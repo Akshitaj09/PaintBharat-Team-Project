@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skincare Banner Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background-color: #a39587;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .banner-container {
+            position: relative;
+            width: 800px;
+            height: 350px;
+            background-color: #ebe5df;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .leaf-shadow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.05) 25%, transparent 25%) -50px 0,
+                        linear-gradient(225deg, rgba(0,0,0,0.05) 25%, transparent 25%) -50px 0;
+            background-size: 100px 100px;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.4;
+        }
+
+        .image-section {
+            flex: 1.2;
+            position: relative;
+            z-index: 2;
+        }
+
+        .blob-container {
+            width: 120%;
+            height: 100%;
+            background-color: #d1ccc6;
+            border-radius: 0% 100% 100% 0% / 0% 50% 50% 0%; 
+            overflow: hidden;
+            position: absolute;
+            left: -10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blob-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .discount-badge {
+            position: absolute;
+            right: -40px;
+            top: 55%;
+            transform: translateY(-50%);
+            background: #3d352d;
+            color: white;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid #ebe5df;
+            z-index: 15;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .discount-badge .percent { font-size: 19px; font-weight: bold; }
+        .discount-badge .off { font-size: 14px; }
+
+        .content-section {
+            flex: 1;
+            padding-right: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end; 
+            text-align: right;
+            z-index: 5;
+        }
+
+        .content-section h3 {
+            font-size: 20px;
+            color: #3d352d;
+            margin-bottom: 2px;
+            margin-top: 45px;
+        }
+
+        .content-section h1 {
+            font-size: 48px;
+            color: #3d352d;
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .content-section p {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 250px;
+            line-height: 1.5;
+            font-family: sans-serif;
+        }
+
+        /* --- BUTTONS STYLING --- */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .website-btn {
+            background: #3d352d;
+            color: #fff;
+            padding: 8px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 11px;
+            font-family: sans-serif;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            transition: all 0.3s ease; /* Smooth movement ke liye */
+            display: inline-block;
+        }
+        /* Hover karne par button thoda bada dikhega */
+.website-btn:hover {
+    transform: scale(1.1); /* 1.1 ka matlab hai 10% bada hona */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Bada hone par halki shadow achhi lagti hai */
+}
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3d352d;
+            color: #3d352d;
+        }
+
+        .star {
+            position: absolute;
+            color: #3d352d;
+            font-size: 16px;
+            z-index: 6;
+        }
+        .s1 { top: 40px; right: 280px; }
+        .s2 { top: 80px; right: 80px; }
+        .s3 { bottom: 90px; right: 200px; }
+        .s4 { top: 30px; left: 150px; color: #fff; }
+
+        .light-blob {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(209, 204, 198, 0.4);
+            border-radius: 50%;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner-container">
+        <div class="leaf-shadow"></div>
+        <div class="light-blob"></div>
+
+        <div class="image-section">
+            <div class="blob-container">
+                <img src="img/house.jfif" alt="Skincare Product">
+            </div>
+            <div class="discount-badge">
+                <div class="percent">100%</div>
+                <div class="off">Genuine</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h3>Color Your</h3>
+            <h1>Space</h1>
+            <p>“Transform your space with vibrant colors and smooth finishes – bring your walls to life with every stroke.”</p>
+            
+            <div class="button-group">
+                <a href="#" class="website-btn btn-outline">Estimate Cost</a>
+                <a href="www.paintbharat.com" class="website-btn">Find Your Colors</a>
+            </div>
+        </div>
+
+        <div class="star s1">✦</div>
+        <div class="star s2">✦</div>
+        <div class="star s3">✦</div>
+        <div class="star s4">✦</div>
+    </div>
+
+</body>
+</html>
