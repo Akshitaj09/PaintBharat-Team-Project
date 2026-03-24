@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Painting Service – Book Site Visit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- FONTS -->
+ <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+
+<style>
+/* 🌸 CUSTOM TEXT SELECTION */
+::selection {
+  background: #e4e0f7;
+  color: #000;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Playfair Display" "Poppins";
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #ffffff;
+}
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 80px 20px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* =========================
+   LEFT SECTION
+========================= */
+.left {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* 🎨 Paint Stroke */
+.paint-stroke {
+  position: absolute;
+  width: 320px;
+  height: 220px;
+  background: linear-gradient(135deg, #ffd1dc, #ffeaf1);
+  border-radius: 60% 40% 55% 45%;
+  filter: blur(35px);
+  top: 120px;
+  left: -60px;
+  z-index: -2;
+}
+
+/* 📱 iPhone */
+.iphone {
+  width: 260px;
+  height: 500px;
+  background: #111;
+  border-radius: 42px;
+  padding: 12px;
+  box-shadow: 0 35px 70px rgba(0,0,0,0.3);
+  transform: rotate(-6deg);
+  animation: floatPhone 4s ease-in-out infinite;
+}
+
+@keyframes floatPhone {
+  0% { transform: translateY(0) rotate(-6deg); }
+  50% { transform: translateY(-12px) rotate(-6deg); }
+  100% { transform: translateY(0) rotate(-6deg); }
+}
+
+/* 📱 Screen */
+.iphone-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ffd1dc, #ffffff);
+}
+
+/* 🔴 Logo + Name */
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.phone-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  animation: logoPulse 3s infinite ease-in-out;
+}
+
+@keyframes logoPulse {
+  0%,100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.brand-name {
+  font-size: 13px;
+  font-family: poppins;
+  color: #6b6b6b;
+  font-weight: 500;
+}
+
+/* ✨ Floating Feature Tags */
+.feature {
+  position: absolute;
+  background: #ffffff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family:'Poppins';
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  animation: floatTag 3s ease-in-out infinite;
+}
+
+.feature.one { top: 60px; left: 210px; }
+.feature.two { top: 180px; left: -80px; animation-delay: .5s; }
+.feature.three { top: 360px; left: 200px; animation-delay: 1s; }
+
+@keyframes floatTag {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+/* 🖋 Caption */
+.phone-caption {
+  margin-top: 20px;
+  font-family: 'poppins';
+  font-size: 13px;
+  color: #555;
+  max-width: 340px;
+  line-height: 1.6;
+  border-left: 3px solid #eb7da2;
+  padding-left: 12px;
+}
+
+/* =========================
+   RIGHT – VISIT CARD
+========================= */
+.visit-card {
+  background: #eeddf3;
+  border-radius: 18px;
+  padding: 36px;
+  max-width: 520px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+  margin-top: -80px;
+}
+
+.visit-card h3 {
+  font-size: 25px;
+  font-family: 'playfair display';
+  margin-bottom: 8px;
+}
+
+.visit-card p {
+  font-size: 12px;
+  font-family: poppins;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.visit-card input {
+  width: 100%;
+  font-family: poppins;
+  font-size: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.checkbox-row {
+  display: flex;
+  gap: 22px;
+  font-size: 12px;
+  font-family: 'poppins';
+  margin: 10px 0 22px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.checkbox-row input[type="checkbox"] {
+    margin: 0;
+    transform: translateY(-1px);
+}
+
+small {
+  font-size: 12px;
+  font-family: poppins;
+  color: #777;
+  margin-bottom: 18px;
+  display: block;
+}
+
+.cta-btn {
+  width: 100%;
+  background: #e4879e;
+  border: none;
+  padding: 14px;
+  font-size: 16px;
+  font-family: poppins;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cta-btn:hover {
+  background: linear-gradient(135deg, #FFF7FB, #FBCFE8, #F9A8D4);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .left {
+    align-items: center;
+  }
+
+  .feature {
+    display: none;
+  }
+
+  .phone-caption {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .visit-card {
+    margin-top: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="paint-stroke"></div>
+
+    <div class="iphone">
+      <div class="iphone-screen">
+        <div class="logo-row">
+          <img src="paint bharat logo.png" class="phone-logo" alt="PaintBharat Logo">
+          <span class="brand-name">PaintBharat Co.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating tags -->
+    <div class="feature one">✔ Free Color Advice</div>
+    <div class="feature two">✔ Trusted Painters</div>
+    <div class="feature three">✔ WhatsApp Updates</div>
+
+    <p class="phone-caption">
+      A smarter way to experience premium painting services — modern, trusted & effortless.
+    </p>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="visit-card">
+    <h3>Book FREE Site Visit</h3>
+    <p>Expert advice with transparent pricing</p>
+
+    <input type="text" placeholder="Enter your name">
+    <input type="tel" placeholder="Enter mobile number">
+    <input type="text" placeholder="Enter email address">
+
+    <div class="checkbox-row">
+      <label><input type="checkbox"> WhatsApp updates</label>
+      <label><input type="checkbox" checked> Local painter hired</label>
+    </div>
+
+    <small>
+      By proceeding, you authorize us to contact you via call, SMS or email.
+    </small>
+
+    <button class="cta-btn">Book FREE Site Visit →</button>
+  </div>
+
+</div>
+
+</body>
+</html>

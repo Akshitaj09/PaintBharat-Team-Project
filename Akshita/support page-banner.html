@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiles Make Us Smile - Banner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --btn-gray: #4d4d4d;
+            --text-white: #ffffff;
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .banner-container {
+            width: 100%;
+            max-width: 1100px;
+            height: 480px;
+            background: #111;
+            /* Texture overlay for the dark background */
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                url('https://i.pinimg.com/1200x/b9/28/70/b9287013ebdde9bf03a19da093be74fe.jpg');
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            border-radius: 4px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Left Side: Text and Content */
+        .content-area {
+            flex: 1;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 20;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 30%, rgba(0,0,0,0) 100%);
+        }
+
+        .content-area h1 {
+            color: var(--text-white);
+            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        .content-area p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            margin-bottom: 35px;
+            font-weight: 400;
+        }
+
+        .btn-find-more {
+            background-color: var(--btn-gray);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.05rem;
+            font-weight: 400;
+            cursor: pointer;
+            width: fit-content;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .btn-find-more:hover {
+            background-color: #666;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+        }
+
+        /* Right Side: Geometric Collage */
+        .collage-area {
+            flex: 1.2;
+            position: relative;
+            background: transparent;
+        }
+
+        /* Diamond Grid Logic */
+        .diamond-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .diamond {
+            position: absolute;
+            overflow: hidden;
+            transform: rotate(45deg);
+            background-color: #222;
+            border: 3px solid #111;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .diamond img {
+            width: 150%;
+            height: 150%;
+            object-fit: cover;
+            /* Rotate back so the image is upright */
+            transform: rotate(-45deg) scale(1.1);
+            position: absolute;
+            top: -25%;
+            left: -25%;
+            transition: var(--transition);
+        }
+
+        /* Hover Effect */
+        .diamond:hover {
+            z-index: 50;
+            transform: rotate(45deg) scale(1.05);
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+        }
+
+        .diamond:hover img {
+            transform: rotate(-45deg) scale(1.25);
+        }
+
+        /* Precise Positioning based on original image */
+        
+        /* Main Center Diamond - Bathtub */
+        .d1 {
+            width: 280px;
+            height: 280px;
+            left: 15%;
+            top: 15%;
+            z-index: 10;
+        }
+
+        /* Top Small Diamond - Blue/Light Tiles */
+        .d2 {
+            width: 160px;
+            height: 160px;
+            top: -20px;
+            left: 55%;
+            z-index: 5;
+        }
+
+        /* Bottom Small Diamond - Kitchen/Wood */
+        .d3 {
+            width: 190px;
+            height: 190px;
+            bottom: -30px;
+            left: 45%;
+            z-index: 5;
+        }
+
+        /* Right Large Diamond - Living Area */
+        .d4 {
+            width: 250px;
+            height: 250px;
+            top: 25%;
+            right: -80px;
+            z-index: 4;
+        }
+
+        /* Lower Left Diamond - Outdoor */
+        .d5 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            left: 5%;
+            z-index: 11;
+        }
+
+        /* Tiny Edge Diamond - Bottom Right */
+        .d6 {
+            width: 100px;
+            height: 100px;
+            bottom: 20px;
+            right: 20px;
+            z-index: 12;
+        }
+
+        /* Top Edge Sliver */
+        .d7 {
+            width: 120px;
+            height: 120px;
+            top: 10px;
+            right: -40px;
+            z-index: 2;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .banner-container {
+                flex-direction: column;
+                height: auto;
+                min-height: 700px;
+            }
+            .content-area {
+                padding: 40px 30px;
+                text-align: center;
+                align-items: center;
+                background: rgba(0,0,0,0.8);
+            }
+            .collage-area {
+                height: 400px;
+                width: 100%;
+                overflow: hidden;
+            }
+            .diamond-wrapper {
+                transform: scale(0.7) translateY(-50px);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner-container">
+        <!-- Content Section -->
+        <div class="content-area">
+            <h1>PAINT<br>BHARAT</h1>
+            <p>We provide stylish painting solutions</p>
+            <button class="btn-find-more">Need Support?</button>
+        </div>
+
+        <!-- Collage Section -->
+        <div class="collage-area">
+            <div class="diamond-wrapper">
+                
+                <!-- Main Bathtub -->
+                <div class="diamond d1">
+                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800" alt="Bathtub">
+                </div>
+
+                <!-- Top Blue/Grey Tiles -->
+                <div class="diamond d2">
+                    <img src="https://i.pinimg.com/1200x/8d/80/78/8d8078072de9ea9821398e771dcdf752.jpg" alt="Wall Tiles">
+                </div>
+
+                <!-- Kitchen/Counter -->
+                <div class="diamond d3">
+                    <img src="https://i.pinimg.com/1200x/5e/01/46/5e0146f43fb974152b0a13b9c0b61194.jpg" alt="Kitchen Tiles">
+                </div>
+
+                <!-- Living Area Tiles -->
+                <div class="diamond d4">
+                    <img src="https://i.pinimg.com/1200x/0f/a5/7d/0fa57d18633f2a75f76943706a55dc1f.jpg" alt="Floor Tiles">
+                </div>
+
+                <!-- Outdoor/Stone -->
+                <div class="diamond d5">
+                    <img src="https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=800" alt="Stone Tiles">
+                </div>
+
+                <!-- Small Detail -->
+                <div class="diamond d6">
+                    <img src="https://i.pinimg.com/736x/f0/f8/b6/f0f8b6557d849a32b23e0ff3853bc3d8.jpg" alt="Detail">
+                </div>
+
+                <!-- Edge Accent -->
+                <div class="diamond d7">
+                    <img src="https://i.pinimg.com/736x/27/09/a8/2709a80cf988785fa304dccbbda0c6d2.jpg" alt="Accent">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

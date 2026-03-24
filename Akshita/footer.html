@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editable Footer</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: poppins ;
+        }
+
+        body {
+            background: #f5f5f5;
+        }
+
+        .footer {
+            background-color: #111;
+            color: #fff;
+            padding: 50px 20px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-left {
+            flex: 1 1 280px;
+        }
+
+        .footer-logo {
+            width: 140px;
+            margin-bottom: 20px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-icons a {
+            color: #fff;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #df6a79;
+        }
+
+        .footer-column {
+            flex: 1 1 180px;
+        }
+
+        .footer-column h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .footer-column a {
+            display: block;
+            text-decoration: none;
+            color: #ccc;
+            font-size: 15px;
+            font-family: 'poppins';
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: #fff;
+        }
+
+        .footer-links {
+            margin-top: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            font-size: 15px;
+            margin-top: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .social-icons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<footer class="footer">
+    <div class="footer-container">
+
+        <!-- Left Section -->
+        <div class="footer-left">
+            <!-- Editable Logo -->
+            <img src="img/paint bharat logo.png" alt="Company Logo" class="footer-logo">
+
+            <!-- Social Media Links -->
+            <div class="social-icons">
+                <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://twitter.com" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+            </div>
+
+            <p class="copyright">© 2026 PaintBharat Co.</p>
+
+            <div class="footer-links">
+                <a href="#">Disclaimer</a> |
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Terms & Conditions</a>
+            </div>
+        </div>
+
+        <!-- Products -->
+        <div class="footer-column">
+            <h3>Products</h3>
+            <a href="#">Interior Wall Coatings</a>
+            <a href="#">Exterior Wall Coatings</a>
+            <a href="#">Wallpaper</a>
+            <a href="#">Wood Finishes</a>
+            <a href="#">Waterproofing</a>
+        </div>
+
+        <!-- Colour -->
+        <div class="footer-column">
+            <h3>Colour</h3>
+            <a href="#">Colour Catalogue</a>
+            <a href="#">Colour Blogs</a>
+        </div>
+
+        <!-- Tools -->
+        <div class="footer-column">
+            <h3>Tools</h3>
+            <a href="#">Budget Calculator</a>
+        </div>
+
+        <!-- Support -->
+        <div class="footer-column">
+            <h3>Support</h3>
+            <a href="#">Customer Care</a>
+            <a href="#">Roadmap</a>
+        </div>
+
+    </div>
+</footer>
+
+</body>
+</html>
