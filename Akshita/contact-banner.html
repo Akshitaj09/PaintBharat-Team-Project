@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Painting Calculator Banner</title>
+    <style>
+        /* Basic Reset & Center Page */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Fixed Size Banner Container */
+        .banner-wrapper {
+            width: 1150px;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            background: url('https://i.pinimg.com/1200x/df/b8/94/dfb8944717f2d62bd2bdfc8e7816fe37.jpg') no-repeat center center;
+            background-size: cover;
+            transition: transform 0.5s ease;
+        }
+
+        /* Glassmorphism Overlay (The Glass Effect) */
+        .glass-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 1;
+        }
+
+        .banner-wrapper:hover .glass-overlay {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Right Side Content */
+        .content-right {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            text-align: right;
+            max-width: 450px;
+            color: #222;
+            transition: opacity 0.4s ease;
+        }
+
+        .content-right h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            color: #111;
+            font-weight: 800;
+        }
+
+        .content-right p {
+            font-size: 1.25rem;
+            margin-bottom: 35px;
+            color: #444;
+            font-weight: 400;
+        }
+
+        .btn-cost {
+            padding: 15px 35px;
+            background-color: #6b4229;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgb(11, 3, 3);
+            transition: background 0.3s;
+        }
+
+        .btn-cost:hover {
+            background-color: #130b02;
+        }
+
+        /* Center Button (Hidden state) */
+        .center-trigger {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            z-index: 3;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .banner-wrapper:hover .center-trigger {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .btn-now {
+            padding: 20px 45px;
+            background: #ffffff;
+            color: #111;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .btn-now .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-now:hover .arrow {
+            transform: translateX(8px);
+        }
+
+        /* Dim the right side slightly on hover to focus on the center */
+        .banner-wrapper:hover .content-right {
+            opacity: 0.6;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="banner-wrapper">
+        <div class="glass-overlay"></div>
+
+        <div class="center-trigger">
+            <button class="btn-now">
+                Calculate Now <span class="arrow">→</span>
+            </button>
+        </div>
+
+        <div class="content-right">
+            <h1>Painting<br>Calculator</h1>
+            <p>Smart estimates for your interior walls and ceilings.</p>
+            <button class="btn-cost">Calculate Cost</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Color Visualizer - Hero Section</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Space Grotesk for headings/logo, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1c1e;
+            --accent-brown: #8b5e3c;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Heading & Logo Font */
+        h1, .logo-font {
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        /* Full Width Section with Background Image */
+        .hero-wrapper {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .hero-bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: var(--bg-dark);
+        }
+
+        .hero-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1.2s ease-in-out;
+            opacity: 0.15;
+        }
+
+        /* Typography */
+        .heading-main {
+            line-height: 1.05;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .accent-text {
+            color: var(--accent-brown);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(90deg, #d1f7e0 0%, #a8e6cf 100%);
+            color: #1a1c1e;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* Visualizer Area */
+        .preview-container {
+            position: relative;
+            width: 100%;
+            height: 550px;
+            border-radius: 2rem;
+            overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+            background-color: #000;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .slide-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1.2s ease-in-out;
+            opacity: 0;
+        }
+
+        .slide-img.active {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .color-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            transition: background-color 0.6s ease;
+            opacity: 0;
+            z-index: 20;
+        }
+
+        .color-overlay.active {
+            opacity: 0.6;
+        }
+
+        /* 3D Color Carousel Styling */
+        .carousel-view {
+            perspective: 1200px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            width: 320px; 
+        }
+
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .swatch-3d {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Hex Code Overlay on Hover */
+        .swatch-3d .hex-code {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-family: monospace;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .swatch-3d:hover .hex-code {
+            opacity: 1;
+        }
+
+        .swatch-3d.active {
+            transform: translateZ(120px) translateX(0);
+            z-index: 50;
+            border: 2px solid white;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.2);
+            opacity: 1;
+        }
+
+        .swatch-3d.prev {
+            transform: translateX(-70px) translateZ(-50px) rotateY(25deg);
+            z-index: 40;
+            opacity: 0.8;
+        }
+
+        .swatch-3d.next {
+            transform: translateX(70px) translateZ(-50px) rotateY(-25deg);
+            z-index: 40;
+            opacity: 0.8;
+        }
+
+        .swatch-3d.far-prev {
+            transform: translateX(-130px) translateZ(-180px) rotateY(45deg) scale(0.85);
+            z-index: 30;
+            opacity: 0.4;
+        }
+
+        .swatch-3d.far-next {
+            transform: translateX(130px) translateZ(-180px) rotateY(-45deg) scale(0.85);
+            z-index: 30;
+            opacity: 0.4;
+        }
+
+        .swatch-3d.hidden {
+            transform: translateZ(-400px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Carousel Navigation Buttons */
+        .carousel-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 60;
+        }
+
+        .carousel-nav-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        /* Modals & Reset */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #ffffff;
+            color: #ffffff;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        #heart-btn.is-active {
+            color: #ec4899;
+            border-color: rgba(236, 72, 153, 0.4);
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-wrapper min-h-screen text-white">
+        <!-- Background Layer -->
+        <div class="hero-bg-container">
+            <div id="full-page-bg" class="hero-bg-image"></div>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="btn-reset-color" class="btn-reset absolute top-10 right-10 md:top-16 md:right-16 z-50 px-5 py-3 rounded-full text-[11px] font-bold tracking-[0.2em] flex items-center gap-3 uppercase text-gray-400">
+            <i class="fa-solid fa-rotate-left"></i>
+            Reset Scene
+        </button>
+
+        <!-- Main Content -->
+        <div class="w-full px-6 md:px-16 lg:px-24 py-16 md:py-24 flex flex-col h-full relative z-10">
+            
+            <main class="grid lg:grid-cols-12 gap-16 lg:gap-24 items-center flex-grow">
+                
+                <!-- Left Content -->
+                <div class="lg:col-span-5 animate-fade-in">
+                    <h1 class="heading-main text-5xl md:text-7xl xl:text-8xl font-bold mb-8">
+                        Check out colors <br>
+                        with <span class="accent-text">AI Visualizer</span>
+                    </h1>
+                    <p class="text-gray-200 text-lg md:text-xl mb-12 max-w-xl">
+                        Welcome to MetaGems, where all artists, collectors, and enthusiasts unite to explore and acquire unique digital artworks.
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-8 mb-12">
+                        <button id="btn-upload" class="btn-primary px-10 py-5 rounded-full flex items-center gap-3 font-semibold text-base">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                            Upload Your Room
+                        </button>
+                        <button id="btn-watch" class="flex items-center gap-4 group">
+                            <div class="w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center group-hover:bg-[#8b5e3c] transition-all">
+                                <i class="fa-solid fa-play text-xs"></i>
+                            </div>
+                            <span class="font-medium text-base">Watch Now</span>
+                        </button>
+                    </div>
+
+                    <!-- 3D Color Swatch Carousel -->
+                    <div class="mt-8">
+                        <div class="text-[10px] text-gray-500 uppercase tracking-[0.4em] font-bold mb-6">Select Palette</div>
+                        <div class="flex items-center gap-4">
+                            <button id="prev-swatch" class="carousel-nav-btn"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                            
+                            <div class="carousel-view">
+                                <div id="swatch-track" class="carousel-track">
+                                    <!-- Swatches populated by JS -->
+                                </div>
+                            </div>
+
+                            <button id="next-swatch" class="carousel-nav-btn"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Visualizer -->
+                <div class="lg:col-span-7 relative">
+                    <div id="slideshow-container" class="preview-container shadow-2xl">
+                        <img id="img-1" src="" alt="Interior 1" class="slide-img active">
+                        <img id="img-2" src="" alt="Interior 2" class="slide-img">
+                        <div id="color-overlay" class="color-overlay"></div>
+                    </div>
+
+                    <!-- Active Shade Info Card -->
+                    <div class="absolute bottom-[-20px] right-12 bg-[#2a2c2e]/90 backdrop-blur-xl p-4 rounded-xl border border-gray-700/50 flex items-center gap-6 z-30 shadow-xl min-w-[280px]">
+                        <div class="flex-grow">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Active Shade</div>
+                            <div id="active-shade-name" class="text-lg font-bold logo-font leading-tight">None Selected</div>
+                            <div id="active-shade-hex" class="text-sm font-medium text-gray-400 font-mono mt-1 opacity-70">--</div>
+                        </div>
+                        <div class="flex flex-col items-center gap-3">
+                            <div id="active-color-box" class="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center transition-all border border-gray-600">
+                                <i class="fa-solid fa-paint-roller text-gray-500 text-sm"></i>
+                            </div>
+                            <button id="heart-btn" class="w-10 h-10 rounded-lg bg-transparent border border-white/20 flex items-center justify-center text-white transition-all transform hover:scale-110">
+                                <i id="heart-icon" class="fa-regular fa-heart text-base"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="upload-modal" class="modal-overlay">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md text-black shadow-2xl">
+            <h2 class="text-2xl font-bold mb-2 logo-font">Upload Your Room</h2>
+            <p class="text-gray-500 text-sm mb-6">Choose a clear photo of your room for best visualization.</p>
+            <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-2xl p-12 flex flex-col items-center justify-center gap-4 mb-6 hover:border-gray-500 cursor-pointer">
+                <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400"></i>
+                <div class="text-center"><p class="font-medium">Click to browse or drag & drop</p></div>
+                <input type="file" id="file-input" class="hidden" accept="image/*">
+            </div>
+            <div class="flex gap-4">
+                <button id="btn-cancel-upload" class="flex-1 py-4 rounded-xl bg-gray-100 font-bold">Cancel</button>
+                <button id="btn-upload-now" class="flex-1 py-4 rounded-xl bg-[#8b5e3c] text-white font-bold">Upload Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="fullscreen-modal" class="modal-overlay">
+        <div class="relative w-[90vw] h-[90vh]">
+            <button id="close-fullscreen" class="absolute top-4 right-4 w-12 h-12 bg-white rounded-full text-black flex items-center justify-center z-10">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="w-full h-full rounded-2xl overflow-hidden relative">
+                <img id="fullscreen-img" src="" alt="Enlarged" class="w-full h-full object-contain">
+                <div id="fullscreen-overlay" class="absolute inset-0 pointer-events-none mix-blend-multiply opacity-60"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colors = [
+            { hex: '#8E4585', name: 'Plum' },
+            { hex: '#3F4C6B', name: 'Deep Slate' },
+            { hex: '#B48395', name: 'Dark Blush' },
+            { hex: '#606C88', name: 'Steel Beam' },
+            { hex: '#722F37', name: 'Wine' },
+            { hex: '#71797E', name: 'Steel Grey' },
+            { hex: '#40826D', name: 'Viridian' },
+            { hex: '#954535', name: 'Chestnut' },
+            { hex: 'transparent', name: 'More Colors', isMore: true }
+        ];
+
+        let activeColorIndex = 0;
+        let isSlideshowActive = true;
+        let isCarouselAutomated = true;
+        let currentSlideIndex = 0;
+        let activeColor = null;
+        let uploadedImage = null;
+
+        const slides = [
+            "img/bg 1.png",
+            "img/bg 2.png",
+            "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200",
+            "img/bg 3.png"
+        ];
+
+        const swatchTrack = document.getElementById('swatch-track');
+        const img1 = document.getElementById('img-1');
+        const img2 = document.getElementById('img-2');
+        const fullPageBg = document.getElementById('full-page-bg');
+        const colorOverlay = document.getElementById('color-overlay');
+        const activeShadeName = document.getElementById('active-shade-name');
+        const activeShadeHex = document.getElementById('active-shade-hex');
+        const activeColorBox = document.getElementById('active-color-box');
+        const heartBtn = document.getElementById('heart-btn');
+        const heartIcon = document.getElementById('heart-icon');
+        const resetBtn = document.getElementById('btn-reset-color');
+
+        function renderSwatches() {
+            swatchTrack.innerHTML = '';
+            colors.forEach((c, i) => {
+                const div = document.createElement('div');
+                div.className = 'swatch-3d';
+                
+                if (c.isMore) {
+                    div.style.background = 'rgba(255,255,255,0.05)';
+                    div.innerHTML = '<div class="flex flex-col items-center justify-center text-[10px] text-gray-400 font-bold uppercase text-center p-2"><i class="fa-solid fa-plus mb-1"></i>More Colors</div>';
+                } else {
+                    div.style.backgroundColor = c.hex;
+                    const hexSpan = document.createElement('div');
+                    hexSpan.className = 'hex-code';
+                    hexSpan.innerText = c.hex;
+                    div.appendChild(hexSpan);
+                }
+                
+                div.onclick = () => {
+                    // Manual selection stops automation
+                    selectColorByIndex(i, false);
+                };
+                swatchTrack.appendChild(div);
+            });
+            updateSwatchStates();
+        }
+
+        function updateSwatchStates() {
+            const swatches = document.querySelectorAll('.swatch-3d');
+            const len = colors.length;
+            swatches.forEach((s, i) => {
+                s.className = 'swatch-3d';
+                if (i === activeColorIndex) {
+                    s.classList.add('active');
+                } else if (i === (activeColorIndex - 1 + len) % len) {
+                    s.classList.add('prev');
+                } else if (i === (activeColorIndex + 1) % len) {
+                    s.classList.add('next');
+                } else if (i === (activeColorIndex - 2 + len) % len) {
+                    s.classList.add('far-prev');
+                } else if (i === (activeColorIndex + 2) % len) {
+                    s.classList.add('far-next');
+                } else {
+                    s.classList.add('hidden');
+                }
+            });
+        }
+
+        function selectColorByIndex(index, isAuto = false) {
+            activeColorIndex = index;
+            const c = colors[index];
+            
+            // If it's a manual click, we update the UI state and permanently stop carousel automation
+            if (!isAuto) {
+                isCarouselAutomated = false;
+                
+                if (!c.isMore) {
+                    activeColor = c.hex;
+                    colorOverlay.style.backgroundColor = c.hex;
+                    colorOverlay.classList.add('active');
+                    activeShadeName.innerText = c.name;
+                    activeShadeHex.innerText = c.hex;
+                    activeColorBox.innerHTML = '';
+                    activeColorBox.style.backgroundColor = c.hex;
+                    
+                    stopSlideshow();
+                } else {
+                    activeShadeName.innerText = 'Explore Palettes';
+                    activeShadeHex.innerText = 'Coming Soon';
+                    activeColorBox.style.backgroundColor = 'transparent';
+                    activeColorBox.innerHTML = '<i class="fa-solid fa-palette text-gray-500 text-sm"></i>';
+                }
+            }
+
+            updateSwatchStates();
+        }
+
+        // Automated cycle every 2 seconds
+        function nextSwatchAuto() {
+            if (!isCarouselAutomated) return;
+            const nextIdx = (activeColorIndex + 1) % colors.length;
+            // Pass true for isAuto so wall color doesn't change on background cycle
+            selectColorByIndex(nextIdx, true); 
+        }
+        let carouselInterval = setInterval(nextSwatchAuto, 2000); 
+
+        document.getElementById('prev-swatch').onclick = () => {
+            selectColorByIndex((activeColorIndex - 1 + colors.length) % colors.length, false);
+        };
+        document.getElementById('next-swatch').onclick = () => {
+            selectColorByIndex((activeColorIndex + 1) % colors.length, false);
+        };
+
+        img1.src = slides[0];
+        updateBackground(slides[0]);
+
+        function updateBackground(src) {
+            fullPageBg.style.backgroundImage = `url('${src}')`;
+        }
+
+        function startSlideshow() {
+            if (!isSlideshowActive) return;
+            const currentImg = img1.classList.contains('active') ? img1 : img2;
+            const nextImg = img1.classList.contains('active') ? img2 : img1;
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            const nextSrc = slides[currentSlideIndex];
+            nextImg.src = nextSrc;
+            updateBackground(nextSrc);
+            nextImg.classList.add('active');
+            currentImg.classList.remove('active');
+        }
+
+        let slideshowInterval = setInterval(startSlideshow, 3500);
+
+        function stopSlideshow() {
+            isSlideshowActive = false;
+            clearInterval(slideshowInterval);
+        }
+
+        function resumeAll() {
+            if (!uploadedImage) {
+                isSlideshowActive = true;
+                clearInterval(slideshowInterval);
+                slideshowInterval = setInterval(startSlideshow, 3500);
+            }
+            isCarouselAutomated = true;
+        }
+
+        resetBtn.onclick = () => {
+            activeColor = null;
+            colorOverlay.classList.remove('active');
+            activeShadeName.innerText = 'None Selected';
+            activeShadeHex.innerText = '--';
+            activeColorBox.style.backgroundColor = 'transparent';
+            activeColorBox.innerHTML = '<i class="fa-solid fa-paint-roller text-gray-500 text-sm"></i>';
+            resumeAll();
+        };
+
+        heartBtn.onclick = () => {
+            heartBtn.classList.toggle('is-active');
+            heartIcon.classList.toggle('fa-regular');
+            heartIcon.classList.toggle('fa-solid');
+        };
+
+        const uploadModal = document.getElementById('upload-modal');
+        document.getElementById('btn-upload').onclick = () => uploadModal.style.display = 'flex';
+        document.getElementById('btn-cancel-upload').onclick = () => uploadModal.style.display = 'none';
+        document.getElementById('btn-upload-now').onclick = () => {
+            if (uploadedImage) {
+                stopSlideshow();
+                isCarouselAutomated = false;
+                const currentImg = img1.classList.contains('active') ? img1 : img2;
+                currentImg.src = uploadedImage;
+                updateBackground(uploadedImage);
+                uploadModal.style.display = 'none';
+            }
+        };
+
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { uploadedImage = ev.target.result; dropZone.querySelector('p').innerText = file.name; };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        document.getElementById('btn-watch').onclick = () => {
+            const currentImg = img1.classList.contains('active') ? img1 : img2;
+            document.getElementById('fullscreen-img').src = currentImg.src;
+            document.getElementById('fullscreen-modal').style.display = 'flex';
+            const fOverlay = document.getElementById('fullscreen-overlay');
+            if(activeColor) { fOverlay.style.opacity = "0.6"; fOverlay.style.backgroundColor = activeColor; } 
+            else { fOverlay.style.opacity = "0"; }
+        };
+        document.getElementById('close-fullscreen').onclick = () => document.getElementById('fullscreen-modal').style.display = 'none';
+
+        renderSwatches();
+    </script>
+</body>
+</html>

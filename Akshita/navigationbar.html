@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Navigation Update</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --bg-black: #000000;
+            --accent-pink: #f0144c;
+            --text-white: #ffffff;
+            --text-gray: #e0e0e0;
+            --text-muted: #888888;
+            --hover-box-grey: rgba(231, 231, 231, 0.705);/* 20% transparency grey */
+            --font-main: 'playfair display';
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-family: var(--font-main);
+        }
+
+        header {
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            padding: 10px 40px;
+            height: 100px
+        }
+
+        /* Top Row */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 15px;
+        }
+
+        .logo-section { 
+            display: flex; 
+            align-items: center;
+            gap: 10px; 
+        }
+
+        .logo-section img {
+            height: 45px;
+            width: auto;
+            display: block;
+        }
+
+        .brand-name { 
+            font-size: 29px; 
+            font-weight: 500; 
+        }
+
+        .search-container { 
+            flex-grow: 1; 
+            max-width: 400px; 
+            margin-left: 50px; 
+            position: relative; 
+        }
+
+        .search-container input {
+            width: 100%; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 1px solid #555;
+            color: white; 
+            padding: 8px 35px; 
+            font-size: 24px;
+            font-family: playfair display;
+        }
+        .search-container .ph-magnifying-glass { 
+            position: absolute; 
+            left: 5px; top: 50%; 
+            transform: translateY(-50%); 
+            font-size: 20px; 
+        }
+        .search-container .ph-camera {
+            position: absolute; right: 5px; top: 50%;
+            transform: translateY(-50%); font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* User Actions Styling */
+        .user-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 30px; 
+        }
+
+        .action-item {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+        }
+
+        /* Underline for Cart and User Icons */
+        .action-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-pink);
+            transition: width 0.3s ease;
+        }
+
+        .action-item:hover::after {
+            width: 100%;
+        }
+
+        .icon-btn { 
+            font-size: 24px; 
+        }
+
+        /* Login Button "Lift" Effect */
+        .login-btn { 
+            background-color: var(--accent-pink); 
+            color: white; 
+            padding: 8px 25px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-5px); /* Lift up effect */
+            box-shadow: 0 5px 15px rgba(240, 20, 76, 0.4);
+        }
+
+        /* Bottom Row */
+        .bottom-nav { display: flex; justify-content: space-between; align-items: center; }
+        .nav-links { display: flex; list-style: none; margin-top: 15px; padding: 0; gap: 30px; }
+        .nav-item { position: relative; padding-bottom: 10px; }
+        .nav-link { text-decoration: none; color: var(--text-gray); font-size: 22px; padding: 5px 0; position: relative; }
+
+        /* Navigation Underline */
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: -2px; left: 0; background-color: var(--accent-pink); transition: width 0.3s ease;
+        }
+        .nav-item:hover > .nav-link::after { width: 100%; }
+
+        /* Dropdown & Mega Menu Hover Box */
+        .dropdown-item, .mega-col a {
+            transition: background-color 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .dropdown-item:hover, .mega-col a:hover {
+            background-color: var(--hover-box-grey);
+            color: #000;
+        }
+
+        /* Standard Dropdown */
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 300px;
+            display: none; padding: 10px; border: 1px solid #ddd; z-index: 100; box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .nav-item:hover .dropdown-menu { display: block; }
+        .dropdown-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; text-decoration: none; color: #333; }
+        .dropdown-item i { color: var(--accent-pink); font-size: 18px; }
+        .dropdown-item span { font-size: 20px; }
+
+        /* Mega Menu */
+        .mega-menu {
+            position: absolute; top: 100%; left: 0; background-color: #ffffff; width: 950px;
+            display: none; padding: 30px; border: 1px solid #ddd; z-index: 110; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            grid-template-columns: repeat(5, 1fr); gap: 20px;
+            border-radius: 8px;
+        }
+        .nav-item:hover .mega-menu { display: grid; }
+        
+        .mega-col h3 { color: var(--text-muted); font-size: 13px; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .mega-col a { display: block; text-decoration: none; color: #333; font-size: 20px; margin-bottom: 5px; padding: 8px 10px; }
+
+        .home-icon { font-size: 20px; color: white; border-bottom: 1px solid white; padding-bottom: 2px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="top-nav">
+        <div class="logo-section">
+            <img src="img/paint bharat logo2.png" alt="PaintBharat Logo">
+            <span class="brand-name">PaintBharat Co.</span>
+        </div>
+
+        <div class="search-container">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" placeholder="Search for Colour Inspiration">
+            <i class="ph ph-camera"></i>
+        </div>
+
+        <div class="user-actions">
+            <div class="action-item">
+            </div>
+            <div class="action-item">
+                <i class="ph ph-user icon-btn"></i>
+            </div>
+            <a href="#" class="login-btn">Login</a>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <ul class="nav-links">
+            <li class="nav-item"><a href="#" class="nav-link"><i class="ph ph-house-line home-icon"></i></a></li>
+            
+            <li class="nav-item">
+                <a href="#" class="nav-link">Products</a>
+                <div class="mega-menu">
+                    <div class="mega-col">
+                        <h3>Inner Expressions</h3>
+                        <a href="#">Paints</a>
+                    </div>
+                    <div class="mega-col">
+                        <h3>Outer Expressions</h3>
+                        <a href="#">Paints</a>
+                    </div>
+                    <div class="mega-col">
+                        <h3>Waterproofing</h3>
+                        <a href="#">All products</a>
+                        <a href="#">Bathrooms</a>
+                        <a href="#">Terrace & tanks</a>
+                        <a href="#">Cracks & joints</a>
+                    </div>
+                    <div class="mega-col">
+                        <h3>Other Surfaces</h3>
+                        <a href="#">Wood Finishes</a>
+                        <a href="#">Metal paints</a>
+                        <a href="#">Undercoats</a>
+                        <a href="#">Adhesives</a>
+                    </div>
+                    <div class="mega-col">
+                        <h3>Shop</h3>
+                        <a href="#">DIY Tools</a>
+                        <a href="#">Colour books</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">Services</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item"><i class="ph ph-users-three"></i><span>Expert Consultation</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-drop"></i><span>Waterproofing Service</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-paint-brush-broad"></i><span>Interior Painting</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-house"></i><span>Exterior Painting</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-grid-four"></i><span>House Wallpaper</span></a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Shades Card</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item"><i class="ph ph-palette"></i><span>Color Catalogue</span></a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Designs</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item"><i class="ph ph-intersect-square"></i><span>Wall Textures</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-mask-happy"></i><span>Stencil Painting</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-house"></i><span>Exterior Texture</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-grid-four"></i><span>House Wallpaper</span></a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Pricing</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item"><i class="ph ph-buildings"></i><span> Interior Paint Pricing</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-house-line"></i><span> Exterior Paint Pricing</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-calculator"></i><span> Wallpaper Pricing</span></a>
+                    <a href="#" class="dropdown-item"><i class="ph ph-drop"></i><span> Waterproofing Pricing</span></a>
+                </div>
+            </li>
+        </ul>
+
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a href="#" class="nav-link">Careers</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item"><i class="ph ph-briefcase"></i><span>Current Openings</span></a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Our Company</a>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item"><i class="ph ph-buildings"></i><span>Meet Us</span></a>
+                </div>
+            </li>
+            <li class="nav-item"><a href="#" class="nav-link">Support</a></li>
+        </ul>
+    </nav>
+</header>
+
+</body>
+</html>

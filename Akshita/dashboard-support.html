@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Power AI</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brown: {
+                            500: '#5D4037',
+                            600: '#4E342E',
+                            700: '#3E2723',
+                            accent: '#8D6E63',
+                            ring: '#A1887F'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Background Handling */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -2;
+            transition: background-image 0.6s ease, opacity 0.6s ease;
+        }
+
+        /* Dark Mode: Original Premium Office Background */
+        .dark body { background-color: #0c0a09; color: #ffffff; }
+        .dark body::before {
+            background-image: url('img/bg.png');
+            opacity: 0.6;
+        }
+
+        /* Light Mode: Clean Architecture Background */
+        html:not(.dark) body { background-color: #FCFAF9; color: #1c1917; }
+        html:not(.dark) body::before {
+            background-image: url('img/bg2.png');
+            opacity: 0.6;
+        }
+
+        /* Overlays */
+        .page-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: background 0.4s ease;
+        }
+        html:not(.dark) .page-overlay {
+            background: rgba(45, 38, 34, 0.08);
+        }
+        .dark .page-overlay {
+            background: linear-gradient(to bottom, rgba(28, 25, 23, 0.25), rgba(12, 10, 9, 0.75) 100%);
+        }
+
+        /* Header Styling */
+        .glass-header {
+            backdrop-filter: blur(32px) saturate(180%);
+            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            transition: all 0.4s ease;
+        }
+        .dark .glass-header {
+            background: rgba(12, 10, 9, 0.6);
+            border-bottom: 1px solid rgba(214, 211, 209, 0.1);
+        }
+        html:not(.dark) .glass-header {
+            background: rgba(255, 255, 255, 0.22);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+        }
+
+        /* Input Styling - Glassmorphism Restored for Search & Dropdown */
+        .glass-input {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+        }
+        html:not(.dark) .glass-input {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+        /* Dark Mode Glass Search and Designation Card Background */
+        .dark .glass-input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Custom Theme Toggle Switch */
+        .theme-switch-container {
+            width: 90px;
+            height: 42px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 100px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .dark .theme-switch-container {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .switch-icon { width: 20px; height: 20px; z-index: 10; transition: all 0.3s ease; }
+        .switch-sun { color: #fcd34d; }
+        .switch-moon { color: #94a3b8; }
+        .dark .switch-sun { color: #64748b; }
+        .dark .switch-moon { color: #c084fc; }
+        .switch-knob {
+            position: absolute; width: 34px; height: 34px; background: white; border-radius: 50%;
+            left: 4px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 5;
+        }
+        .dark .switch-knob { transform: translateX(48px); }
+
+        /* Glass Cards - 32px Corners */
+        .glass-card {
+            border-radius: 32px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Light Mode Glass - Increased Transparency (0.22 -> 0.12) */
+        html:not(.dark) .glass-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(32px) saturate(180%);
+            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+            color: #09090b;
+        }
+        .dark .glass-card {
+            background: rgba(22, 18, 15, 0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+
+        .glass-card:hover { transform: translateY(-8px) scale(1.02); }
+        .dark .glass-card:hover {
+            background: rgba(41, 37, 36, 0.7);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+        }
+        html:not(.dark) .glass-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        /* FAQ Content Styling */
+        .faq-title { font-weight: 900; transition: all 0.5s ease; display: inline-block; }
+        
+        html:not(.dark) .faq-title { color: #0c0a09; text-shadow: none; filter: none; }
+        .dark .faq-title { text-shadow: 0 10px 20px rgba(0,0,0,0.5); color: white; }
+        .faq-title:hover { transform: scale(1.05); }
+
+        /* Subheading Clarity */
+        .subheading-text { transition: color 0.4s ease; }
+        html:not(.dark) .subheading-text { color: #1c1917; text-shadow: none; filter: none; }
+        .dark .subheading-text { color: #f5f5f4; text-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+
+        .btn-contact {
+            background: #d6c9b0; color: #1c1917; padding: 14px 36px; border-radius: 100px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem;
+            transition: all 0.4s ease; border: 1px solid rgba(0, 0, 0, 0.05); cursor: pointer;
+        }
+        .btn-contact:hover { transform: translateY(-5px) scale(1.05); background: #e5dccb; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+
+        /* Typewriter Cursor */
+        .typewriter-cursor { border-right: 3px solid #d6d3d1; animation: blink-caret 0.75s step-end infinite; }
+        html:not(.dark) .typewriter-cursor { border-color: #5d4037; }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: inherit; } }
+
+        /* FAQ Vertical Alignment */
+        .faq-item { margin-bottom: 20px; width: 100%; transition: transform 0.3s ease; }
+        .question-wrapper { display: flex; align-items: center; gap: 16px; cursor: pointer; width: 100%; transition: all 0.3s ease; }
+        .icon-circle {
+            width: 48px; height: 48px; border-radius: 50%; background: #e7e5e4; color: #000;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+            font-size: 1.3rem; transition: all 0.4s ease; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .question-wrapper:hover .icon-circle { transform: scale(1.1) rotate(10deg); background: #ffffff; }
+
+        .question-pill {
+            font-family: 'Outfit', sans-serif; border-radius: 100px; padding: 16px 32px;
+            font-weight: 600; flex-grow: 1; transition: all 0.4s ease;
+        }
+        html:not(.dark) .question-pill { background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 1); color: #1c1917; }
+        .dark .question-pill { background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(214, 211, 209, 0.1); color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        .answer-wrapper { display: none; align-items: center; gap: 16px; margin-top: 10px; margin-left: 64px; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+
+        .answer-pill {
+            font-family: 'Plus Jakarta Sans', sans-serif; border-radius: 24px; padding: 18px 24px;
+            font-size: 1rem; line-height: 1.6; flex-grow: 1; transition: all 0.3s ease;
+        }
+        html:not(.dark) .answer-pill { background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(0, 0, 0, 0.05); color: #44403c; }
+        .dark .answer-pill { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); color: rgba(231, 229, 228, 0.95); text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+
+        .answer-wrapper:hover .answer-pill { color: #ffffff; }
+        html:not(.dark) .answer-wrapper:hover .answer-pill { background: #5D4037; border-color: #4E342E; }
+        .dark .answer-wrapper:hover .answer-pill { background: rgba(0, 0, 0, 0.6); }
+
+        .chat-icon-box {
+            width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0; backdrop-filter: blur(5px); transition: all 0.3s ease;
+        }
+        html:not(.dark) .chat-icon-box { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(0, 0, 0, 0.05); }
+        .dark .chat-icon-box { background: rgba(231, 229, 228, 0.15); border: 1px solid rgba(214, 211, 209, 0.08); }
+
+        .faq-item.active .answer-wrapper { display: flex; }
+
+        .dropdown-item {
+            padding: 10px 16px; cursor: pointer; transition: all 0.2s ease; font-size: 0.875rem;
+            font-weight: 600; color: inherit; border-radius: 8px; margin: 2px 6px; opacity: 0.8;
+        }
+        .dropdown-item:hover { background: rgba(0, 0, 0, 0.05); opacity: 1; transform: translateX(4px); }
+        .dark .dropdown-item:hover { background: rgba(255, 255, 255, 0.1); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(214, 211, 209, 0.4); border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-stone-50 dark:bg-[#0c0a09]">
+
+    <div class="page-overlay"></div>
+
+    <header class="sticky top-0 z-50 glass-header px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <!-- Global Search - Glassmorphism Applied -->
+            <div class="relative w-full hidden md:block max-w-md">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"></i>
+                <input type="text" placeholder="Global Search..." class="glass-input w-full pl-11 pr-4 py-2.5 rounded-xl text-sm font-medium outline-none">
+            </div>
+
+            <div class="flex items-center space-x-4 sm:space-x-6">
+                <!-- Designation "Card" Option - Glassmorphism Applied -->
+                <div class="relative">
+                    <button id="role-dropdown-trigger" class="glass-input flex items-center justify-between px-4 py-2 w-44 rounded-xl text-sm font-bold cursor-pointer outline-none transition-all group">
+                        <span id="current-role-display">Employee</span>
+                        <i data-lucide="chevron-down" class="ml-2 w-4 h-4 text-zinc-500 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors"></i>
+                    </button>
+                    <div id="role-dropdown-menu" class="absolute top-full right-0 mt-2 w-48 glass-card border border-white/10 dark:border-white/10 rounded-2xl py-2 shadow-2xl opacity-0 scale-95 pointer-events-none transition-all duration-200 z-50 overflow-hidden">
+                        <div class="dropdown-item" data-value="Employee">Employee</div>
+                        <div class="dropdown-item" data-value="Founder / Admin">Founder / Admin</div>
+                        <div class="dropdown-item" data-value="Contractor">Contractor</div>
+                        <div class="dropdown-item" data-value="Client">Client</div>
+                    </div>
+                </div>
+
+                <!-- Theme Toggle Switch -->
+                <div id="dark-mode-toggle" class="theme-switch-container">
+                    <i data-lucide="sun" class="switch-icon switch-sun"></i>
+                    <div class="switch-knob"></div>
+                    <i data-lucide="moon" class="switch-icon switch-moon"></i>
+                </div>
+
+                <div class="flex items-center space-x-4 border-l border-zinc-300 dark:border-white/10 pl-4 sm:pl-6">
+                    <div class="text-right hidden sm:block">
+                        <p id="top-bar-name" class="text-sm font-extrabold tracking-tight whitespace-nowrap text-zinc-900 dark:text-white">User Profile</p>
+                        <p id="top-bar-role" class="text-[10px] font-bold uppercase tracking-wider text-brown-500">Employee</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-zinc-300 dark:border-white/20 shadow-sm transition-transform hover:scale-105 active:scale-95 flex-shrink-0 bg-zinc-300 dark:bg-zinc-800 flex items-center justify-center">
+                        <i data-lucide="user" class="w-5 h-5 text-zinc-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 pt-12">
+        <section class="flex flex-col md:flex-row items-stretch gap-12 mb-32">
+            <div class="w-full md:w-3/5 text-left flex flex-col justify-center">
+                <nav class="flex items-center space-x-2 text-xs uppercase tracking-widest text-zinc-500 dark:text-stone-400 mb-8 font-bold">
+                    <span class="opacity-80 font-black">Home</span>
+                    <span class="opacity-40 font-black">/</span>
+                    <span class="text-zinc-800 dark:text-stone-200 font-black">FAQ</span>
+                </nav>
+                <h1 class="faq-title text-7xl md:text-8xl mb-10">FAQ</h1>
+                <div class="min-h-[5rem]">
+                    <p class="subheading-text font-semibold text-lg md:text-xl leading-relaxed inline-block">
+                        <span id="typewriter" class="typewriter-cursor"></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-full md:w-2/5 flex">
+                <div class="glass-card w-full p-10 flex flex-col items-start justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-6 font-['Outfit'] text-zinc-900 dark:text-stone-100">Still have a questions?</h2>
+                        <p class="text-sm leading-relaxed mb-8 text-zinc-600 dark:text-stone-400 opacity-90">
+                            Our team is dedicated to providing you with the best support possible. Reach out to our experts today for a personalized consultation regarding our services.
+                        </p>
+                    </div>
+                    <div class="block">
+                        <a href="#" class="btn-contact">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-24">
+            <div id="card-about" class="glass-card p-12 text-center flex flex-col items-center active-card" onclick="switchCategory('about')">
+                <div class="w-16 h-16 rounded-2xl bg-stone-500/10 flex items-center justify-center mb-8 border border-stone-400/20">
+                    <i data-lucide="info" class="w-7 h-7 text-zinc-900 dark:text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">About PaintBharat</h3>
+                <p class="text-sm uppercase tracking-widest font-black opacity-60">Learn More</p>
+            </div>
+            <div id="card-privacy" class="glass-card p-12 text-center flex flex-col items-center" onclick="switchCategory('privacy')">
+                <div class="w-16 h-16 rounded-2xl bg-stone-500/10 flex items-center justify-center mb-8 border border-stone-400/20">
+                    <i data-lucide="shield" class="w-7 h-7 text-zinc-900 dark:text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Privacy & Policy</h3>
+                <p class="text-sm uppercase tracking-widest font-black opacity-60">View Terms</p>
+            </div>
+            <div id="card-support" class="glass-card p-12 text-center flex flex-col items-center" onclick="switchCategory('support')">
+                <div class="w-16 h-16 rounded-2xl bg-stone-500/10 flex items-center justify-center mb-8 border border-stone-400/20">
+                    <i data-lucide="help-circle" class="w-7 h-7 text-zinc-900 dark:text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Support & More</h3>
+                <p class="text-sm uppercase tracking-widest font-black opacity-60">Get Help</p>
+            </div>
+        </div>
+
+        <div id="faq-container" class="max-w-4xl mx-auto mb-20 space-y-5"></div>
+    </main>
+
+    <script>
+        const faqData = {
+            about: [
+                { q: "Do You Offer Revisions On Designs?", a: "Yes, I provide revisions to ensure the final design aligns perfectly with your expectations." },
+                { q: "How Does PaintBharat Differ From Others?", a: "We focus on human-centric design that feels natural and integrates deeply into your vision." },
+                { q: "What Is Your Mission?", a: "Our mission is to empower creativity using advanced tools and expert craftsmanship." }
+            ],
+            privacy: [
+                { q: "How Is My Data Secured?", a: "We use AES-256 encryption and decentralized storage to ensure your project data remains private and secure." },
+                { q: "Do You Sell Data To Third Parties?", a: "Absolutely not. Your data belongs to you, and we never share it with external advertisers." },
+                { q: "Can I Delete My Account Data?", a: "Yes, you can request a complete data wipe at any time through your dashboard settings." }
+            ],
+            support: [
+                { q: "What Is The Cost Of Your Services?", a: "Pricing depends on the scope of work. We offer both project-based rates and flexible monthly plans." },
+                { q: "How Can I Contact Support?", a: "You can reach us 24/7 via live chat or by emailing support@paintbharat.com." },
+                { q: "What Is The Average Response Time?", a: "Our average response time for premium users is under 30 minutes during business hours." }
+            ]
+        };
+
+        const themeToggle = document.getElementById('dark-mode-toggle');
+        const roleTrigger = document.getElementById('role-dropdown-trigger');
+        const roleMenu = document.getElementById('role-dropdown-menu');
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        roleTrigger.addEventListener('click', () => {
+            roleMenu.classList.toggle('opacity-0');
+            roleMenu.classList.toggle('scale-95');
+            roleMenu.classList.toggle('pointer-events-none');
+        });
+
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.getElementById('current-role-display').textContent = item.dataset.value;
+                document.getElementById('top-bar-role').textContent = item.dataset.value;
+                roleMenu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            });
+        });
+
+        function toggleFaq(trigger) {
+            const item = trigger.closest('.faq-item');
+            const isActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(faq => faq.classList.remove('active'));
+            if (!isActive) item.classList.add('active');
+        }
+
+        function switchCategory(category) {
+            document.querySelectorAll('.glass-card').forEach(card => card.classList.remove('active-card'));
+            const activeCard = document.getElementById(`card-${category}`);
+            if (activeCard) activeCard.classList.add('active-card');
+
+            const faqContainer = document.getElementById('faq-container');
+            faqContainer.innerHTML = faqData[category].map((item, index) => `
+                <div class="faq-item ${index === 0 ? 'active' : ''}">
+                    <div class="question-wrapper" onclick="toggleFaq(this)">
+                        <div class="icon-circle">?</div>
+                        <div class="question-pill">${item.q}</div>
+                    </div>
+                    <div class="answer-wrapper">
+                        <div class="answer-pill">${item.a}</div>
+                        <div class="chat-icon-box">
+                            <i data-lucide="message-square" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        const phrases = [
+            "We help solve client problems with high quality design solutions.",
+            "Unlock the full potential of your business with Power AI.",
+            "Transforming customer support through intelligent automation.",
+            "Explore our knowledge base for instant clarity and support."
+        ];
+        let currentPhraseIndex = 0, currentCharIndex = 0, isDeleting = false;
+
+        function type() {
+            const typewriterElement = document.getElementById('typewriter');
+            if (!typewriterElement) return;
+            const currentPhrase = phrases[currentPhraseIndex];
+            if (isDeleting) currentCharIndex--; else currentCharIndex++;
+            typewriterElement.textContent = currentPhrase.substring(0, currentCharIndex);
+            if (!isDeleting && currentCharIndex === currentPhrase.length) {
+                isDeleting = true;
+                setTimeout(type, 2500); 
+            } else if (isDeleting && currentCharIndex === 0) {
+                isDeleting = false;
+                currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+                setTimeout(type, 500); 
+            } else {
+                setTimeout(type, isDeleting ? 30 : 60);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            type();
+            switchCategory('about'); 
+        });
+    </script>
+</body>
+</html>
