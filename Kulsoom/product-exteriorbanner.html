@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Real Estate Banner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .luxury-shadow {
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3);
+        }
+
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Dimension containers */
+        .banner-container {
+            width: 375px;
+            height: 520px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (min-width: 1024px) {
+            .banner-container {
+                width: 1024px;
+                height: 460px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .banner-container {
+                width: 1280px;
+                height: 520px;
+            }
+        }
+
+        /* Ultra-smooth fade overlay - No hard partitions */
+        .fade-overlay {
+            background: linear-gradient(
+                90deg, 
+                #1a1a1a 0%, 
+                #1a1a1a 10%, 
+                rgba(26, 26, 26, 0.85) 30%, 
+                rgba(26, 26, 26, 0.4) 60%, 
+                rgba(26, 26, 26, 0) 100%
+            );
+        }
+
+        /* Continuous Zoom Out Animation */
+        @keyframes zoomOut {
+            from { transform: scale(1.15); }
+            to { transform: scale(1); }
+        }
+
+        .animate-zoom-out {
+            animation: zoomOut 20s cubic-bezier(0.1, 0, 0.2, 1) forwards;
+        }
+
+        /* Text Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-up {
+            opacity: 0;
+            animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .delay-1 { animation-delay: 0.3s; }
+        .delay-2 { animation-delay: 0.5s; }
+        .delay-3 { animation-delay: 0.7s; }
+
+        .loader {
+            border: 2px solid rgba(0,0,0,0.1);
+            border-top: 2px solid #1a1a1a;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom Hover Icon Animation */
+        .btn-hover-arrow {
+            transition: transform 0.3s ease;
+        }
+        button:hover .btn-hover-arrow {
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="relative banner-container rounded-[32px] overflow-hidden luxury-shadow bg-[#1a1a1a]">
+        <!-- Background Image Container -->
+        <div id="bg-image" class="absolute inset-0 bg-cover bg-right opacity-0 transition-opacity duration-1000"></div>
+        
+        <!-- The Fading Effect (Adjusted for deeper integration) -->
+        <div class="absolute inset-0 fade-overlay z-10"></div>
+
+        <!-- Content Area -->
+        <div class="absolute inset-0 flex flex-col justify-center px-10 md:px-20 lg:px-28 max-w-4xl text-white z-20">
+            <h1 id="title" class="serif-font text-4xl md:text-5xl lg:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
+                Exterior Painting <br class="hidden md:block"> Perfection
+            </h1>
+            <p id="subtext" class="text-lg md:text-xl font-light text-neutral-300/90 mb-10 max-w-md leading-relaxed">
+                Protecting beauty from the outside in with ultra-premium architectural finishes.
+            </p>
+            <div id="cta">
+                <!-- Updated Button with Video Animation logic -->
+                <button class="group flex items-center gap-3 px-10 py-4 bg-black/40 border border-white/20 text-white font-semibold rounded-full hover:bg-white hover:text-black transition-all duration-300 active:scale-95 uppercase tracking-widest text-[10px] shadow-lg">
+                    <span>Explore Solutions</span>
+                    <svg class="btn-hover-arrow w-4 h-4 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-[#f8f9fa] transition-opacity duration-700 z-50">
+            <div class="loader mb-4"></div>
+            <p class="text-neutral-500 text-[10px] tracking-[0.2em] uppercase font-medium">Curating Architectural Visuals</p>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = ""; 
+        
+        async function generateHeroImage() {
+            const prompt = "ultra-luxury modern home exterior, architectural photography, golden hour sunset lighting, soft shadows, neutral facade colors, minimal garden, cinematic wide shot, large negative space on the left side, blurred background depth, magazine quality, 8k resolution, no people";
+            
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const bgContainer = document.getElementById('bg-image');
+            const title = document.getElementById('title');
+            const subtext = document.getElementById('subtext');
+            const cta = document.getElementById('cta');
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        instances: [{ prompt: prompt }],
+                        parameters: { sampleCount: 1 }
+                    })
+                });
+
+                if (!response.ok) throw new Error('Generation failed');
+
+                const data = await response.json();
+                const base64Image = data.predictions[0].bytesBase64Encoded;
+                const imageUrl = `data:image/png;base64,${base64Image}`;
+                
+                bgContainer.style.backgroundImage = `url('${imageUrl}')`;
+                bgContainer.classList.remove('opacity-0');
+                bgContainer.classList.add('opacity-100', 'animate-zoom-out');
+                
+                loadingOverlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                    title.classList.add('animate-up', 'delay-1');
+                    subtext.classList.add('animate-up', 'delay-2');
+                    cta.classList.add('animate-up', 'delay-3');
+                }, 700);
+
+            } catch (error) {
+                console.error("Image generation error:", error);
+                bgContainer.style.backgroundImage = "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=90&w=1920')";
+                bgContainer.classList.remove('opacity-0');
+                bgContainer.classList.add('opacity-100', 'animate-zoom-out');
+                loadingOverlay.style.display = 'none';
+                
+                title.classList.add('animate-up', 'delay-1');
+                subtext.classList.add('animate-up', 'delay-2');
+                cta.classList.add('animate-up', 'delay-3');
+            }
+        }
+
+        window.onload = generateHeroImage;
+    </script>
+</body>
+</html>

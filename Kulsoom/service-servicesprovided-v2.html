@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Stats Section</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* 3D Perspective Container */
+        .perspective-1500 {
+            perspective: 1500px;
+        }
+
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+
+        /* Anti-gravity Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateZ(0deg); }
+            50% { transform: translateY(-12px) rotateZ(1deg); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Shimmer Scanline Effect */
+        @keyframes scanline {
+            0% { transform: translateX(-100%) skewX(-25deg); }
+            100% { transform: translateX(400%) skewX(-25deg); }
+        }
+
+        .shimmer {
+            position: absolute;
+            inset: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.02), transparent);
+            animation: scanline 6s cubic-bezier(0.87, 0, 0.13, 1) infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Spotlight tracking - subtle pink glow on white */
+        .spotlight {
+            background: radial-gradient(400px circle at var(--x) var(--y), rgba(255, 51, 102, 0.06), transparent 70%);
+        }
+
+        /* Entrance animation helpers */
+        .card-hidden {
+            opacity: 0;
+            transform: translateY(60px) rotateX(20deg);
+        }
+
+        .card-visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
+</head>
+<body class="selection:bg-pink-500 selection:text-white">
+
+    <div class="relative z-10 flex items-center justify-center py-16 px-6">
+        <div class="max-w-6xl w-full">
+            
+            <!-- Header Section -->
+            <header class="text-center mb-16" id="header">
+                <div class="flex flex-col items-center opacity-0 translate-y-8 transition-all duration-1000">
+                    <div class="h-1 w-16 bg-gradient-to-r from-pink-500 to-orange-400 mb-6"></div>
+                    <h1 class="text-[60px] font-black text-gray-950 tracking-tighter leading-none mb-4">
+                        THE IMPACT
+                    </h1>
+                    <p class="text-pink-500 font-bold tracking-[0.6em] uppercase text-[9px] animate-pulse">
+                        Scaling beyond the expected
+                    </p>
+                </div>
+            </header>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Stat Card 1 -->
+                <div class="stat-card-container perspective-1500 h-[300px] card-hidden" data-value="3.5" data-suffix=" L+">
+                    <div class="stat-card h-full preserve-3d transition-all duration-300 ease-out bg-white border border-gray-100 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] relative overflow-hidden group">
+                        <div class="shimmer"></div>
+                        <div class="spotlight absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                        <div class="flex flex-col items-center justify-center text-center h-full relative z-20 px-6" style="transform: translateZ(60px)">
+                            <div class="absolute -inset-10 bg-pink-500/5 blur-3xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-1000"></div>
+                            <h3 class="text-5xl font-black italic tracking-tighter text-gray-950 mb-3">
+                                <span class="counter">0</span><span class="suffix">L+</span>
+                            </h3>
+                            <p class="text-[10px] font-black text-pink-500 uppercase tracking-[0.4em] leading-tight group-hover:text-gray-900 transition-colors">Consumer homes painted</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="stat-card-container perspective-1500 h-[300px] card-hidden" data-value="95" data-suffix="%+">
+                    <div class="stat-card h-full preserve-3d transition-all duration-300 ease-out bg-white border border-gray-100 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] relative overflow-hidden group">
+                        <div class="shimmer" style="animation-delay: 1s;"></div>
+                        <div class="spotlight absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                        <div class="flex flex-col items-center justify-center text-center h-full relative z-20 px-6" style="transform: translateZ(60px)">
+                            <div class="absolute -inset-10 bg-pink-500/5 blur-3xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-1000"></div>
+                            <h3 class="text-5xl font-black italic tracking-tighter text-gray-950 mb-3">
+                                <span class="counter">0</span><span class="suffix">%+</span>
+                            </h3>
+                            <p class="text-[10px] font-black text-pink-500 uppercase tracking-[0.4em] leading-tight group-hover:text-gray-900 transition-colors">On Time Site Completion</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="stat-card-container perspective-1500 h-[300px] card-hidden" data-value="650" data-suffix="+">
+                    <div class="stat-card h-full preserve-3d transition-all duration-300 ease-out bg-white border border-gray-100 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] relative overflow-hidden group">
+                        <div class="shimmer" style="animation-delay: 2s;"></div>
+                        <div class="spotlight absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                        <div class="flex flex-col items-center justify-center text-center h-full relative z-20 px-6" style="transform: translateZ(60px)">
+                            <div class="absolute -inset-10 bg-pink-500/5 blur-3xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-1000"></div>
+                            <h3 class="text-5xl font-black italic tracking-tighter text-gray-950 mb-3">
+                                <span class="counter">0</span><span class="suffix">+</span>
+                            </h3>
+                            <p class="text-[10px] font-black text-pink-500 uppercase tracking-[0.4em] leading-tight group-hover:text-gray-900 transition-colors">Towns across India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Card 4 -->
+                <div class="stat-card-container perspective-1500 h-[300px] card-hidden" data-value="10" data-suffix=" L">
+                    <div class="stat-card h-full preserve-3d transition-all duration-300 ease-out bg-white border border-gray-100 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] relative overflow-hidden group">
+                        <div class="shimmer" style="animation-delay: 3s;"></div>
+                        <div class="spotlight absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                        <div class="flex flex-col items-center justify-center text-center h-full relative z-20 px-6" style="transform: translateZ(60px)">
+                            <div class="absolute -inset-10 bg-pink-500/5 blur-3xl rounded-full scale-0 group-hover:scale-100 transition-transform duration-1000"></div>
+                            <h3 class="text-5xl font-black italic tracking-tighter text-gray-950 mb-3">
+                                <span class="counter">0</span><span class="suffix">L</span>
+                            </h3>
+                            <p class="text-[10px] font-black text-pink-500 uppercase tracking-[0.4em] leading-tight group-hover:text-gray-900 transition-colors">Satisfied customers</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action Section -->
+            <div class="mt-20 flex flex-col items-center opacity-0 translate-y-8 transition-all duration-1000" id="footer-action">
+                <button class="group relative px-10 py-4 bg-gray-950 text-white rounded-full font-bold text-xs tracking-[0.3em] uppercase overflow-hidden shadow-lg transition-all hover:shadow-pink-200">
+                    <span class="relative z-10">Join the movement</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-pink-500 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.id === 'header' || entry.target.id === 'footer-action') {
+                        entry.target.querySelector('div')?.classList.remove('opacity-0', 'translate-y-8');
+                        entry.target.classList.remove('opacity-0', 'translate-y-8');
+                    } else {
+                        entry.target.classList.remove('card-hidden');
+                        entry.target.classList.add('card-visible');
+                        startCounter(entry.target);
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        observer.observe(document.querySelector('#header'));
+        observer.observe(document.querySelector('#footer-action'));
+
+        const cardContainers = document.querySelectorAll('.stat-card-container');
+        cardContainers.forEach((container) => {
+            observer.observe(container);
+            const card = container.querySelector('.stat-card');
+            
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = -(x - centerX) / 10;
+
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+                card.querySelector('.spotlight').style.opacity = '1';
+            });
+
+            container.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+                card.querySelector('.spotlight').style.opacity = '0';
+            });
+
+            setTimeout(() => { card.classList.add('animate-float'); }, 2000);
+        });
+
+        function startCounter(container) {
+            const counterEl = container.querySelector('.counter');
+            const targetValue = parseFloat(container.dataset.value);
+            const duration = 2500;
+            const start = performance.now();
+            const decimal = container.dataset.value.includes('.');
+
+            function animateCount(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const ease = 1 - Math.pow(1 - progress, 4);
+                const current = ease * targetValue;
+                counterEl.innerText = decimal ? current.toFixed(1) : Math.floor(current);
+                if (progress < 1) requestAnimationFrame(animateCount);
+            }
+            requestAnimationFrame(animateCount);
+        }
+    </script>
+</body>
+</html>

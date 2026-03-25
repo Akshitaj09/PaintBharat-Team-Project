@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Painting & Home Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(rgba(10, 10, 15, 0.7), rgba(10, 10, 15, 0.7)),
+                        linear-gradient(135deg, #fcdbd2 0%, #f4def2 30%, #7e22ce 70%, #1e3a8a 100%);
+            background-attachment: fixed;
+            color: #f5f5f5;
+        }
+        .font-script {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Card Styles:
+           - Glassmorphism effect replacing solid gradients
+        */
+        .faq-card {
+            background: rgba(20, 20, 25, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .faq-card:hover {
+            background: rgba(35, 35, 40, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-circle {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Character Animations */
+        @keyframes bounce-drop {
+            0%, 100% { transform: translateY(0px) scaleX(1) scaleY(1); }
+            50% { transform: translateY(-30px) scaleX(0.92) scaleY(1.08); }
+        }
+        @keyframes heart-float {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
+        }
+        .animate-drop {
+            animation: bounce-drop 4s ease-in-out infinite;
+        }
+        .heart-particle {
+            position: absolute;
+            color: #cf8992;
+            animation: heart-float 2.5s ease-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden text-gray-100">
+
+    <!-- Main Container -->
+    <div class="w-full px-6 md:px-12 lg:px-24 xl:px-32 py-24 relative z-10">
+        
+        <div class="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
+            
+            <!-- Left Side: Sticky Heading & Large Character -->
+            <div class="w-full lg:w-2/5 lg:sticky lg:top-24 flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div class="mb-2">
+                    <h4 class="text-[#cf8992] tracking-widest uppercase text-sm font-semibold mb-3">Our Services</h4>
+                    <h1 class="font-script text-6xl md:text-8xl font-semibold mb-6 text-white">
+                        FAQ
+                    </h1>
+                </div>
+                
+                <p class="text-gray-300 leading-relaxed max-sm:px-4 mb-12 text-lg">
+                    Find answers to common questions about our painting, wallpaper, and waterproofing services. Hover over a card to reveal the details.
+                </p>
+
+                <!-- Enlarged Cute Drop Character Section -->
+                <div class="relative mt-4 group">
+                    <!-- Larger Floating Hearts -->
+                    <div class="heart-particle left-10 top-0 text-3xl" style="animation-delay: 0s">♥</div>
+                    <div class="heart-particle right-4 top-10 text-2xl" style="animation-delay: 0.8s">♥</div>
+                    <div class="heart-particle left-20 top-20 text-4xl" style="animation-delay: 1.6s">♥</div>
+
+                    <!-- Perfect as a Paint or Water Drop! -->
+                    <div class="animate-drop">
+                        <svg width="280" height="320" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="dropGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#fcdbd2;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#f4def2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M80 20C80 20 30 90 30 130C30 157.614 52.3858 180 80 180C107.614 180 130 157.614 130 130C130 90 80 20 80 20Z" fill="url(#dropGradient)" />
+                            <path d="M80 170C102.091 170 120 152.091 120 130C120 100 80 45 80 45V170Z" fill="white" fill-opacity="0.3" />
+
+                            <!-- Eyes -->
+                            <circle cx="65" cy="135" r="5" fill="#262626" />
+                            <circle cx="95" cy="135" r="5" fill="#262626" />
+                            <circle cx="66.5" cy="133.5" r="2" fill="white" />
+                            <circle cx="96.5" cy="133.5" r="2" fill="white" />
+                            
+                            <!-- Blush -->
+                            <circle cx="50" cy="145" r="7" fill="#fcdbd2" opacity="0.9" />
+                            <circle cx="110" cy="145" r="7" fill="#fcdbd2" opacity="0.9" />
+                            
+                            <!-- Smile -->
+                            <path d="M72 152C75 156 85 156 88 152" stroke="#262626" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+
+                    <div class="mt-8">
+                        <h3 class="font-script text-3xl text-white">Ready for a refresh?</h3>
+                        <button class="mt-6 px-10 py-3 bg-[#cf8992] text-white rounded-full font-medium shadow-xl shadow-[#cf8992]/20 hover:bg-[#b8767f] transition-all duration-300">
+                            Get a Free Quote
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: FAQ Cards -->
+            <div class="w-full lg:w-3/5 flex flex-col gap-10">
+                
+                <!-- Card 1: Painting -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl glass-circle">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-white text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            What painting services do you offer?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-48 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-300 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-white/10 pt-6 mt-6 max-w-2xl">
+                                We provide comprehensive interior and exterior painting services for both residential and commercial properties. Our expert painters use premium, long-lasting paints to ensure a flawless and durable finish.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Wallpaper -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl glass-circle">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-white text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            Do you handle wallpaper installation?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-48 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-300 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-white/10 pt-6 mt-6 max-w-2xl">
+                                Yes! We expertly install all types of wallpaper, from standard vinyl and fabric to delicate custom murals. Our team guarantees perfect seam alignment, smooth edges, and proper wall preparation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Waterproofing -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl glass-circle">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-white text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            How effective is your waterproofing?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-48 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-300 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-white/10 pt-6 mt-6 max-w-2xl">
+                                Extremely effective. We use industry-leading, advanced membrane and sealant solutions to permanently block leaks, treat dampness, and protect your walls and foundation from severe moisture damage.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Prep/General -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl glass-circle">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-white text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            Do I need to move my furniture?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-48 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-300 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-white/10 pt-6 mt-6 max-w-2xl">
+                                Leave the heavy lifting to us! While we ask you to move small or fragile items, our team will carefully move heavier furniture to the center of the room and cover everything with protective drop cloths.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

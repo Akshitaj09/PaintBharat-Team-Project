@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Painting & Waterproofing Testimonials</title>
+    <!-- Tailwind CSS for rapid modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display for headings, Poppins for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff; /* Pure White Background */
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: #3d2b1f; /* Deep Espresso */
+        }
+
+        /* --- CUSTOM TEXT SELECTION --- */
+        ::selection {
+            background-color: #e6ccb2; 
+            color: #3d2b1f; 
+        }
+        ::-moz-selection {
+            background-color: #e6ccb2;
+            color: #3d2b1f;
+        }
+
+        /* --- REFINED HORIZONTAL SCROLLBAR --- */
+        .scroll-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: #f8f5f2;
+            border-radius: 10px;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #d4a373;
+            border-radius: 10px;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            scroll-padding-left: 3px;
+        }
+
+        /* Brand Colors & Transitions - Brown Tones */
+        .earth-bg { background-color: #f5ebe0; }
+        .earth-accent { color: #a68a64; } 
+        .earth-border { border-color: #ede0d4; }
+        .earth-button { 
+            background-color: #b08968; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            color: #ffffff; 
+        }
+        .earth-button:hover { 
+            background-color: #7f5539; 
+            transform: translateY(-2px); 
+            box-shadow: 0 10px 20px -5px rgba(127, 85, 57, 0.3); 
+        }
+
+        .nav-button {
+            background: white;
+            border: 1px solid #ede0d4;
+            color: #b08968;
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            background: #f5ebe0;
+            color: #7f5539;
+        }
+        
+        /* Glassmorphism for play button */
+        .glass-play {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Testimonial Card Hover Effects */
+        .testimonial-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            flex: 0 0 auto;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -15px rgba(127, 85, 57, 0.1), 0 15px 30px -20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Video Modal Styles */
+        #videoModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 18, 11, 0.95); 
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .card-overlay {
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.6), transparent);
+        }
+    </style>
+</head>
+<body class="text-stone-800 antialiased">
+
+    <!-- Testimonials Section -->
+    <section class="py-12 md:py-20 max-w-[100vw] overflow-hidden relative">
+        
+        <!-- Header -->
+        <div class="px-6 max-w-7xl mx-auto text-center mb-8 md:mb-12">
+            <span class="uppercase tracking-[0.4em] text-[10px] font-extrabold earth-accent mb-2 block">Our Craftsmanship</span>
+            <h2 class="text-4xl md:text-6xl font-bold mb-2 leading-tight">Homes Transformed</h2>
+            <div class="w-12 h-1 earth-bg mx-auto rounded-full mb-4"></div>
+            <p class="text-stone-500 max-w-xl mx-auto text-sm md:text-base font-light">
+                See the difference through the lens of our homeowners. Quality that speaks for itself.
+            </p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="hidden md:flex absolute top-1/2 left-0 right-0 justify-between px-8 z-10 -translate-y-1/2 pointer-events-none">
+            <button onclick="scrollTestimonials(-1)" class="nav-button p-4 rounded-full shadow-lg pointer-events-auto" aria-label="Previous">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </button>
+            <button onclick="scrollTestimonials(1)" class="nav-button p-4 rounded-full shadow-lg pointer-events-auto" aria-label="Next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Scrollable Cards Container -->
+        <div class="relative">
+            <div id="scrollContainer" class="scroll-container flex gap-6 md:gap-8 overflow-x-auto pb-12 px-6 snap-x snap-mandatory no-scrollbar scroll-smooth">
+                
+                <!-- Spacer for scroll start -->
+                <div class="flex-none w-[1px]"></div>
+
+                <!-- Card 1: Interior -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1562663474-6cbb3fee4c77?auto=format&fit=crop&q=80&w=800" alt="Interior Painting" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl scale-95 group-hover:scale-110 transition-transform duration-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Interior Perfection</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "They transformed the entire mood of my home with surgical precision. Every line is sharp, and the finish is velvet-smooth."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">Linda Sterling</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">Homeowner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Exterior -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1518605336397-90db35f53b43?auto=format&fit=crop&q=80&w=800" alt="Exterior Painting" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Exterior Revive</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "Amazing curb appeal. Our house looks brand new and perfectly finished. The attention to detail on the trim was beyond expectations."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">David Henderson</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">Project Manager</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Structural/Waterproofing -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1621905252507-b354bc24eeaf?auto=format&fit=crop&q=80&w=800" alt="Waterproofing" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Structural Integrity</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "Solved our leaks finally. Incredibly thorough with every corner of the house. I can finally sleep through a storm without worry."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">Rachel Adams</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">Homeowner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Kitchen Cabinets -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800" alt="Kitchen Cabinets" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Kitchen Revitalization</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "Our kitchen cabinets look factory-new. The spray finish is absolutely flawless—no brush marks, just pure quality."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">Elena Rodriguez</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">Homeowner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: Commercial -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800" alt="Commercial Space" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Commercial Grade</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "They handled our office floor with incredible speed and professionalism. Minimal downtime, maximum visual impact."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">Marcus Thorne</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">CEO, TechCore</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: Deck Staining -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1591123120675-6f7f1aae0e5b?auto=format&fit=crop&q=80&w=800" alt="Deck Staining" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Outdoor Living</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "The deck restoration was phenomenal. It went from gray and splintered to a rich, warm mahogany that invites us outside."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1544717297-fa154da09f5b?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">Sarah Jenkins</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">Homeowner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7: Bathroom Waterproofing -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80&w=800" alt="Bathroom" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Moisture Guard</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "No more mold or dampness behind the tiles. Their waterproofing system is robust and gave us peace of mind for the long haul."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">Claire Thompson</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">Homeowner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 8: Roof Coating -->
+                <div class="testimonial-card w-[80vw] md:w-[400px] rounded-[2rem] border earth-border overflow-hidden snap-start">
+                    <div class="relative group cursor-pointer" onclick="openVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+                        <img src="https://images.unsplash.com/photo-1632759145351-1d7552a996c6?auto=format&fit=crop&q=80&w=800" alt="Roof Coating" class="w-full h-64 object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700">
+                        <div class="absolute inset-0 card-overlay"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 glass-play rounded-full flex items-center justify-center text-white shadow-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ffffff" class="w-6 h-6 ml-1" viewBox="0 0 16 16">
+                                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 block mb-2 italic">Energy Shield</span>
+                        <p class="text-stone-700 mb-6 leading-relaxed text-sm md:text-base font-light">
+                            "The reflective roof coating lowered our internal temperatures by nearly 10 degrees. It looks great and saves us money."
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-full mr-3 object-cover border-2 border-stone-100">
+                            <div>
+                                <h4 class="font-bold text-stone-900 text-xs">James Wilson</h4>
+                                <p class="text-[9px] text-stone-400 uppercase font-bold tracking-widest">Property Owner</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spacer for scroll end -->
+                <div class="flex-none w-6"></div>
+
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="mt-4 text-center px-6">
+            <button class="earth-button px-10 py-4 rounded-full font-bold text-[10px] tracking-[0.4em] uppercase shadow-lg">
+                Reserve Your Date
+            </button>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div id="videoModal">
+        <div class="relative w-[95vw] max-w-6xl px-4">
+            <!-- Close Button -->
+            <button onclick="closeVideo()" class="absolute -top-16 right-4 text-white hover:text-stone-300 text-6xl font-extralight transition-colors">&times;</button>
+            
+            <div class="aspect-video bg-black rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10">
+                <iframe id="videoPlayer" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('videoModal');
+        const player = document.getElementById('videoPlayer');
+        const scrollContainer = document.getElementById('scrollContainer');
+
+        /**
+         * Navigation scroll logic. 
+         * Scrolls the container by one card width plus the gap.
+         */
+        function scrollTestimonials(direction) {
+            const cardWidth = 432; // 400px width + 32px gap
+            scrollContainer.scrollBy({
+                left: direction * cardWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        function openVideo(url) {
+            player.src = url;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeVideo() {
+            player.src = '';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; 
+        }
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeVideo();
+            }
+        });
+    </script>
+
+</body>
+</html>

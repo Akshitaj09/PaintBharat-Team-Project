@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura | Your Favorites</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            pink: '#E8B4B8',
+                            pinkHover: '#D69A9E',
+                            navy: '#1B263B',
+                            navyHover: '#2E4057',
+                            dark: '#0D1321',
+                            light: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-fast': 'pulseFast 0.3s ease-in-out',
+                        'slide-in-right': 'slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-out': 'fadeOut 0.3s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseFast: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.2)' },
+                        },
+                        slideInRight: {
+                            '0%': { opacity: '0', transform: 'translateX(30px)' },
+                            '100%': { opacity: '1', transform: 'translateX(0)' },
+                        },
+                        fadeOut: {
+                            '0%': { opacity: '1', transform: 'scale(1)' },
+                            '100%': { opacity: '0', transform: 'scale(0.95)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Micro-interactions */
+        body {
+            color: #1A1A1A;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .glass-dark {
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAFAFA;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E5E5E5;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #E8B4B8;
+        }
+
+        /* Card Hover Effects */
+        .product-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(232, 180, 184, 0.15), 0 1px 3px rgba(0,0,0,0.02);
+            border-color: rgba(232, 180, 184, 0.4);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Image Zoom on Hover */
+        .img-container img {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .product-card:hover .img-container img {
+            transform: scale(1.05);
+        }
+
+        /* Add to Cart Slide Animation */
+        .action-btn {
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .product-card:hover .action-btn {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Ripple Effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        .ripple::after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10, 10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+        .ripple:active::after {
+            transform: scale(0, 0);
+            opacity: .3;
+            transition: 0s;
+        }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: #eee;
+            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
+        @keyframes shine {
+            to { background-position-x: -200%; }
+        }
+
+        /* Hide Scrollbar for clean UI in certain areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans relative bg-gradient-to-br from-[#FAFAFA] via-[#F5F7FA] to-[#EAEFF5]">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-gray-100 transition-all duration-300" id="navbar">
+        <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-4 cursor-pointer">
+                    <i data-lucide="palette" class="text-brand-pink w-8 h-8"></i>
+                    <span class="font-serif text-2xl tracking-wider text-brand-dark font-semibold">AURA</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="text-gray-500 hover:text-brand-pink transition-colors text-sm uppercase tracking-widest">Collections</a>
+                    <a href="#" class="text-gray-500 hover:text-brand-pink transition-colors text-sm uppercase tracking-widest">Inspiration</a>
+                    <a href="#" class="text-gray-500 hover:text-brand-pink transition-colors text-sm uppercase tracking-widest">About</a>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <div class="relative cursor-pointer group">
+                        <i data-lucide="search" class="w-5 h-5 text-gray-600 group-hover:text-brand-pink transition-colors"></i>
+                    </div>
+                    <div class="relative cursor-pointer group">
+                        <i data-lucide="heart" class="w-5 h-5 text-brand-pink fill-brand-pink transition-colors"></i>
+                        <span id="nav-wishlist-count" class="absolute -top-2 -right-2 bg-brand-dark text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">0</span>
+                    </div>
+                    <div class="relative cursor-pointer group">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-gray-600 group-hover:text-brand-pink transition-colors"></i>
+                        <span id="nav-cart-count" class="absolute -top-2 -right-2 bg-brand-pink text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-32 pb-20 px-4 sm:px-8 lg:px-12 xl:px-16 w-full">
+        
+        <!-- Page Header -->
+        <header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 opacity-0 animate-fade-in-up" style="animation-delay: 0.1s;">
+            <div>
+                <p class="text-brand-navy text-sm font-medium tracking-widest uppercase mb-2">Curated Collection</p>
+                <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl text-brand-dark font-medium">Your Favorites</h1>
+                <p class="text-gray-500 mt-4 max-w-lg text-sm leading-relaxed">A refined selection of your most loved shades, waiting to bring life and luxury to your spaces.</p>
+            </div>
+            
+            <div class="flex items-center gap-4 flex-wrap">
+                <button onclick="shareWishlist()" class="ripple flex items-center gap-2 px-6 py-2.5 rounded-full border border-gray-200 text-gray-600 hover:border-brand-pink hover:text-brand-pink transition-all duration-300 text-sm font-medium bg-white shadow-sm">
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                    Share
+                </button>
+                <button id="move-all-btn" onclick="moveAllToCart()" class="ripple flex items-center gap-2 px-6 py-2.5 rounded-full bg-brand-navy text-white hover:bg-brand-navyHover hover:shadow-lg hover:shadow-brand-navy/30 transition-all duration-300 text-sm font-medium">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+                    Move All to Cart
+                </button>
+            </div>
+        </header>
+
+        <!-- Controls (Sort Only) -->
+        <div class="flex justify-end items-center mb-8 pb-6 border-b border-brand-pink/20 gap-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.2s;">
+            <div class="relative flex items-center gap-3">
+                <span class="text-xs text-brand-navy font-semibold tracking-widest uppercase">Sort by:</span>
+                <div class="relative group">
+                    <select id="sort-select" class="appearance-none bg-white/60 backdrop-blur-md border border-gray-200 rounded-full py-2 pl-5 pr-12 text-sm font-medium text-gray-800 outline-none hover:border-brand-pink focus:border-brand-pink transition-all cursor-pointer shadow-sm">
+                        <option value="newest">Newest Added</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name">Name: A to Z</option>
+                    </select>
+                    <i data-lucide="chevron-down" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand-navy group-hover:text-brand-pink transition-colors"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-x-6 gap-y-10 relative min-h-[400px]">
+            <!-- Content injected by JS -->
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center opacity-0 transition-opacity duration-500">
+            <div class="w-48 h-48 mb-6 relative">
+                <div class="absolute inset-0 bg-brand-pink/10 rounded-full animate-pulse-fast"></div>
+                <i data-lucide="heart" class="w-24 h-24 text-gray-200 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 stroke-[1px]"></i>
+            </div>
+            <h2 class="font-serif text-3xl text-brand-dark mb-3">Your wishlist is empty</h2>
+            <p class="text-gray-500 max-w-md mb-8">Explore our luxurious collection of premium paints and discover the perfect shade for your sanctuary.</p>
+            <button class="ripple px-8 py-3 rounded-full bg-brand-dark text-white hover:bg-black hover:shadow-lg hover:shadow-black/20 transition-all duration-300 font-medium tracking-wide">
+                Explore Collections
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 py-12 mt-auto">
+        <div class="w-full px-4 sm:px-8 lg:px-12 xl:px-16 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <i data-lucide="palette" class="text-brand-pink w-6 h-6"></i>
+                <span class="font-serif text-xl tracking-wider text-brand-dark font-semibold">AURA</span>
+            </div>
+            <p class="text-gray-400 text-sm">© 2026 Aura Premium Paints. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Quick View Modal (Hidden by default) -->
+    <div id="quick-view-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm cursor-pointer" onclick="closeQuickView()"></div>
+        <div class="relative bg-white w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row transform scale-95 opacity-0 transition-all duration-300" id="modal-content">
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-gray-500 hover:text-brand-dark hover:bg-white transition-colors shadow-sm">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="w-full md:w-1/2 h-64 md:h-auto relative bg-gray-100" id="modal-image-container">
+                <!-- Image injected -->
+            </div>
+            
+            <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                <p class="text-brand-pink text-xs font-semibold tracking-widest uppercase mb-2" id="modal-category">Premium Matte</p>
+                <h2 class="font-serif text-3xl md:text-4xl text-brand-dark mb-2" id="modal-title">Product Name</h2>
+                
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="flex text-brand-pink" id="modal-stars"></div>
+                    <span class="text-sm text-gray-500" id="modal-reviews"></span>
+                </div>
+                
+                <p class="text-2xl font-medium text-brand-dark mb-6" id="modal-price">$0.00</p>
+                
+                <p class="text-gray-600 text-sm leading-relaxed mb-8">
+                    A deeply pigmented, luxurious finish that brings unparalleled depth to your walls. Crafted with eco-friendly materials and a flawless texture.
+                </p>
+                
+                <div class="flex items-center gap-4">
+                    <button class="ripple flex-grow bg-brand-navy text-white py-3.5 rounded-full hover:bg-brand-navyHover hover:shadow-lg hover:shadow-brand-navy/30 transition-all font-medium tracking-wide flex justify-center items-center gap-2" onclick="addToCartFromModal()">
+                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                        Add to Cart
+                    </button>
+                    <button class="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center text-brand-pink hover:border-brand-pink transition-colors bg-white shadow-sm" id="modal-fav-btn" onclick="toggleFavoriteFromModal()">
+                        <i data-lucide="heart" class="w-6 h-6 fill-current"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // --- Data ---
+        const initialProducts = [
+            { id: 1, name: 'Ivory White', price: 45.00, colorHex: '#F4F1E1', rating: 4.9, reviews: 124, image: 'https://images.unsplash.com/photo-1620300431448-6932a392eaf5?w=600&q=80', dateAdded: '2023-10-01', category: 'neutral' },
+            { id: 2, name: 'Sandstone Beige', price: 48.00, colorHex: '#D8C3A5', rating: 4.7, reviews: 89, image: 'https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=600&q=80', dateAdded: '2023-10-05', category: 'warm' },
+            { id: 3, name: 'Golden Oak', price: 55.00, colorHex: '#D4AF37', rating: 5.0, reviews: 210, image: 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?w=600&q=80', dateAdded: '2023-09-15', category: 'warm' },
+            { id: 4, name: 'Desert Clay', price: 52.00, colorHex: '#B97A57', rating: 4.6, reviews: 67, image: 'https://images.unsplash.com/photo-1565153907400-7e01a9ab25f3?w=600&q=80', dateAdded: '2023-10-10', category: 'warm' },
+            { id: 5, name: 'Midnight Black', price: 60.00, colorHex: '#2A2A2A', rating: 4.8, reviews: 156, image: 'https://images.unsplash.com/photo-1550684376-efcbd6e3f031?w=600&q=80', dateAdded: '2023-08-22', category: 'cool' },
+            { id: 6, name: 'Terracotta Glow', price: 50.00, colorHex: '#E2725B', rating: 4.9, reviews: 102, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=600&q=80', dateAdded: '2023-10-12', category: 'warm' },
+            { id: 7, name: 'Sage Whisper', price: 47.00, colorHex: '#9BAA95', rating: 4.5, reviews: 45, image: 'https://images.unsplash.com/photo-1566802192750-681b9e07fb6a?w=600&q=80', dateAdded: '2023-10-08', category: 'cool' },
+            { id: 8, name: 'Cashmere Gray', price: 49.00, colorHex: '#AFAFAF', rating: 4.8, reviews: 178, image: 'https://images.unsplash.com/photo-1604076913837-52ab5629fba9?w=600&q=80', dateAdded: '2023-09-01', category: 'neutral' },
+        ];
+
+        // --- State ---
+        let wishlist = [...initialProducts]; // Copy
+        let cart = [];
+        let currentSort = 'newest';
+        let currentModalProductId = null;
+
+        // --- DOM Elements ---
+        const grid = document.getElementById('product-grid');
+        const emptyState = document.getElementById('empty-state');
+        const moveAllBtn = document.getElementById('move-all-btn');
+        const wishlistCountEl = document.getElementById('nav-wishlist-count');
+        const cartCountEl = document.getElementById('nav-cart-count');
+        const sortSelect = document.getElementById('sort-select');
+        const toastContainer = document.getElementById('toast-container');
+        
+        // Modal Elements
+        const modal = document.getElementById('quick-view-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalPrice = document.getElementById('modal-price');
+        const modalImageContainer = document.getElementById('modal-image-container');
+        const modalStars = document.getElementById('modal-stars');
+        const modalReviews = document.getElementById('modal-reviews');
+
+        // --- Initialization ---
+        function init() {
+            updateHeaderCounts();
+            renderSkeletons();
+            
+            // Simulate network request
+            setTimeout(() => {
+                applyFiltersAndSort();
+            }, 800);
+
+            // Event Listeners
+            sortSelect.addEventListener('change', (e) => {
+                currentSort = e.target.value;
+                applyFiltersAndSort();
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if (window.scrollY > 20) {
+                    nav.classList.add('shadow-md');
+                } else {
+                    nav.classList.remove('shadow-md');
+                }
+            });
+        }
+
+        // --- Core Functions ---
+        
+        function applyFiltersAndSort() {
+            let processed = [...wishlist];
+
+            // Sort
+            processed.sort((a, b) => {
+                switch(currentSort) {
+                    case 'price-low': return a.price - b.price;
+                    case 'price-high': return b.price - a.price;
+                    case 'name': return a.name.localeCompare(b.name);
+                    case 'newest': 
+                    default:
+                        return new Date(b.dateAdded) - new Date(a.dateAdded);
+                }
+            });
+
+            renderProducts(processed);
+            updateUI();
+        }
+
+        function renderSkeletons() {
+            grid.innerHTML = '';
+            for(let i=0; i<8; i++) {
+                grid.innerHTML += `
+                    <div class="product-card rounded-2xl p-4 shadow-sm relative h-[420px] flex flex-col">
+                        <div class="w-full h-56 rounded-xl skeleton mb-4"></div>
+                        <div class="h-6 w-3/4 skeleton rounded mb-2"></div>
+                        <div class="h-4 w-1/4 skeleton rounded mb-4"></div>
+                        <div class="mt-auto flex justify-between">
+                            <div class="h-10 w-2/3 skeleton rounded-full"></div>
+                            <div class="h-10 w-10 skeleton rounded-full"></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderProducts(productsToRender) {
+            grid.innerHTML = '';
+            
+            if (productsToRender.length === 0 && wishlist.length > 0) {
+                 grid.innerHTML = `<div class="col-span-full py-20 text-center text-gray-500">No favorite paints found.</div>`;
+                 return;
+            }
+
+            productsToRender.forEach((product, index) => {
+                const delay = index * 0.05;
+                
+                // Generate Stars
+                const fullStars = Math.floor(product.rating);
+                const hasHalfStar = product.rating % 1 !== 0;
+                let starsHTML = '';
+                for(let i=0; i<fullStars; i++) starsHTML += `<i data-lucide="star" class="w-4 h-4 fill-current"></i>`;
+                if(hasHalfStar) starsHTML += `<i data-lucide="star-half" class="w-4 h-4 fill-current"></i>`;
+                
+                const card = document.createElement('div');
+                card.className = `product-card rounded-2xl p-4 shadow-sm relative group overflow-hidden opacity-0 animate-fade-in-up flex flex-col`;
+                card.style.animationDelay = `${delay}s`;
+                card.id = `product-${product.id}`;
+                
+                card.innerHTML = `
+                    <!-- Image Area -->
+                    <div class="relative w-full h-64 rounded-xl overflow-hidden mb-5 img-container bg-gray-50 cursor-pointer" onclick="openQuickView(${product.id})">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover" loading="lazy">
+                        
+                        <!-- Quick View Overlay -->
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                            <span class="bg-white/90 text-brand-dark px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                                <i data-lucide="eye" class="w-4 h-4"></i> Quick View
+                            </span>
+                        </div>
+
+                        <!-- Top right actions -->
+                        <div class="absolute top-3 right-3 flex flex-col gap-2 z-10" onclick="event.stopPropagation()">
+                            <button onclick="toggleFavorite(${product.id})" class="w-9 h-9 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-brand-pink hover:scale-110 transition-transform shadow-sm fav-btn">
+                                <i data-lucide="heart" class="w-5 h-5 fill-brand-pink transition-colors"></i>
+                            </button>
+                        </div>
+
+                        <!-- Color Swatch Badge -->
+                        <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur rounded-full px-3 py-1.5 flex items-center gap-2 shadow-sm">
+                            <div class="w-3.5 h-3.5 rounded-full border border-gray-200" style="background-color: ${product.colorHex}"></div>
+                            <span class="text-xs font-semibold text-gray-700">${product.colorHex}</span>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-serif text-lg font-medium text-brand-dark leading-tight group-hover:text-brand-pink transition-colors cursor-pointer" onclick="openQuickView(${product.id})">${product.name}</h3>
+                            <span class="font-medium text-brand-dark">$${product.price.toFixed(2)}</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-1.5 mb-4 mt-auto pt-2">
+                            <div class="flex text-brand-pink">
+                                ${starsHTML}
+                            </div>
+                            <span class="text-xs text-gray-400">(${product.reviews})</span>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="action-btn mt-auto">
+                            <button onclick="addToCart(${product.id})" class="ripple w-full py-2.5 rounded-full border border-brand-navy text-brand-navy font-medium text-sm hover:bg-brand-navy hover:text-white transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+
+            // Re-init icons for newly added elements
+            lucide.createIcons();
+        }
+
+        function updateUI() {
+            updateHeaderCounts();
+            
+            if (wishlist.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                moveAllBtn.classList.add('opacity-50', 'pointer-events-none');
+                
+                // Trigger reflow for fade in
+                void emptyState.offsetWidth;
+                emptyState.classList.add('opacity-100');
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('opacity-100');
+                moveAllBtn.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function updateHeaderCounts() {
+            wishlistCountEl.textContent = wishlist.length;
+            cartCountEl.textContent = cart.length;
+
+            // Small pop animation
+            wishlistCountEl.classList.add('animate-pulse-fast');
+            setTimeout(() => wishlistCountEl.classList.remove('animate-pulse-fast'), 300);
+        }
+
+        // --- Interactions ---
+
+        function toggleFavorite(id) {
+            const productIndex = wishlist.findIndex(p => p.id === id);
+            const card = document.getElementById(`product-${id}`);
+            const btn = card.querySelector('.fav-btn');
+
+            if (productIndex > -1) {
+                // Remove
+                const product = wishlist[productIndex];
+                
+                // Animate out
+                card.style.animation = 'none'; // reset
+                card.classList.add('animate-fade-out');
+                
+                setTimeout(() => {
+                    wishlist.splice(productIndex, 1);
+                    showToast(`Removed <strong>${product.name}</strong> from favorites.`, 'info');
+                    applyFiltersAndSort(); // Re-render
+                }, 300);
+            }
+        }
+
+        function addToCart(id) {
+            const product = initialProducts.find(p => p.id === id);
+            cart.push(product);
+            
+            // Update UI specific to add to cart
+            cartCountEl.classList.add('animate-pulse-fast');
+            setTimeout(() => cartCountEl.classList.remove('animate-pulse-fast'), 300);
+            
+            updateHeaderCounts();
+            showToast(`Added <strong>${product.name}</strong> to cart.`, 'success');
+        }
+
+        function moveAllToCart() {
+            if (wishlist.length === 0) return;
+            
+            const count = wishlist.length;
+            cart = [...cart, ...wishlist];
+            
+            // Animate all cards out
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach((card, i) => {
+                setTimeout(() => {
+                    card.classList.add('animate-fade-out');
+                }, i * 50);
+            });
+
+            setTimeout(() => {
+                wishlist = [];
+                updateHeaderCounts();
+                applyFiltersAndSort();
+                showToast(`Moved ${count} items to your cart.`, 'success');
+            }, cards.length * 50 + 300);
+        }
+
+        function shareWishlist() {
+            showToast("Wishlist link copied to clipboard!", "success");
+            // Mock clipboard functionality
+        }
+
+        // --- Modal Functions ---
+
+        function openQuickView(id) {
+            const product = initialProducts.find(p => p.id === id);
+            if(!product) return;
+            currentModalProductId = id;
+
+            // Populate Data
+            modalTitle.textContent = product.name;
+            modalPrice.textContent = `$${product.price.toFixed(2)}`;
+            modalReviews.textContent = `(${product.reviews} Reviews)`;
+            
+            modalImageContainer.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur rounded-full px-4 py-2 flex items-center gap-3 shadow-lg">
+                    <div class="w-5 h-5 rounded-full border border-gray-200" style="background-color: ${product.colorHex}"></div>
+                    <span class="text-sm font-semibold text-gray-800">${product.colorHex}</span>
+                </div>
+            `;
+
+            // Stars
+            const fullStars = Math.floor(product.rating);
+            const hasHalfStar = product.rating % 1 !== 0;
+            let starsHTML = '';
+            for(let i=0; i<fullStars; i++) starsHTML += `<i data-lucide="star" class="w-5 h-5 fill-current"></i>`;
+            if(hasHalfStar) starsHTML += `<i data-lucide="star-half" class="w-5 h-5 fill-current"></i>`;
+            modalStars.innerHTML = starsHTML;
+
+            // Fav Button State
+            const isFav = wishlist.some(p => p.id === id);
+            const favIcon = document.querySelector('#modal-fav-btn').querySelector('svg, i');
+            if(isFav) {
+                favIcon.classList.add('fill-brand-pink', 'text-brand-pink');
+                favIcon.classList.remove('text-gray-400', 'fill-transparent');
+            } else {
+                favIcon.classList.remove('fill-brand-pink', 'text-brand-pink');
+                favIcon.classList.add('text-gray-400', 'fill-transparent');
+            }
+
+            // Show Modal
+            modal.classList.remove('hidden');
+            // Trigger reflow
+            void modal.offsetWidth;
+            modalContent.classList.remove('scale-95', 'opacity-0');
+            modalContent.classList.add('scale-100', 'opacity-100');
+            
+            lucide.createIcons();
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeQuickView() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function addToCartFromModal() {
+            addToCart(currentModalProductId);
+            closeQuickView();
+        }
+
+        function toggleFavoriteFromModal() {
+            const id = currentModalProductId;
+            const productIndex = wishlist.findIndex(p => p.id === id);
+            const product = initialProducts.find(p => p.id === id);
+            const favBtn = document.getElementById('modal-fav-btn');
+            const favIcon = favBtn.querySelector('svg, i');
+
+            favBtn.classList.add('animate-pulse-fast');
+            setTimeout(() => favBtn.classList.remove('animate-pulse-fast'), 300);
+
+            if (productIndex > -1) {
+                // Remove
+                wishlist.splice(productIndex, 1);
+                favIcon.classList.remove('fill-brand-pink', 'text-brand-pink');
+                favIcon.classList.add('text-gray-400', 'fill-transparent');
+                showToast(`Removed <strong>${product.name}</strong> from favorites.`, 'info');
+            } else {
+                // Add
+                wishlist.push(product);
+                favIcon.classList.add('fill-brand-pink', 'text-brand-pink');
+                favIcon.classList.remove('text-gray-400', 'fill-transparent');
+                showToast(`Added <strong>${product.name}</strong> to favorites.`, 'success');
+            }
+            
+            applyFiltersAndSort(); // Update background grid
+        }
+
+        // --- Toast Notifications ---
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            
+            let icon = '';
+            let borderColor = '';
+            if (type === 'success') {
+                icon = `<i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>`;
+                borderColor = 'border-green-100';
+            } else {
+                icon = `<i data-lucide="info" class="w-5 h-5 text-blue-500"></i>`;
+                borderColor = 'border-blue-100';
+            }
+
+            toast.className = `glass flex items-center gap-3 px-5 py-4 rounded-xl shadow-xl border ${borderColor} text-sm font-medium text-brand-dark animate-slide-in-right pointer-events-auto max-w-sm w-full`;
+            toast.innerHTML = `
+                ${icon}
+                <div class="flex-grow">${message}</div>
+                <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-brand-dark transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            `;
+
+            toastContainer.appendChild(toast);
+            lucide.createIcons();
+
+            // Auto remove
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.style.animation = 'fadeOut 0.3s ease-in-out forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 4000);
+        }
+
+        // Start
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>

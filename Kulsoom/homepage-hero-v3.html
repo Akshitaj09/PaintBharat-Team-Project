@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Paint Reveal | Luxury Interiors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background-color: #ffffff; /* Pure white background */
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw; height: 56.25vw; /* 16:9 Aspect Ratio */
+            max-height: 100vh; max-width: 177.78vh; 
+            margin: auto; top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        /* Slideshow Styles */
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            filter: brightness(0.85); 
+        }
+        .slide.active { opacity: 1; }
+
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; }
+        #mask-canvas { z-index: 2; transition: opacity 2s ease-in-out; }
+        #roller-canvas { z-index: 3; pointer-events: none; }
+
+        /* Glassmorphism Cards */
+        #services-container {
+            position: absolute;
+            bottom: 6%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 15;
+            opacity: 0;
+            visibility: hidden;
+            width: 92%;
+            max-width: 1100px;
+            justify-content: center;
+        }
+
+        #services-container.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 28px;
+            padding: 2.2rem 1.5rem;
+            flex: 1;
+            text-align: center;
+            color: white; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Entrance Animations for Cards */
+        .glass-card {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        #services-container.visible .glass-card {
+            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        #services-container.visible .glass-card:nth-child(1) { animation-delay: 0.2s; }
+        #services-container.visible .glass-card:nth-child(2) { animation-delay: 0.4s; }
+        #services-container.visible .glass-card:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover .icon-box {
+            transform: rotate(-8deg) scale(1.1);
+            background: white;
+            color: #1a1a1a;
+        }
+
+        /* --- BUTTON ANIMATIONS --- */
+        .service-btn {
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.8rem;
+            background: white;
+            color: #1a1a1a;
+            border-radius: 9999px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 0;
+            padding-bottom: 120%;
+            background: rgba(0,0,0,0.05);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease-out;
+        }
+
+        .service-btn:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            letter-spacing: 0.15em; /* Subtle expansion on hover */
+        }
+
+        .service-btn:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .service-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* UI Overlay */
+        #ui-overlay {
+            position: absolute;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            text-align: center;
+            color: white; 
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.4);
+            width: 100%;
+            pointer-events: none;
+        }
+        
+        #ui-overlay * { pointer-events: auto; }
+
+        .btn-replay {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            z-index: 20;
+            padding: 0.7rem 1.5rem;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 9999px;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-replay:hover { 
+            background: white; 
+            color: #1a1a1a; 
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-replay:active {
+            transform: scale(0.95);
+        }
+
+        /* Shine effect for buttons */
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .service-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg);
+            transition: 0.5s;
+        }
+
+        .service-btn:hover::before {
+            animation: shine 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <!-- Automated Slideshow -->
+    <div id="slideshow">
+        <img class="slide active" src="images/homepage_herosection1.jpg" alt="Slide 1" />
+        <img class="slide" src="images/homepage_herosection2.jpg" alt="Slide 2" />
+        <img class="slide" src="images/homepage_herosection3.jpg" alt="Slide 3" />
+        <img class="slide" src="images/homepage_herosection4.jpg" alt="Slide 4" />
+        <img class="slide" src="images/homepage_herosection5.jpg" alt="Slide 5" />
+    </div>
+    
+    <canvas id="mask-canvas"></canvas>
+    <canvas id="roller-canvas"></canvas>
+
+    <button class="btn-replay" id="replay-btn" onclick="restartAnimation()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></svg>
+        Replay Reveal
+    </button>
+
+    <div id="ui-overlay">
+        <h1 class="text-6xl font-black tracking-[0.45em] uppercase mb-4 text-white">Elevated Living</h1>
+        <p class="text-xl opacity-90 font-light tracking-widest italic text-white">The Master Standard in Restoration</p>
+    </div>
+
+    <!-- Glassmorphism Service Cards -->
+    <div id="services-container">
+        <div class="glass-card">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold mb-1">Cost Analysis</h3>
+                <p class="text-xs opacity-80 leading-relaxed font-medium">Market-grade estimates for bespoke projects.</p>
+            </div>
+            <button class="service-btn">Get Estimate</button>
+        </div>
+        <div class="glass-card">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold mb-1">Inspirations</h3>
+                <p class="text-xs opacity-80 leading-relaxed font-medium">Curated palettes from top global designers.</p>
+            </div>
+            <button class="service-btn">View Colors</button>
+        </div>
+        <div class="glass-card">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold mb-1">AI Visualizer</h3>
+                <p class="text-xs opacity-80 leading-relaxed font-medium">Real-time room rendering in seconds.</p>
+            </div>
+            <button class="service-btn">Launch App</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const maskCanvas = document.getElementById('mask-canvas');
+    const rollerCanvas = document.getElementById('roller-canvas');
+    const maskCtx = maskCanvas.getContext('2d');
+    const rollerCtx = rollerCanvas.getContext('2d');
+    const uiOverlay = document.getElementById('ui-overlay');
+    const servicesContainer = document.getElementById('services-container');
+    const replayBtn = document.getElementById('replay-btn');
+    const slides = document.querySelectorAll('.slide');
+
+    let width, height, animationFrame;
+    let progress = 0;
+    let currentSlide = 0;
+    let slideInterval;
+    const revealSpeed = 0.0042; // Slightly faster for a snappier feel
+
+    const colors = { roller: '#ffffff', accents: '#1a1a1a', metal: '#cbd5e1' };
+    const points = [ 
+        { x: -0.15, y: 0.1 }, 
+        { x: 0.2, y: 0.85 }, 
+        { x: 0.45, y: 0.15 }, 
+        { x: 0.7, y: 0.85 }, 
+        { x: 0.95, y: 0.2 },
+        { x: 1.2, y: 0.8 }
+    ];
+
+    function resize() {
+        const container = document.getElementById('container');
+        width = container.clientWidth; 
+        height = container.clientHeight;
+        maskCanvas.width = width; 
+        maskCanvas.height = height;
+        rollerCanvas.width = width; 
+        rollerCanvas.height = height;
+        
+        maskCtx.fillStyle = '#ffffff'; // Starting mask is now pure WHITE
+        maskCtx.fillRect(0, 0, width, height);
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function getPathPoint(t) {
+        const segmentCount = points.length - 1;
+        const scaledT = t * segmentCount;
+        const index = Math.min(Math.floor(scaledT), segmentCount - 1);
+        const segmentT = scaledT - index;
+        const p1 = points[index], p2 = points[index + 1];
+        return {
+            x: lerp(p1.x, p2.x, segmentT) * width,
+            y: lerp(p1.y, p2.y, segmentT) * height,
+            angle: Math.atan2((p2.y - p1.y) * height, (p2.x - p1.x) * width)
+        };
+    }
+
+    function drawRoller(x, y, angle) {
+        rollerCtx.clearRect(0, 0, width, height);
+        const rW = width * 0.16;
+        const rH = rW * 0.28;
+        rollerCtx.save();
+        rollerCtx.translate(x, y); rollerCtx.rotate(angle);
+        rollerCtx.shadowColor = 'rgba(0,0,0,0.15)';
+        rollerCtx.shadowBlur = 20;
+        rollerCtx.strokeStyle = colors.metal;
+        rollerCtx.lineWidth = rH * 0.12;
+        rollerCtx.beginPath();
+        rollerCtx.moveTo(0, 0); rollerCtx.lineTo(0, rH * 1.3);
+        rollerCtx.lineTo(-rW * 0.35, rH * 1.6);
+        rollerCtx.stroke();
+        rollerCtx.fillStyle = colors.accents;
+        rollerCtx.beginPath();
+        rollerCtx.roundRect(-rW * 0.45, rH * 1.5, rW * 0.25, rH * 0.45, 6);
+        rollerCtx.fill();
+        const grad = rollerCtx.createLinearGradient(0, -rH/2, 0, rH/2);
+        grad.addColorStop(0, '#f8fafc'); grad.addColorStop(0.5, '#ffffff'); grad.addColorStop(1, '#e2e8f0');
+        rollerCtx.fillStyle = grad;
+        rollerCtx.beginPath();
+        rollerCtx.roundRect(-rW/2, -rH/2, rW, rH, 5);
+        rollerCtx.fill();
+        rollerCtx.restore();
+    }
+
+    function eraseMask(x, y, angle) {
+        maskCtx.save();
+        maskCtx.globalCompositeOperation = 'destination-out';
+        const brushWidth = width * 0.22;
+        maskCtx.translate(x, y); maskCtx.rotate(angle);
+        const grad = maskCtx.createRadialGradient(0,0, brushWidth*0.1, 0,0, brushWidth*0.55);
+        grad.addColorStop(0, 'rgba(0,0,0,1)'); grad.addColorStop(1, 'rgba(0,0,0,0)');
+        maskCtx.fillStyle = grad;
+        maskCtx.fillRect(-brushWidth/2, -brushWidth/2, brushWidth, brushWidth);
+        maskCtx.restore();
+    }
+
+    function startSlideshow() {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000);
+    }
+
+    function animate() {
+        if (progress < 1) {
+            progress += revealSpeed;
+            const current = getPathPoint(progress);
+            eraseMask(current.x, current.y, current.angle);
+            drawRoller(current.x, current.y, current.angle);
+            animationFrame = requestAnimationFrame(animate);
+        } else {
+            uiOverlay.style.opacity = '1';
+            servicesContainer.classList.add('visible');
+            replayBtn.style.opacity = '1';
+            maskCanvas.style.opacity = '0';
+            
+            let rAlpha = 1;
+            const fadeR = () => {
+                if (rAlpha > 0) {
+                    rAlpha -= 0.05;
+                    rollerCanvas.style.opacity = rAlpha;
+                    requestAnimationFrame(fadeR);
+                }
+            };
+            fadeR();
+            startSlideshow();
+        }
+    }
+
+    function restartAnimation() {
+        if (slideInterval) clearInterval(slideInterval);
+        cancelAnimationFrame(animationFrame);
+        progress = 0;
+        currentSlide = 0;
+        
+        slides.forEach((s, i) => {
+            s.classList.remove('active');
+            if(i === 0) s.classList.add('active');
+        });
+
+        uiOverlay.style.opacity = '0';
+        servicesContainer.classList.remove('visible');
+        replayBtn.style.opacity = '0';
+        maskCanvas.style.opacity = '1';
+        rollerCanvas.style.opacity = '1';
+        
+        resize();
+        setTimeout(animate, 400);
+    }
+
+    window.onload = () => { 
+        resize(); 
+        setTimeout(animate, 800); 
+    };
+    window.onresize = resize;
+</script>
+
+</body>
+</html>

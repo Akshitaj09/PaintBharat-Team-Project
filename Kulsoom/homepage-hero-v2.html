@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinematic Paint Reveal | Custom Gold Swatch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background-color: #f3f4f6;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw; height: 56.25vw;
+            max-height: 100vh; max-width: 177.78vh; 
+            margin: auto; top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            background: #000;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; }
+        #bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        #mask-canvas { z-index: 2; }
+
+        /* --- 3D INTERACTIVE SWATCH STYLES --- */
+        #palette-container {
+            position: absolute;
+            right: 4%;
+            top: 15%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 15;
+            opacity: 0; 
+            visibility: hidden;
+            transition: opacity 1s ease-out, visibility 1s;
+        }
+
+        .swatch-card {
+            width: clamp(75px, 11vw, 110px);
+            height: clamp(75px, 11vw, 110px);
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .swatch-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .swatch-card:hover .swatch-inner {
+            transform: rotateY(180deg);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 14px;
+            border: 4px solid white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        /* COLORS */
+        .color-1 .front { background-color: rgb(176, 169, 153); }
+        .color-2 .front { background-color: rgb(236, 178, 166); }
+        
+        /* UPDATED GOLD COLOR HERE */
+        .color-gold .front { background-color: rgb(201, 163, 27); } 
+
+        .back {
+            background-color: white;
+            color: #2d3436;
+            transform: rotateY(180deg);
+        }
+
+        .back .name { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.02em; }
+        .back .code { font-size: 0.65rem; color: #636e72; font-family: monospace; font-weight: 500; }
+
+        /* UI ELEMENTS */
+        #ui-overlay {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+        }
+
+        .btn-restart {
+            margin-top: 1.2rem;
+            padding: 0.7rem 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-weight: 500;
+        }
+        .btn-restart:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <img id="bg-image" src="images/sage green.jpg" alt="Background" onerror="this.src='https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000'">
+    
+    <canvas id="mask-canvas"></canvas>
+    <canvas id="roller-canvas"></canvas>
+
+    <div id="palette-container">
+        <div class="swatch-card color-1">
+            <div class="swatch-inner">
+                <div class="front"></div>
+                <div class="back">
+                    <span class="name">Sage</span>
+                    <span class="code">RGB(176,169,153)</span>
+                </div>
+            </div>
+        </div>
+        <div class="swatch-card color-2">
+            <div class="swatch-inner">
+                <div class="front"></div>
+                <div class="back">
+                    <span class="name">Coral</span>
+                    <span class="code">RGB(236,178,166)</span>
+                </div>
+            </div>
+        </div>
+        <div class="swatch-card color-gold">
+            <div class="swatch-inner">
+                <div class="front"></div>
+                <div class="back">
+                    <span class="name">Gold</span>
+                    <span class="code">RGB(201,163,27)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ui-overlay">
+        <h1 class="text-4xl font-light tracking-widest uppercase mb-2">Refined Spaces</h1>
+        <p class="text-lg opacity-80">Experience the transformation</p>
+        <button class="btn-restart" onclick="restartAnimation()">Replay Reveal</button>
+    </div>
+</div>
+
+<script>
+    const maskCanvas = document.getElementById('mask-canvas');
+    const rollerCanvas = document.getElementById('roller-canvas');
+    const maskCtx = maskCanvas.getContext('2d');
+    const rollerCtx = rollerCanvas.getContext('2d');
+    const uiOverlay = document.getElementById('ui-overlay');
+    const paletteContainer = document.getElementById('palette-container');
+
+    let width, height, animationFrame;
+    let progress = 0;
+    const speed = 0.004; 
+
+    const colors = { roller: '#fce4ec', accents: '#2d3436', metal: '#bdc3c7' };
+    const points = [ { x: -0.1, y: -0.1 }, { x: 0.2, y: 0.85 }, { x: 0.5, y: 0.15 }, { x: 0.8, y: 0.85 }, { x: 1.1, y: 0.2 } ];
+
+    function resize() {
+        const container = document.getElementById('container');
+        width = container.clientWidth; height = container.clientHeight;
+        maskCanvas.width = width; maskCanvas.height = height;
+        rollerCanvas.width = width; rollerCanvas.height = height;
+        maskCtx.fillStyle = 'white';
+        maskCtx.fillRect(0, 0, width, height);
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function getPathPoint(t) {
+        const segmentCount = points.length - 1;
+        const scaledT = t * segmentCount;
+        const index = Math.min(Math.floor(scaledT), segmentCount - 1);
+        const segmentT = scaledT - index;
+        const p1 = points[index], p2 = points[index + 1];
+        return {
+            x: lerp(p1.x, p2.x, segmentT) * width,
+            y: lerp(p1.y, p2.y, segmentT) * height,
+            angle: Math.atan2((p2.y - p1.y) * height, (p2.x - p1.x) * width)
+        };
+    }
+
+    function drawRoller(x, y, angle) {
+        rollerCtx.clearRect(0, 0, width, height);
+        const rollerWidth = width * 0.18;
+        const rollerHeight = rollerWidth * 0.25;
+        rollerCtx.save();
+        rollerCtx.translate(x, y); rollerCtx.rotate(angle);
+        rollerCtx.shadowColor = 'rgba(0,0,0,0.15)';
+        rollerCtx.shadowBlur = 20;
+        rollerCtx.strokeStyle = colors.metal;
+        rollerCtx.lineWidth = rollerHeight * 0.15;
+        rollerCtx.beginPath();
+        rollerCtx.moveTo(0, 0); rollerCtx.lineTo(0, rollerHeight * 1.2);
+        rollerCtx.lineTo(-rollerWidth * 0.4, rollerHeight * 1.5);
+        rollerCtx.stroke();
+        rollerCtx.fillStyle = colors.accents;
+        rollerCtx.beginPath();
+        rollerCtx.roundRect(-rollerWidth * 0.55, rollerHeight * 1.4, rollerWidth * 0.3, rollerHeight * 0.4, 5);
+        rollerCtx.fill();
+        const grad = rollerCtx.createLinearGradient(0, -rollerHeight/2, 0, rollerHeight/2);
+        grad.addColorStop(0, '#ffffff'); grad.addColorStop(0.5, colors.roller); grad.addColorStop(1, '#e1d0d7');
+        rollerCtx.fillStyle = grad;
+        rollerCtx.beginPath();
+        rollerCtx.roundRect(-rollerWidth/2, -rollerHeight/2, rollerWidth, rollerHeight, 4);
+        rollerCtx.fill();
+        rollerCtx.restore();
+    }
+
+    function eraseMask(x, y, angle) {
+        maskCtx.save();
+        maskCtx.globalCompositeOperation = 'destination-out';
+        const brushWidth = width * 0.22;
+        maskCtx.translate(x, y); maskCtx.rotate(angle);
+        const gradient = maskCtx.createRadialGradient(0, 0, brushWidth * 0.1, 0, 0, brushWidth * 0.6);
+        gradient.addColorStop(0, 'rgba(0,0,0,1)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        maskCtx.fillStyle = gradient;
+        maskCtx.fillRect(-brushWidth/2, -brushWidth/2, brushWidth, brushWidth);
+        maskCtx.restore();
+    }
+
+    function animate() {
+        if (progress < 1) {
+            progress += speed;
+            const current = getPathPoint(progress);
+            eraseMask(current.x, current.y, current.angle);
+            drawRoller(current.x, current.y, current.angle);
+            animationFrame = requestAnimationFrame(animate);
+        } else {
+            uiOverlay.style.opacity = '1';
+            paletteContainer.style.visibility = 'visible';
+            paletteContainer.style.opacity = '1';
+            
+            let opacity = 1;
+            const fade = () => {
+                if (opacity > 0) {
+                    opacity -= 0.02;
+                    maskCanvas.style.opacity = opacity;
+                    requestAnimationFrame(fade);
+                }
+            };
+            fade();
+        }
+    }
+
+    function restartAnimation() {
+        cancelAnimationFrame(animationFrame);
+        progress = 0;
+        uiOverlay.style.opacity = '0';
+        paletteContainer.style.opacity = '0';
+        paletteContainer.style.visibility = 'hidden';
+        maskCanvas.style.opacity = '1';
+        resize();
+        animate();
+    }
+
+    window.onload = () => { resize(); setTimeout(animate, 800); };
+    window.onresize = resize;
+</script>
+
+</body>
+</html>

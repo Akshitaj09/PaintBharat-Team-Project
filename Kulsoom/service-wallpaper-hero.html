@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Co. | Refined Designs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Inter:wght@300;400;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #d6c9b1;
+            --bg: #0a0a0a;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: crosshair;
+            height: 1200vh; /* Scroll space for cinematic mapping */
+        }
+
+        /* Kinetic Typography Helper */
+        .char-reveal {
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: bottom;
+        }
+        
+        .char-inner {
+            display: inline-block;
+            transform: translateY(110%);
+            will-change: transform;
+        }
+
+        .master-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        .section-full {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* GUARANTEED FIRST SLIDE VISIBILITY */
+        #sec-1 {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .hero-wallpaper {
+            position: absolute;
+            inset: 0;
+            background-image: url('images/wallpaper_2.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7);
+        }
+
+        .hero-title-container {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 20;
+            width: 100%;
+        }
+
+        /* ATMOSPHERE Section - UPDATED IMAGE PATH */
+        .mood-bg {
+            background-image: url('images/wall_paper.png'); 
+            background-size: cover;
+            background-position: center;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+            z-index: 5;
+        }
+
+        .mood-heading {
+            color: #000000 !important; /* Force black text */
+        }
+
+        .mood-overlay-text {
+            font-size: 25vw;
+            font-weight: 900;
+            color: rgba(0, 0, 0, 0.05); /* Darker transparent text for Atmosphere */
+            line-height: 0.8;
+            pointer-events: none;
+            position: absolute;
+            white-space: nowrap;
+        }
+
+        /* 75/25 Layout */
+        .image-container {
+            width: 75%;
+            height: 90vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .writeup-container {
+            width: 25%;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        .small-desc {
+            font-size: 0.75rem;
+            line-height: 1.8;
+            color: #666;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+        }
+
+        .num-text {
+            font-size: 5rem;
+            line-height: 0.8;
+            margin-bottom: 0.5rem;
+            opacity: 0.3;
+        }
+
+        .prod-heading {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        .chaos-popup {
+            position: fixed;
+            width: 180px;
+            padding: 12px;
+            background: white;
+            color: black;
+            font-weight: 900;
+            font-size: 0.7rem;
+            box-shadow: 10px 10px 0px var(--accent);
+            z-index: 100;
+            display: none;
+            pointer-events: none;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .inspiring-title {
+            font-size: clamp(2rem, 7vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="popup-layer">
+        <div class="chaos-popup">LUXURY SILK</div>
+        <div class="chaos-popup">HAND-PAINTED</div>
+        <div class="chaos-popup">NATURAL FIBERS</div>
+    </div>
+
+    <div class="master-container">
+        
+        <section class="section-full" id="sec-1">
+            <div class="hero-wallpaper"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-transparent to-black/30 z-10"></div>
+            
+            <div class="hero-title-container">
+                <h1 id="hero-title" class="text-7xl md:text-[8vw] font-black tracking-tighter uppercase mb-1">
+                    Refined Designs
+                </h1>
+                <p id="hero-sub" class="text-[#d6c9b1] font-bold tracking-[2.5em] text-[10px] md:text-sm opacity-0 uppercase ml-[2.5em]">
+                    PaintBharat Co.
+                </p>
+            </div>
+        </section>
+
+        <section class="section-full" id="sec-2">
+            <div class="absolute inset-0 bg-neutral-100"></div> <div class="absolute inset-0 mood-bg" id="mood-wave"></div>
+            <div class="mood-overlay-text" id="mood-scroll">ATMOSPHERE ATMOSPHERE</div>
+            
+            <div class="z-20 text-center px-10">
+                <h2 class="text-6xl md:text-[8vw] font-black mb-4 leading-none uppercase mood-heading">Selling <br><span class="italic font-serif"> Atmosphere</span></h2>
+                <h2 class="text-xs md:text-sm font-bold tracking-[1em] text-black/40 opacity-0 reveal-sub uppercase">Where Walls Breathe</h2>
+            </div>
+        </section>
+
+        <section class="section-full bg-black" id="sec-3">
+            <div class="flex items-center justify-between w-full h-full p-6">
+                <div class="image-container">
+                    <img src="images/wallpaper2.png" class="w-full h-full object-cover img-reveal">
+                </div>
+                <div class="writeup-container">
+                    <h2 class="num-text font-black">01</h2>
+                    <h3 class="text-[#d6c9b1] prod-heading font-serif italic uppercase">Premium</h3>
+                    <p class="small-desc">Exclusive designs crafted with archival pigments for discerning architecture.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-full bg-neutral-900" id="sec-4">
+            <div class="flex items-center justify-between w-full h-full p-6">
+                <div class="writeup-container text-right">
+                    <h2 class="num-text font-black">02</h2>
+                    <h3 class="text-[#d6c9b1] prod-heading font-serif italic uppercase">Luxury</h3>
+                    <p class="small-desc">Silk-infused textures and hand-applied metallic foils for opulence.</p>
+                </div>
+                <div class="image-container">
+                    <img src="images/wallpaper_8.jpg" class="w-full h-full object-cover img-reveal">
+                </div>
+            </div>
+        </section>
+
+        <section class="section-full bg-black" id="sec-5">
+            <div class="flex items-center justify-between w-full h-full p-6">
+                <div class="image-container">
+                    <img src="images/wallpaper_2.jpg" class="w-full h-full object-cover img-reveal">
+                </div>
+                <div class="writeup-container">
+                    <h2 class="num-text font-black">03</h2>
+                    <h3 class="text-[#d6c9b1] prod-heading font-serif italic uppercase">Eco</h3>
+                    <p class="small-desc">Sustainable luxury crafted from plant-based fibers and non-toxic pigments.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-full bg-[#d6c9b1]" id="sec-6">
+            <div class="text-center text-black px-6">
+                <h3 class="text-xs uppercase tracking-[0.6em] mb-6 font-bold opacity-60">The Art of Living</h3>
+                <h2 class="inspiring-title font-black uppercase join-text">
+                    Craft the Canvas <br>of dreams
+                </h2>
+                <div class="flex flex-col md:flex-row justify-center gap-8 mt-12 join-btns opacity-0 translate-y-10">
+                    <button class="px-20 py-7 bg-black text-white font-black uppercase text-sm tracking-widest hover:scale-105 transition-all shadow-2xl">Book Now</button>
+                    <button class="px-20 py-7 border-4 border-black text-black font-black uppercase text-sm tracking-widest hover:bg-black hover:text-white transition-all">Get Samples</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        window.onload = () => {
+            const splittables = ['#hero-title', '.mood-heading', '.prod-heading', '.num-text', '.join-text'];
+            splittables.forEach(sel => {
+                document.querySelectorAll(sel).forEach(el => {
+                    const text = el.innerText;
+                    el.innerHTML = text.split('').map(char => 
+                        `<span class="char-reveal"><span class="char-inner">${char === ' ' ? '&nbsp;' : char}</span></span>`
+                    ).join('');
+                });
+            });
+
+            // --- INTRO ---
+            const intro = gsap.timeline();
+            intro.to('#sec-1 .char-inner', { y: 0, stagger: 0.02, duration: 1.2, ease: "expo.out", delay: 0.5 })
+                 .to('#hero-sub', { opacity: 1, y: -5, duration: 1 }, "-=0.8");
+
+            // --- MASTER TIMELINE ---
+            const master = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "body",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.1,
+                }
+            });
+
+            master.to('#sec-1', { yPercent: -100, duration: 1 });
+
+            // Slide 2 (Mood)
+            master.set('#sec-2', { opacity: 1, zIndex: 11 })
+                    .to('#mood-wave', { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', duration: 2 })
+                    .to('#mood-scroll', { x: -1000, duration: 3 }, "-=2")
+                    .to('#sec-2 .mood-heading .char-inner', { y: 0, stagger: 0.02, duration: 1 }, "-=1.5")
+                    .to('.reveal-sub', { opacity: 1, y: 0, duration: 1 }, "-=1")
+                    .to('#sec-2', { xPercent: -100, rotateY: -10, duration: 1 }, "+=0.5");
+
+            // Slide 3 (Premium)
+            master.set('#sec-3', { opacity: 1, yPercent: 100, zIndex: 12 })
+                  .to('#sec-3', { yPercent: 0, duration: 1 })
+                  .to('#sec-3 .char-inner', { y: 0, stagger: 0.02, duration: 1 }, "-=0.5")
+                  .from('#sec-3 .img-reveal', { scale: 1.5, duration: 2 }, "-=1.5")
+                  .to('#sec-3', { xPercent: 100, duration: 1 }, "+=0.5");
+
+            // Slide 4 (Luxury)
+            master.set('#sec-4', { opacity: 1, xPercent: -100, zIndex: 13 })
+                  .to('#sec-4', { xPercent: 0, duration: 1 })
+                  .to('#sec-4 .char-inner', { y: 0, stagger: 0.02, duration: 1 }, "-=0.5")
+                  .from('#sec-4 .img-reveal', { xPercent: -30, scale: 1.2, duration: 2 }, "-=1.5")
+                  .to('#sec-4', { scale: 0.5, opacity: 0, duration: 1 }, "+=0.5");
+
+            // Slide 5 (Eco)
+            master.set('#sec-5', { opacity: 1, scale: 2, zIndex: 14 })
+                  .to('#sec-5', { scale: 1, duration: 1 })
+                  .to('#sec-5 .char-inner', { y: 0, stagger: 0.02, duration: 1 }, "-=0.5")
+                  .to('#sec-5', { yPercent: -100, duration: 1 }, "+=0.5");
+
+            // Slide 6 (Join)
+            master.set('#sec-6', { opacity: 1, yPercent: 100, zIndex: 15 })
+                  .to('#sec-6', { yPercent: 0, duration: 1.5, ease: "expo.out" })
+                  .to('#sec-6 .join-text .char-inner', { y: 0, stagger: 0.02, duration: 1, ease: "back.out(1.7)" }, "-=1.2")
+                  .to('.join-btns', { opacity: 1, y: 0, duration: 1 }, "-=0.5");
+
+            // Localized Popups
+            const popups = document.querySelectorAll('.chaos-popup');
+            ScrollTrigger.create({
+                trigger: "body",
+                onUpdate: (self) => {
+                    const p = self.progress;
+                    if (p > 0.08 && p < 0.22) {
+                        if (Math.random() > 0.985) {
+                            const popup = popups[Math.floor(Math.random() * popups.length)];
+                            if (popup.style.display !== 'block') {
+                                gsap.set(popup, { 
+                                    display: 'block', 
+                                    x: (Math.random() * 70 + 15) + 'vw', 
+                                    y: (Math.random() * 70 + 15) + 'vh',
+                                    rotate: (Math.random() - 0.5) * 30,
+                                    scale: 0
+                                });
+                                gsap.to(popup, { scale: 1, duration: 0.3, ease: "back.out" });
+                                gsap.to(popup, { scale: 0, delay: 0.8, duration: 0.2, onComplete: () => popup.style.display = 'none' });
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>

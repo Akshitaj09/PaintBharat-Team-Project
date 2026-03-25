@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Luxury Paint | Favorites</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#D4AF37',
+                        brown: '#C8A27A',
+                        dark: '#1a1a1a',
+                        light: '#fdfbfb'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base & Background Animations */
+        body {
+            background: #ffffff;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+        
+        .glass-darker {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #C8A27A 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Card Animations & Effects */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 2.5rem;
+        }
+        @media (min-width: 768px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        @media (min-width: 1280px) { .masonry-grid { column-count: 4; } }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 2.5rem;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .tilt-card {
+            transition: transform 0.1s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+            border: 1.5px solid #000000 !important;
+        }
+
+        .tilt-card:hover {
+            box-shadow: 0 15px 45px -10px rgba(212, 175, 55, 0.3);
+            border-color: #D4AF37 !important;
+        }
+
+        /* Light Sweep Effect */
+        .tilt-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            transition: all 0.7s ease;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .tilt-card:hover::before {
+            left: 200%;
+        }
+
+        /* Heart Pulse */
+        .heart-btn {
+            transition: all 0.3s ease;
+        }
+        .heart-btn:hover {
+            transform: scale(1.15);
+            color: #ef4444;
+            filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.5));
+        }
+
+        /* Color Circle Hover */
+        .color-circle {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .color-circle:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 30px -5px var(--glow-color);
+        }
+        .color-circle img {
+            transition: transform 0.5s ease;
+        }
+        .color-circle:hover img {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Buttons */
+        .btn-luxury {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .btn-luxury::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .btn-luxury:hover::after {
+            transform: translateY(0);
+        }
+        
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fdfbfb; }
+        ::-webkit-scrollbar-thumb { background: #C8A27A; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+
+    </style>
+</head>
+<body class="antialiased font-sans relative min-h-screen">
+
+    <!-- Particle Background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Navigation (Simplified for context) -->
+    <nav class="fixed top-0 w-full z-50 glass border-b-0 border-white/20 px-8 py-4 flex justify-between items-center transition-all duration-300">
+        <div class="text-2xl font-serif font-bold tracking-widest text-dark uppercase flex items-center gap-2">
+            <i class="fa-solid fa-droplet text-gold text-lg"></i> AURA
+        </div>
+        <div class="flex gap-6 items-center text-sm font-medium">
+            <a href="#" class="hover:text-gold transition-colors">Shop</a>
+            <a href="#" class="hover:text-gold transition-colors">Inspiration</a>
+            <a href="#" class="text-gold border-b border-gold pb-1">Wishlist</a>
+            <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/50 transition-colors">
+                <i class="fa-solid fa-shopping-bag"></i>
+            </a>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-24 px-4 sm:px-8 md:px-12 lg:px-16 w-full max-w-[1800px] mx-auto relative z-10" id="main-content">
+        
+        <!-- Hero Wishlist Section (Editorial Style) -->
+        <section class="relative pt-16 pb-20 mb-16 flex flex-col items-start text-left w-full z-10 border-b border-dark/5">
+            <!-- Floating animated elements behind -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none flex justify-start items-center">
+                <div class="absolute w-[40rem] h-[40rem] bg-gold/5 rounded-full blur-[80px] animate-[pulse_8s_ease-in-out_infinite] -translate-x-32"></div>
+                <div class="absolute w-[30rem] h-[30rem] bg-brown/5 rounded-full blur-[60px] animate-[pulse_6s_ease-in-out_infinite_reverse] translate-x-32 -translate-y-16"></div>
+            </div>
+
+            <div class="relative z-10 w-full">
+                
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif font-bold text-dark mb-10 leading-[1.1] tracking-tight">
+                    Your <br class="md:hidden"/> <span class="text-gradient italic font-light pr-4">Favorites</span>
+                </h1>
+                
+                <div class="flex flex-wrap items-center justify-start gap-5">
+                    <div class="glass-darker px-8 py-4 rounded-full flex items-center gap-3 shadow-lg shadow-gold/5 border-white">
+                        <div class="w-2 h-2 rounded-full bg-gold animate-pulse"></div>
+                        <span id="wishlist-count" class="text-dark font-semibold tracking-wide">8 Items</span>
+                    </div>
+                    
+                    <button class="btn-luxury bg-dark text-white px-8 py-4 rounded-full font-medium text-sm flex items-center gap-3 shadow-xl shadow-dark/20 hover:shadow-dark/40 transition-shadow">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-white/70"></i> Share Palette
+                    </button>
+                    
+                    <button onclick="clearAllProducts()" class="w-14 h-14 rounded-full glass flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all shadow-sm border border-white/50" title="Clear Wishlist">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Product Grid (Populated by JS) -->
+        <div id="wishlist-grid" class="masonry-grid">
+            <!-- Cards will be injected here -->
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="empty-state" class="hidden flex-col items-center justify-center py-32 glass-darker rounded-[3rem] text-center px-4 relative overflow-hidden shadow-xl border-white/60">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNENEFGMzciIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-50"></div>
+            
+            <div class="w-40 h-40 mb-8 relative">
+                <div class="absolute inset-0 bg-gold/20 blur-2xl rounded-full animate-pulse"></div>
+                <svg viewBox="0 0 100 100" class="w-full h-full relative z-10 drop-shadow-xl" fill="none" stroke="currentColor">
+                    <path d="M20 40 L80 40 L70 90 L30 90 Z" fill="rgba(255,255,255,0.8)" stroke="#D4AF37" stroke-width="2"/>
+                    <path d="M20 40 C20 30, 80 30, 80 40" fill="rgba(255,255,255,0.9)" stroke="#D4AF37" stroke-width="2"/>
+                    <path d="M30 40 C30 20, 70 20, 70 40" stroke="#C8A27A" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M40 50 Q50 80, 60 50" stroke="#f0f0f0" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="50" cy="50" r="15" fill="#f8f9fa" opacity="0.5"/>
+                    <path d="M45 45 L55 55 M55 45 L45 55" stroke="#ccc" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            
+            <h2 class="text-3xl font-serif font-bold mb-4">Your Canvas is Empty</h2>
+            <p class="text-gray-500 mb-8 max-w-md font-light">No favorites yet. Start exploring our curated palette of luxury colors and save the ones that inspire you.</p>
+            <button onclick="resetDemoProducts()" class="btn-luxury bg-gold text-white px-10 py-4 rounded-full font-medium text-sm tracking-wide shadow-lg shadow-gold/30">
+                Explore Colors
+            </button>
+        </div>
+
+        <!-- Color Inspiration Section -->
+        <section class="mt-32 mb-8 relative w-full">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-serif font-bold mb-3 text-dark">Trending Inspirations</h2>
+                <p class="text-gray-500 font-light text-lg">Colors catching the eye of interior designers this week.</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-8 md:gap-16 items-center">
+                <!-- Inspiration Circles -->
+                <div class="color-circle relative w-24 h-24 md:w-32 md:h-32 rounded-full cursor-pointer border-4 border-white glass flex items-center justify-center" style="background: #2c3e50; --glow-color: rgba(44, 62, 80, 0.4);">
+                    <span class="absolute -bottom-8 text-sm font-medium text-gray-600 whitespace-nowrap">Midnight</span>
+                </div>
+                <div class="color-circle relative w-20 h-20 md:w-28 md:h-28 rounded-full cursor-pointer border-4 border-white glass flex items-center justify-center" style="background: #e67e22; --glow-color: rgba(230, 126, 34, 0.4);">
+                    <span class="absolute -bottom-8 text-sm font-medium text-gray-600 whitespace-nowrap">Tuscan Sun</span>
+                </div>
+                <div class="color-circle relative w-32 h-32 md:w-40 md:h-40 rounded-full cursor-pointer border-4 border-white glass flex items-center justify-center z-10" style="background: #78909c; --glow-color: rgba(120, 144, 156, 0.4);">
+                    <div class="absolute inset-0 rounded-full border border-white/50 m-2"></div>
+                    <span class="absolute -bottom-8 text-sm font-bold text-dark whitespace-nowrap">Coastal Mist <i class="fa-solid fa-fire text-gold ml-1"></i></span>
+                </div>
+                <div class="color-circle relative w-20 h-20 md:w-28 md:h-28 rounded-full cursor-pointer border-4 border-white glass flex items-center justify-center" style="background: #8d6e63; --glow-color: rgba(141, 110, 99, 0.4);">
+                    <span class="absolute -bottom-8 text-sm font-medium text-gray-600 whitespace-nowrap">Cashmere</span>
+                </div>
+                <div class="color-circle relative w-24 h-24 md:w-32 md:h-32 rounded-full cursor-pointer border-4 border-white glass flex items-center justify-center" style="background: #4db6ac; --glow-color: rgba(77, 182, 172, 0.4);">
+                    <span class="absolute -bottom-8 text-sm font-medium text-gray-600 whitespace-nowrap">Seafoam</span>
+                </div>
+            </div>
+
+            <!-- Clickable combinations line -->
+            <div class="text-center mt-20 pb-12">
+                <a href="#" class="inline-block font-serif text-xl md:text-2xl text-dark relative group transition-colors hover:text-gold cursor-pointer py-2">
+                    Check for combinations
+                    <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-gold transition-all duration-500 ease-in-out group-hover:w-full"></span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300 ease-out">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-dark/60 backdrop-blur-md" onclick="closeQuickView()"></div>
+        
+        <!-- Modal Content Container -->
+        <div id="qv-content" class="glass-darker relative w-full max-w-5xl rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row transform scale-95 translate-y-4 transition-all duration-500 ease-out shadow-2xl border-white/60">
+            
+            <!-- Close Button -->
+            <button onclick="closeQuickView()" class="absolute top-4 right-4 md:top-6 md:right-6 z-50 w-12 h-12 bg-white/70 backdrop-blur-md rounded-full flex items-center justify-center text-dark hover:bg-red-50 hover:text-red-500 transition-colors shadow-sm border border-white/50">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Left Side: Image -->
+            <div id="qv-image-container" class="w-full md:w-1/2 p-12 min-h-[300px] md:min-h-[500px] flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-white/40 to-transparent">
+                <!-- SVG dynamically injected here -->
+            </div>
+
+            <!-- Right Side: Info -->
+            <div class="w-full md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-white/70 backdrop-blur-xl">
+                <span id="qv-finish" class="text-xs font-bold tracking-widest uppercase text-gray-500 mb-3 bg-white/80 px-3 py-1 rounded-full w-max border border-gray-100"></span>
+                <h2 id="qv-title" class="text-4xl lg:text-5xl font-serif font-bold text-dark mb-4 leading-tight"></h2>
+                <p id="qv-price" class="text-3xl font-light text-dark mb-8"></p>
+                
+                <div class="mb-10">
+                    <h4 class="text-sm font-bold tracking-wide uppercase text-dark mb-3">Color Information</h4>
+                    <p class="text-gray-600 font-light text-base leading-relaxed mb-6">Experience the transformative power of this luxurious shade. Crafted with premium pigments for unparalleled depth and a flawless finish that elevates any space instantly.</p>
+                    
+                    <div class="flex items-center gap-4 bg-white/50 p-4 rounded-2xl border border-white shadow-sm w-max">
+                        <div id="qv-swatch" class="w-10 h-10 rounded-full border border-dark/10 shadow-inner"></div>
+                        <div>
+                            <span class="block text-xs text-gray-500 uppercase font-semibold">Selected Shade</span>
+                            <span id="qv-hex" class="block text-sm font-bold text-dark"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-luxury bg-dark text-white py-5 px-8 rounded-full font-semibold text-lg tracking-wide w-full shadow-xl shadow-dark/20 hover:shadow-dark/40 transition-shadow text-center">
+                    Check it out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Product Data ---
+        let products = [
+            { id: 1, name: "Midnight Velvet", finish: "Ultra Matte", price: 125.00, color: "#2c3e50", volume: "1 Gallon", height: "h-[450px]" },
+            { id: 2, name: "Tuscan Sun", finish: "Eggshell", price: 95.00, color: "#e67e22", volume: "1 Gallon", height: "h-[380px]" },
+            { id: 3, name: "Coastal Mist", finish: "Satin", price: 110.00, color: "#78909c", volume: "5 Gallon", height: "h-[480px]" },
+            { id: 4, name: "Cashmere Brown", finish: "Velvet Matte", price: 130.00, color: "#8d6e63", volume: "1 Gallon", height: "h-[400px]" },
+            { id: 5, name: "Pure Alabaster", finish: "High Gloss", price: 85.00, color: "#f5f5f0", volume: "1 Quart", height: "h-[350px]" },
+            { id: 6, name: "Emerald Envy", finish: "Eggshell", price: 115.00, color: "#2e7d32", volume: "1 Gallon", height: "h-[420px]" },
+            { id: 7, name: "Dusty Rose", finish: "Matte", price: 98.00, color: "#e57373", volume: "1 Gallon", height: "h-[390px]" },
+            { id: 8, name: "Royal Sapphire", finish: "Satin", price: 145.00, color: "#1565c0", volume: "5 Gallon", height: "h-[460px]" }
+        ];
+
+        // Store original array for the demo "Reset" button
+        const originalProducts = [...products];
+
+        // --- 2. Dynamic SVG Paint Bucket Generator ---
+        function generateBucketSVG(hexColor) {
+            // Calculates a slightly darker shade for shadow/depth
+            const darken = (col, amt) => {
+                let usePound = false;
+                if (col[0] == "#") { col = col.slice(1); usePound = true; }
+                let num = parseInt(col,16);
+                let r = (num >> 16) + amt;
+                if (r > 255) r = 255; else if  (r < 0) r = 0;
+                let b = ((num >> 8) & 0x00FF) + amt;
+                if (b > 255) b = 255; else if  (b < 0) b = 0;
+                let g = (num & 0x0000FF) + amt;
+                if (g > 255) g = 255; else if (g < 0) g = 0;
+                return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
+            };
+            
+            const darkColor = darken(hexColor, -30);
+
+            return `
+                <svg viewBox="0 0 200 240" class="w-full h-full drop-shadow-2xl" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Back handle -->
+                    <path d="M50 80 C50 30, 150 30, 150 80" stroke="#b0b0b0" stroke-width="6" stroke-linecap="round" fill="none" class="opacity-60"/>
+                    
+                    <!-- Main Bucket Body -->
+                    <path d="M40 80 L160 80 L145 220 L55 220 Z" fill="url(#bucketGrad-${hexColor.replace('#','')})"/>
+                    
+                    <!-- Top Rim -->
+                    <ellipse cx="100" cy="80" rx="60" ry="15" fill="#e0e0e0" stroke="#cccccc" stroke-width="2"/>
+                    <ellipse cx="100" cy="80" rx="55" ry="12" fill="${darkColor}"/>
+                    <ellipse cx="100" cy="82" rx="55" ry="12" fill="${hexColor}"/> <!-- Paint inside -->
+                    
+                    <!-- Bottom Rim -->
+                    <ellipse cx="100" cy="220" rx="45" ry="10" fill="#d0d0d0"/>
+                    
+                    <!-- Label Area -->
+                    <path d="M48 120 L152 120 L148 180 L52 180 Z" fill="rgba(255,255,255,0.9)"/>
+                    <rect x="70" y="135" width="60" height="2" fill="${hexColor}"/>
+                    <rect x="80" y="145" width="40" height="1" fill="#999"/>
+                    
+                    <!-- Handle mounts -->
+                    <circle cx="40" cy="80" r="8" fill="#a0a0a0"/>
+                    <circle cx="160" cy="80" r="8" fill="#a0a0a0"/>
+                    
+                    <!-- Front handle segment -->
+                    <path d="M40 80 C40 100, 160 100, 160 80" stroke="#d0d0d0" stroke-width="6" stroke-linecap="round" fill="none"/>
+                    
+                    <!-- Paint Drip -->
+                    <path d="M70 85 Q75 110 80 115 Q85 110 85 85 Z" fill="${hexColor}"/>
+                    <path d="M120 85 Q122 100 125 105 Q128 100 130 85 Z" fill="${hexColor}"/>
+
+                    <defs>
+                        <linearGradient id="bucketGrad-${hexColor.replace('#','')}" x1="40" y1="80" x2="160" y2="80" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#f0f0f0" />
+                            <stop offset="20%" stop-color="#ffffff" />
+                            <stop offset="80%" stop-color="#e0e0e0" />
+                            <stop offset="100%" stop-color="#d0d0d0" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            `;
+        }
+
+        // --- 3. Render Masonry Grid & Logic ---
+        function renderGrid() {
+            const grid = document.getElementById('wishlist-grid');
+            const countBadge = document.getElementById('wishlist-count');
+            const emptyState = document.getElementById('empty-state');
+            
+            grid.innerHTML = ''; 
+            
+            if (products.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'flex';
+                countBadge.innerText = '0 Items';
+                return;
+            }
+
+            grid.style.display = 'block';
+            emptyState.style.display = 'none';
+            countBadge.innerText = products.length + (products.length === 1 ? ' Item' : ' Items');
+
+            products.forEach((product, index) => {
+                const delay = index * 0.05; // faster stagger
+
+                const cardHTML = `
+                    <div class="masonry-item tilt-card glass rounded-[2rem] p-6 flex flex-col justify-between group" style="animation-delay: ${delay}s; min-height: ${product.height.replace('h-[', '').replace(']', '')};">
+                        
+                        <!-- Top section: Finish Badge & Expanding Remove Button -->
+                        <div class="flex justify-between items-start z-30 relative">
+                            <span class="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-gray-700 shadow-sm border border-white">
+                                ${product.finish}
+                            </span>
+                            
+                            <!-- Hover to reveal remove button -->
+                            <button onclick="removeProduct(${product.id})" class="group/remove bg-white/80 backdrop-blur-md rounded-full px-3 py-2 flex items-center gap-2 border border-white hover:bg-red-50 hover:border-red-200 transition-all duration-300 shadow-sm" title="Remove from wishlist">
+                                <i class="fa-solid fa-heart text-red-500 transition-transform group-hover/remove:scale-110"></i>
+                                <span class="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover/remove:max-w-[100px] group-hover/remove:opacity-100 text-xs font-semibold text-red-600">Remove</span>
+                            </button>
+                        </div>
+
+                        <!-- Image/SVG container -->
+                        <div class="relative flex-grow flex items-center justify-center my-6 z-10">
+                            <!-- Glow behind bucket -->
+                            <div class="absolute w-3/4 h-3/4 rounded-full blur-3xl opacity-30 transition-opacity duration-500 group-hover:opacity-70" style="background-color: ${product.color}"></div>
+                            
+                            <div class="w-full h-full max-h-48 md:max-h-64 relative z-10 transition-transform duration-500 group-hover:-translate-y-3 group-hover:scale-110">
+                                ${generateBucketSVG(product.color)}
+                            </div>
+                        </div>
+
+                        <!-- Info section -->
+                        <div class="z-20 relative bg-white/60 p-5 rounded-2xl border border-white backdrop-blur-md shadow-sm">
+                            <div class="flex justify-between items-end mb-3">
+                                <div>
+                                    <h3 class="font-serif text-xl md:text-2xl font-bold text-dark mb-1 leading-tight group-hover:text-gold transition-colors">${product.name}</h3>
+                                    <p class="text-xs md:text-sm text-gray-500 font-medium">${product.volume}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-lg md:text-xl text-dark">$${product.price.toFixed(2)}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Color Swatch & Quick View -->
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-dark/10">
+                                <div class="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full">
+                                    <div class="w-5 h-5 rounded-full border border-dark/20 shadow-sm" style="background-color: ${product.color}"></div>
+                                    <span class="text-xs font-semibold text-gray-600 uppercase tracking-wide">Preview</span>
+                                </div>
+                                
+                                <button onclick="openQuickView(${product.id})" class="h-10 px-5 rounded-full bg-dark text-white flex items-center gap-2 shadow-md hover:bg-gold hover:shadow-gold/40 transition-all font-medium text-sm">
+                                    <i class="fa-solid fa-eye text-xs"></i> Quick View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+            
+            // Re-initialize tilt effect for new elements
+            setTimeout(initTilt, 100);
+        }
+
+        // Action Functions
+        function removeProduct(id) {
+            products = products.filter(p => p.id !== id);
+            renderGrid();
+        }
+
+        function clearAllProducts() {
+            products = [];
+            renderGrid();
+        }
+
+        function resetDemoProducts() {
+            products = [...originalProducts];
+            renderGrid();
+        }
+
+        // Initial render
+        renderGrid();
+
+        // --- 4. Quick View Modal Logic ---
+        function openQuickView(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            
+            document.getElementById('qv-title').innerText = product.name;
+            document.getElementById('qv-finish').innerText = product.finish;
+            document.getElementById('qv-price').innerText = '$' + product.price.toFixed(2);
+            document.getElementById('qv-swatch').style.backgroundColor = product.color;
+            document.getElementById('qv-hex').innerText = product.color.toUpperCase();
+            
+            const imageContainer = document.getElementById('qv-image-container');
+            imageContainer.innerHTML = `<div class="w-full max-w-[300px] h-full relative z-10 animate-[float_4s_ease-in-out_infinite]">${generateBucketSVG(product.color)}</div>`;
+            imageContainer.style.background = `radial-gradient(circle at center, ${product.color}30 0%, transparent 70%)`;
+
+            const modal = document.getElementById('quick-view-modal');
+            const content = document.getElementById('qv-content');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Small delay to allow display:flex to apply before animating opacity/transform
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95', 'translate-y-4');
+                content.classList.add('scale-100', 'translate-y-0');
+            }, 10);
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById('quick-view-modal');
+            const content = document.getElementById('qv-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100', 'translate-y-0');
+            content.classList.add('scale-95', 'translate-y-4');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = ''; // Restore scroll
+            }, 300);
+        }
+
+        // --- 5. 3D Tilt Effect Initialization ---
+        function initTilt() {
+            const cards = document.querySelectorAll('.tilt-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -8; // Max 8 deg
+                    const rotateY = ((x - centerX) / centerX) * 8;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
+        }
+        
+        // Run tilt init after a tiny delay to ensure DOM layout is complete
+        setTimeout(initTilt, 100);
+
+        // --- 6. Particle Background System ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let particlesArray = [];
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * -0.5 - 0.1; // Move slowly up
+                this.color = `rgba(212, 175, 55, ${Math.random() * 0.2 + 0.05})`; // Gold/warm tones
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // Wrap around
+                if (this.y < 0) this.y = canvas.height;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        function initParticles() {
+            particlesArray = [];
+            const numberOfParticles = (canvas.width * canvas.height) / 15000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        });
+        
+        initParticles();
+        animateParticles();
+
+    </script>
+</body>
+</html>

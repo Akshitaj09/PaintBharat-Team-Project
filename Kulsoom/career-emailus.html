@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Send Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* The exact soft gradient from the reference image */
+        .bg-custom-gradient {
+            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #e3f2fd 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px; /* Reduced outer spacing to fit screen better */
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 50px rgba(31, 38, 135, 0.05);
+        }
+
+        /* Styled Input Fields */
+        .input-item {
+            background: white;
+            border-radius: 9999px;
+            padding: 18px 28px; /* Slightly larger padding for the wider layout */
+            width: 100%;
+            border: none;
+            outline: none;
+            color: #33315a;
+            font-size: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        .input-item:focus {
+            box-shadow: 0 0 0 3px rgba(255, 61, 129, 0.15);
+        }
+
+        /* Custom File Upload */
+        .file-upload-wrapper {
+            position: relative;
+            cursor: pointer;
+            background: white;
+            border-radius: 9999px;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #64748b;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            height: 60px; /* Increased height for prominence */
+        }
+
+        .file-upload-wrapper:hover {
+            background: #f8fafc;
+        }
+
+        .hidden-file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Primary Pink Button */
+        .submit-btn {
+            background: #ff3d81;
+            color: white;
+            padding: 14px;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            height: 60px;
+            box-shadow: 0 4px 15px rgba(255, 61, 129, 0.3);
+        }
+
+        .submit-btn:hover {
+            background: #e91e63;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 61, 129, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Close Button Styling */
+        .close-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-custom-gradient">
+        
+        <!-- Main Section Container - Increased max-width and set to w-full -->
+        <div class="glass-card relative w-full max-w-[1200px] rounded-[48px] px-6 py-10 md:px-20 md:py-16 flex flex-col items-center text-center">
+            
+            <!-- Close Icon -->
+            <div class="close-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+            </div>
+
+            <!-- The Icon from the Design -->
+            <div class="mb-8">
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="60" cy="105" rx="30" ry="5" fill="black" fill-opacity="0.05"/>
+                    <rect x="35" y="35" width="50" height="45" rx="4" fill="#fce4ec"/>
+                    <path d="M60 55C60 55 58 52 55 52C52.5 52 51 54 51 56.5C51 59.5 60 65 60 65C60 65 69 59.5 69 56.5C69 54 67.5 52 65 52C62 52 60 55 60 55Z" fill="#ff3d81"/>
+                    <path d="M25 55C25 51.6863 27.6863 49 31 49H89C92.3137 49 95 51.6863 95 55V85C95 88.3137 92.3137 91 89 91H31C27.6863 91 25 88.3137 25 85V55Z" fill="#ff3d81"/>
+                    <path d="M25 55L60 75L95 55" stroke="white" stroke-width="2" stroke-opacity="0.2"/>
+                    <path d="M25 91L50 70" stroke="white" stroke-width="2" stroke-opacity="0.1"/>
+                    <path d="M95 91L70 70" stroke="white" stroke-width="2" stroke-opacity="0.1"/>
+                </svg>
+            </div>
+
+            <!-- Title & Description -->
+            <h1 class="text-[#33315a] text-4xl md:text-5xl font-bold mb-4">Email Us</h1>
+            <p class="text-[#5b5980] text-lg md:text-xl mb-12 opacity-80 max-w-2xl">
+                Join our team! Please provide your professional details and upload your latest resume.
+            </p>
+
+            <!-- Form Content with Expanded Grid Layout -->
+            <form id="contactForm" class="w-full" onsubmit="handleSubmit(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10">
+                    
+                    <!-- Left Column: Name & Email -->
+                    <div class="flex flex-col space-y-6">
+                        <input type="text" placeholder="Full Name" class="input-item" required id="userName">
+                        <input type="email" placeholder="Email Address" class="input-item" required id="userEmail">
+                    </div>
+
+                    <!-- Right Column: Upload & Submit -->
+                    <div class="flex flex-col space-y-6">
+                        <div class="file-upload-wrapper">
+                            <span id="fileLabel" class="truncate pr-4">Upload Resume (PDF/DOC)</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#ff3d81] flex-shrink-0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                            <input type="file" class="hidden-file-input" id="resumeUpload" accept=".pdf,.doc,.docx" onchange="handleFileChange(this)">
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            Submit Application
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <p class="mt-12 text-[#8c8ab0] text-sm font-medium">
+                Your data is safe with us. We never share personal information.
+            </p>
+
+            <!-- Success Overlay -->
+            <div id="successOverlay" class="hidden absolute inset-0 bg-white/95 rounded-[48px] flex flex-col items-center justify-center p-8 z-10">
+                <div class="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-8">
+                    <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-3xl font-bold text-[#33315a]">Application Received!</h2>
+                <p class="text-[#5b5980] mt-4 text-lg max-w-md">Thank you for applying. Our hiring team will review your resume and contact you shortly.</p>
+                <button onclick="resetForm()" class="mt-10 text-[#ff3d81] font-bold text-base hover:underline">Submit another application</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function handleFileChange(input) {
+            const label = document.getElementById('fileLabel');
+            if (input.files.length > 0) {
+                label.innerText = input.files[0].name;
+                label.classList.add('text-[#33315a]', 'font-bold');
+            } else {
+                label.innerText = "Upload Resume (PDF/DOC)";
+                label.classList.remove('text-[#33315a]', 'font-bold');
+            }
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const btn = event.target.querySelector('button');
+            const originalText = btn.innerText;
+            
+            // Show loading state
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+            btn.style.opacity = "0.7";
+
+            // Simulate API call
+            setTimeout(() => {
+                document.getElementById('successOverlay').classList.remove('hidden');
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.style.opacity = "1";
+            }, 1200);
+        }
+
+        function resetForm() {
+            document.getElementById('contactForm').reset();
+            document.getElementById('fileLabel').innerText = "Upload Resume (PDF/DOC)";
+            document.getElementById('fileLabel').classList.remove('text-[#33315a]', 'font-bold');
+            document.getElementById('successOverlay').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

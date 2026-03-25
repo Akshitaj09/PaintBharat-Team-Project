@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Co. | Curated Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@200;300;400;500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFF5F7;
+            /* Global font set to Poppins */
+            font-family: 'Poppins', sans-serif;
+            color: #2D2A26;
+            overflow-x: hidden;
+        }
+
+        /* Headings kept in Playfair Display */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: -0.02em;
+        }
+
+        /* Specifically keeping the header caption in Inter as requested */
+        .inter-font {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .texture-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.05;
+            mix-blend-mode: multiply;
+            background-image: url('https://www.transparenttextures.com/patterns/pinstripe.png');
+            z-index: 1;
+        }
+
+        .dome-outer {
+            position: relative;
+            aspect-ratio: 3 / 4.8;
+            border: 0.75px solid rgba(0,0,0,0.8);
+            padding: 12px;
+            border-radius: 300px 300px 0 0;
+            transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .dome-inner {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 288px 288px 0 0;
+            background-color: #FAF9F6;
+            position: relative;
+        }
+
+        .dome-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.8) contrast(1.05);
+            transition: all 1.2s cubic-bezier(0.2, 1, 0.3, 1);
+            transform: scale(1.1);
+        }
+
+        .promo-tag {
+            position: absolute;
+            top: 25px;
+            right: -12px;
+            background-color: #f43380;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            z-index: 20;
+            box-shadow: 0 6px 18px rgba(244, 51, 128, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: right center;
+        }
+
+        .group:hover .promo-tag {
+            transform: scale(1.1) translateX(-8px) rotate(-2deg);
+            background-color: #e3216d;
+            box-shadow: 0 8px 25px rgba(244, 51, 128, 0.45);
+        }
+
+        .group:hover .dome-outer {
+            transform: translateY(-12px);
+            border-color: #f43380;
+            box-shadow: 0 20px 40px -20px rgba(244, 51, 128, 0.2);
+        }
+
+        .group:hover .dome-inner img {
+            filter: saturate(1.1);
+            transform: scale(1);
+        }
+
+        .image-tint {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, rgba(253, 217, 229, 0.2));
+            pointer-events: none;
+        }
+
+        .blob-bg {
+            position: fixed;
+            bottom: -10rem;
+            right: -10rem;
+            width: 700px;
+            height: 700px;
+            opacity: 0.4;
+            pointer-events: none;
+            transform: rotate(-15deg);
+            z-index: 0;
+        }
+
+        .accent-color {
+            color: #f43380;
+        }
+
+        .text-muted {
+            color: #6B5E59;
+        }
+
+        .explore-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: #f43380;
+            transition: width 0.4s ease;
+        }
+        .group:hover .explore-link::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="texture-overlay"></div>
+
+    <main class="relative z-10 max-w-[1400px] mx-auto px-8 py-12 md:py-24">
+        <header class="text-center mb-20 space-y-4">
+            <h1 class="text-6xl md:text-8xl font-light text-[#2D2A26] italic">
+                Our Offers
+            </h1>
+            <div class="w-12 h-[1.5px] bg-[#f43380] mx-auto mt-6 mb-6"></div>
+            
+            <p class="inter-font max-w-xl mx-auto text-[11px] md:text-xs text-muted font-light uppercase tracking-[0.25em] leading-relaxed">
+                Experience the Art of Living <br class="hidden md:block"> 
+                Exclusive Limited-Time Savings on Our Signature Finishes
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-14 lg:gap-20">
+            
+            <div class="group cursor-pointer relative">
+                <span class="promo-tag">10% Off</span>
+                <div class="dome-outer">
+                    <div class="dome-inner">
+                        <img src="images/pink_inter.png" alt="Interior Painting" >
+                        <div class="image-tint"></div>
+                    </div>
+                </div>
+                <div class="mt-10 text-center px-6">
+                    <div class="flex justify-center mb-5 accent-color opacity-70 group-hover:opacity-100 transition-all duration-500">
+                        <svg class="w-6 h-6 stroke-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl mb-3 group-hover:accent-color transition-colors duration-500">Interior</h3>
+                    <p class="text-muted text-[14px] leading-relaxed font-light tracking-wide max-w-[240px] mx-auto mb-8">
+                        Bespoke color palettes designed to harmonize with your unique lifestyle.
+                    </p>
+                    <div class="relative inline-block">
+                        <span class="explore-link text-[11px] uppercase tracking-[0.35em] font-semibold accent-color transition-all duration-500">
+                            Explore
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer relative">
+                <span class="promo-tag">10% Off</span>
+                <div class="dome-outer">
+                    <div class="dome-inner">
+                        <img src="images/pink_exter.png" alt="Exterior Painting" >
+                        <div class="image-tint"></div>
+                    </div>
+                </div>
+                <div class="mt-10 text-center px-6">
+                    <div class="flex justify-center mb-5 accent-color opacity-70 group-hover:opacity-100 transition-all duration-500">
+                        <svg class="w-6 h-6 stroke-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582" />
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl mb-3 group-hover:accent-color transition-colors duration-500">Exterior</h3>
+                    <p class="text-muted text-[14px] leading-relaxed font-light tracking-wide max-w-[240px] mx-auto mb-8">
+                        Prestige protection and high-performance finishes for luxury facades.
+                    </p>
+                    <div class="relative inline-block">
+                        <span class="explore-link text-[11px] uppercase tracking-[0.35em] font-semibold accent-color transition-all duration-500">
+                            Explore
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group cursor-pointer relative">
+                <span class="promo-tag">10% Off</span>
+                <div class="dome-outer">
+                    <div class="dome-inner">
+                        <img src="images/wallpaper2.png" alt="Designer Wallpapers">
+                        <div class="image-tint"></div>
+                    </div>
+                </div>
+                <div class="mt-10 text-center px-6">
+                    <div class="flex justify-center mb-5 accent-color opacity-70 group-hover:opacity-100 transition-all duration-500">
+                        <svg class="w-6 h-6 stroke-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl mb-3 group-hover:accent-color transition-colors duration-500">Wallpapers</h3>
+                    <p class="text-muted text-[14px] leading-relaxed font-light tracking-wide max-w-[240px] mx-auto mb-8">
+                        Exquisite textures and patterns sourced from global design houses.
+                    </p>
+                    <div class="relative inline-block">
+                        <span class="explore-link text-[11px] uppercase tracking-[0.35em] font-semibold accent-color transition-all duration-500">
+                            Explore
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="blob-bg">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#FFE4E9" d="M44.7,-76.4C58.1,-69.2,69.2,-58.1,76.4,-44.7C83.6,-31.3,86.9,-15.7,85.6,-0.7C84.4,14.2,78.5,28.5,70.5,41.4C62.5,54.3,52.3,65.8,40,73.5C27.7,81.2,13.8,85.1,-0.5,86C-14.8,86.9,-29.7,84.7,-42.6,77.7C-55.5,70.7,-66.4,58.8,-74.6,45.3C-82.7,31.7,-88.2,15.9,-87.3,0.5C-86.4,-14.8,-79.1,-29.6,-69.5,-41.8C-59.9,-54,-47.9,-63.6,-34.9,-71.1C-21.9,-78.6,-10.9,-84,2.5,-88.3C15.9,-92.6,31.8,-95.8,44.7,-76.4Z" transform="translate(100 100)" />
+        </svg>
+    </div>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Visualizer | Noir Luxury</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Deep black background for the Noir luxury feel */
+            --primary-bg: #000000;
+            --accent-gold: #c5a059;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Gradient Mask: Fading into the black background on the left */
+        .mask-container {
+            mask-image: linear-gradient(to left, black 35%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to left, black 35%, transparent 100%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        /* Hover effect for the palette card */
+        .glass-card-hover:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.2);
+        }
+
+        .color-overlay {
+            mix-blend-mode: multiply;
+            transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-up {
+            animation: fadeUp 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        .active-swatch {
+            ring: 3px solid rgba(255, 255, 255, 0.8);
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        #room-bg {
+            transition: transform 20s ease-out;
+            filter: brightness(0.9);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- BACKGROUND IMAGE SECTION -->
+    <div class="fixed inset-y-0 right-0 w-full lg:w-[85%] z-0 overflow-hidden">
+        <div class="absolute inset-0 mask-container">
+            <img id="room-bg" 
+                 src="images/homepage_herosection5.jpg" 
+                 class="w-full h-full object-cover origin-center" 
+                 alt="Luxury Room Interior">
+            
+            <div id="color-layer" class="absolute inset-0 color-overlay pointer-events-none bg-transparent opacity-40"></div>
+        </div>
+        <div class="absolute inset-0 pointer-events-none opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+    </div>
+
+    <!-- CONTENT OVERLAY -->
+    <main class="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+        
+        <!-- LEFT SIDE: Typography & Swatches -->
+        <section class="flex flex-col justify-center items-start px-8 lg:px-24 py-16 lg:py-0">
+            <div class="max-w-xl">
+                <p class="text-[10px] uppercase tracking-[0.6em] text-gray-400 mb-8 fade-up" style="animation-delay: 0.2s;">Atmospheric Precision</p>
+                
+                <h1 class="text-7xl lg:text-[110px] font-serif font-medium tracking-tighter text-white leading-[0.85] mb-10 fade-up" style="animation-delay: 0.4s;">
+                    AI<br>VISUALIZER
+                </h1>
+                
+                <p class="text-base text-gray-400 font-light max-w-[400px] leading-relaxed mb-12 fade-up" style="animation-delay: 0.6s;">
+                    Experience your walls in a new dimension. Select shades, preview instantly, and reimagine your living space with intelligent precision.
+                </p>
+
+                <!-- Color Palette Card with Hover Golden Border -->
+                <div id="palette-container" class="glass-card glass-card-hover p-6 lg:p-7 rounded-[3rem] fade-up cursor-default" style="animation-delay: 0.8s;">
+                    <div class="flex items-center gap-6 lg:gap-8" id="swatch-grid">
+                        <!-- Swatches injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="hidden lg:block"></div>
+    </main>
+
+    <!-- INFO CARD (SLIDE-UP) -->
+    <div id="info-card" class="fixed bottom-12 left-1/2 -translate-x-1/2 lg:left-24 lg:translate-x-0 w-[90%] lg:w-80 glass-card p-8 rounded-[2rem] shadow-2xl transition-all duration-700 transform translate-y-full opacity-0 z-50">
+        <!-- Close Button (Cross Icon) -->
+        <button id="close-card" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-all transform hover:scale-110 active:scale-90" aria-label="Close Info Card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        <div class="flex items-center gap-4 mb-4">
+            <div id="card-color-dot" class="w-10 h-10 rounded-full shadow-inner border border-white/20"></div>
+            <div>
+                <h3 id="card-name" class="font-serif text-xl text-white">Color Name</h3>
+                <p id="card-hex" class="text-[10px] tracking-widest text-gray-400 uppercase">#FFFFFF</p>
+            </div>
+        </div>
+
+        <p id="card-desc" class="text-gray-400 font-light text-xs leading-relaxed">Description goes here.</p>
+    </div>
+
+    <!-- UPLOAD BUTTON -->
+    <div class="fixed bottom-8 right-8 z-40">
+        <label for="room-upload" class="flex items-center gap-3 bg-white/10 backdrop-blur-xl px-6 py-4 rounded-full shadow-lg cursor-pointer hover:bg-white/20 transition-all group active:scale-95 border border-white/10">
+            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            </div>
+            <span class="text-[11px] uppercase tracking-[0.2em] font-medium text-white/90">Upload Room</span>
+            <input type="file" id="room-upload" class="hidden" accept="image/*">
+        </label>
+    </div>
+
+    <script>
+        const colorData = [
+            { "name": "Soft Rose", "hex": "#F6C1CC", "description": "A gentle, romantic hue that adds a touch of warmth." },
+            { "name": "Honey Glow", "hex": "#F4D06F", "description": "Sun-kissed yellow that energizes any living space." },
+            { "name": "Earthy Sage", "hex": "#B7C4B1", "description": "A grounding green inspired by natural Mediterranean flora." },
+            { "name": "Ice Lavender", "hex": "#E6E6FA", "description": "A crisp, cool purple that promotes clarity and creative flow." },
+            { "name": "Warm Cream", "hex": "#F5F5DC", "description": "The quintessential luxury neutral for a timeless look." }
+        ];
+
+        const swatchGrid = document.getElementById('swatch-grid');
+        const colorLayer = document.getElementById('color-layer');
+        const infoCard = document.getElementById('info-card');
+        const roomBg = document.getElementById('room-bg');
+        const closeCard = document.getElementById('close-card');
+
+        function initSwatches() {
+            colorData.forEach((color, index) => {
+                const button = document.createElement('button');
+                button.className = 'group flex flex-col items-center focus:outline-none transition-transform duration-300 hover:-translate-y-1';
+                
+                button.innerHTML = `
+                    <div class="w-10 h-10 lg:w-11 lg:h-11 rounded-full border-2 border-white/20 shadow-sm transition-all duration-500 group-hover:scale-110" 
+                         style="background-color: ${color.hex};"
+                         id="swatch-${index}">
+                    </div>
+                `;
+                button.onclick = () => selectColor(color, index);
+                swatchGrid.appendChild(button);
+            });
+            
+            setTimeout(() => { if (roomBg) roomBg.style.transform = 'scale(1.15)'; }, 500);
+        }
+
+        function selectColor(color, index) {
+            colorLayer.style.backgroundColor = color.hex;
+            colorLayer.style.opacity = "0.35";
+
+            document.querySelectorAll('[id^="swatch-"]').forEach(el => el.classList.remove('active-swatch'));
+            const currentSwatch = document.getElementById(`swatch-${index}`);
+            if (currentSwatch) currentSwatch.classList.add('active-swatch');
+
+            document.getElementById('card-color-dot').style.backgroundColor = color.hex;
+            document.getElementById('card-name').textContent = color.name;
+            document.getElementById('card-hex').textContent = color.hex;
+            document.getElementById('card-desc').textContent = color.description;
+
+            infoCard.classList.remove('translate-y-full', 'opacity-0');
+            infoCard.classList.add('translate-y-0', 'opacity-100');
+        }
+
+        closeCard.onclick = () => {
+            infoCard.classList.add('translate-y-full', 'opacity-0');
+            infoCard.classList.remove('translate-y-0', 'opacity-100');
+        };
+
+        document.getElementById('room-upload').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    roomBg.src = event.target.result;
+                    colorLayer.style.backgroundColor = 'transparent';
+                    infoCard.classList.add('translate-y-full', 'opacity-0');
+                    document.querySelectorAll('[id^="swatch-"]').forEach(el => el.classList.remove('active-swatch'));
+                    
+                    roomBg.style.transition = 'none';
+                    roomBg.style.transform = 'scale(1)';
+                    setTimeout(() => {
+                        roomBg.style.transition = 'transform 20s ease-out';
+                        roomBg.style.transform = 'scale(1.15)';
+                    }, 100);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.onload = initSwatches;
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive FAQ Section</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes paintSweep {
+            0% { 
+                clip-path: inset(0 100% 0 0); 
+                transform: translateX(30px) scale(0.95);
+                opacity: 0;
+            }
+            100% { 
+                clip-path: inset(0 0 0 0); 
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+        .animate-paint-sweep {
+            animation: paintSweep 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans selection:bg-pink-100 selection:text-pink-600">
+    <div class="min-h-screen flex items-center justify-center p-4 md:p-12">
+        <div class="max-w-7xl w-full bg-white rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden flex flex-col md:flex-row min-h-[800px] border border-white/20">
+            
+            <!-- Left Side: FAQ Navigation -->
+            <div class="w-full md:w-[40%] p-8 md:p-14 bg-white flex flex-col z-20">
+                <div class="mb-12">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-900 text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl">
+                        <i data-lucide="hard-hat" class="w-3 h-3 text-yellow-400"></i>
+                        Construction in Progress
+                    </div>
+                    <h1 class="text-5xl font-black text-slate-900 leading-[0.95] tracking-tight">
+                        Painting <br /> 
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400">Solutions.</span>
+                    </h1>
+                    <p class="text-slate-500 mt-6 text-lg font-medium leading-relaxed max-w-sm">
+                        Our team is working around the clock to make your experience seamless. Pick a topic to see our progress.
+                    </p>
+                </div>
+
+                <!-- FAQ List Container -->
+                <div id="faq-list" class="space-y-4 flex-1">
+                    <!-- JS will inject buttons here -->
+                </div>
+
+                <div class="mt-12 flex items-center justify-between bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-xs font-bold text-slate-600 uppercase tracking-widest">System Online</span>
+                    </div>
+                    <button onclick="generateCharacterImage()" class="p-2 hover:bg-white rounded-full transition-colors text-slate-400 hover:text-pink-500 group" title="Refresh 3D scene">
+                        <i id="refresh-icon" data-lucide="refresh-cw" class="w-4 h-4 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Side: The Interactive Worksite -->
+            <div class="w-full md:w-[60%] relative bg-[#f8f9fb] overflow-hidden flex items-center justify-center p-6 md:p-12">
+                
+                <!-- Wall Background Texture -->
+                <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                     style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+                <!-- 3D Character Layer -->
+                <div id="character-layer" class="absolute inset-0 flex items-center justify-center transition-opacity duration-700">
+                    <!-- Loading State / Image / Fallback will be injected here -->
+                </div>
+
+                <!-- Answer Panel -->
+                <div id="answer-container" class="relative z-30 w-full flex items-center justify-center pointer-events-none">
+                    <!-- Active Answer UI injected here -->
+                </div>
+
+                <!-- Corner Decorations -->
+                <div class="absolute top-12 left-12 flex gap-4 opacity-20">
+                    <div class="w-12 h-1 bg-slate-300 rounded-full"></div>
+                    <div class="w-4 h-1 bg-slate-300 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const FAQ_DATA = [
+            {
+                id: 1,
+                icon: "sparkles",
+                question: "How does the magic happen?",
+                answer: "Our platform uses advanced algorithms to automate your workflow, turning complex tasks into simple, one-click actions. It's like having a digital assistant that never sleeps.",
+                accent: "bg-pink-50"
+            },
+            {
+                id: 2,
+                icon: "zap",
+                question: "Is it fast enough for my team?",
+                answer: "Speed is our middle name. With a global edge network and optimized codebases, we ensure sub-100ms response times for all your collaborative needs.",
+                accent: "bg-yellow-50"
+            },
+            {
+                id: 3,
+                icon: "shield",
+                question: "How secure is my data?",
+                answer: "We use AES-256 encryption at rest and TLS 1.3 in transit. Your privacy is our priority, backed by SOC2 Type II compliance and regular third-party audits.",
+                accent: "bg-blue-50"
+            },
+            {
+                id: 4,
+                icon: "message-circle",
+                question: "What kind of support do you offer?",
+                answer: "Every plan comes with 24/7 priority support. Our team of experts is ready to help you via chat, email, or dedicated Slack channels whenever you need a hand.",
+                accent: "bg-purple-50"
+            }
+        ];
+
+        let activeIndex = 0;
+        let characterImage = null;
+        let isLoadingImage = false;
+
+        function renderFaqs() {
+            const container = document.getElementById('faq-list');
+            container.innerHTML = FAQ_DATA.map((item, index) => `
+                <button
+                    onclick="setActive(${index})"
+                    class="w-full text-left p-6 rounded-3xl transition-all duration-500 flex items-center gap-5 group relative overflow-hidden ${
+                        activeIndex === index 
+                            ? 'bg-slate-900 text-white shadow-2xl scale-[1.02] -translate-x-2' 
+                            : 'bg-white border border-slate-100 hover:border-pink-200 hover:bg-pink-50/30'
+                    }"
+                >
+                    <div class="p-3 rounded-2xl transition-all duration-500 ${activeIndex === index ? 'bg-slate-800 rotate-12' : item.accent}">
+                        <i data-lucide="${item.icon}" class="w-5 h-5 text-pink-400"></i>
+                    </div>
+                    <div class="flex-1">
+                        <span class="block font-bold text-lg ${activeIndex === index ? 'text-white' : 'text-slate-800'}">
+                            ${item.question}
+                        </span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 transition-all duration-500 ${activeIndex === index ? 'rotate-90 opacity-100 translate-x-1' : 'opacity-20'}"></i>
+                </button>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function setActive(index) {
+            activeIndex = index;
+            renderFaqs();
+            renderAnswer();
+        }
+
+        function renderAnswer() {
+            const container = document.getElementById('answer-container');
+            const data = FAQ_DATA[activeIndex];
+            
+            container.innerHTML = `
+                <div class="max-w-lg w-full p-10 md:p-14 rounded-[3rem] shadow-[0_50px_100px_-30px_rgba(236,72,153,0.5)] backdrop-blur-xl bg-pink-500/90 text-white transform transition-all duration-700 pointer-events-auto group hover:-translate-y-2 animate-paint-sweep">
+                    <div class="absolute inset-0 rounded-[3rem] overflow-hidden">
+                        <div class="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                    </div>
+
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                                <i data-lucide="${data.icon}" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="flex gap-1">
+                                <div class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
+                                <div class="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                            </div>
+                        </div>
+
+                        <h2 class="text-3xl font-black mb-6 tracking-tight leading-tight">
+                            ${data.question}
+                        </h2>
+                        
+                        <p class="text-xl leading-relaxed text-pink-50 font-medium mb-10 opacity-90">
+                            ${data.answer}
+                        </p>
+
+                        <div class="flex items-center gap-6">
+                            <button class="px-8 py-4 bg-white text-pink-600 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl hover:shadow-pink-400/40 hover:scale-105 active:scale-95 transition-all">
+                                Dig Deeper
+                            </button>
+                            <span class="text-xs font-bold text-pink-200 uppercase tracking-widest">Section 0${data.id}</span>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-pink-600/50 blur-3xl pointer-events-none"></div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        async function generateCharacterImage() {
+            const layer = document.getElementById('character-layer');
+            const refreshIcon = document.getElementById('refresh-icon');
+            
+            isLoadingImage = true;
+            refreshIcon.classList.add('animate-spin');
+            
+            layer.innerHTML = `
+                <div class="flex flex-col items-center gap-6 animate-pulse">
+                    <div class="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center shadow-inner">
+                        <i data-lucide="paintbrush" class="w-10 h-10 text-pink-400 animate-bounce"></i>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-slate-400 font-black uppercase tracking-widest text-sm">Deploying Painter...</p>
+                        <p class="text-slate-300 text-xs mt-1 italic">Mixing the pink paint</p>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+
+            const apiKey = ""; 
+            const prompt = "High-quality 3D render of a friendly cartoon character in overalls actively painting a large concrete wall with a long paint roller. The character is standing on a small wooden step ladder, with open pink paint cans and brushes on a light grey studio floor. A large section of the wall is covered in smooth pastel pink paint. Soft ambient lighting, clean SaaS aesthetic, isometric-inspired view, 4k, cinematic materials.";
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        instances: [{ prompt }],
+                        parameters: { sampleCount: 1 }
+                    })
+                });
+
+                if (!response.ok) throw new Error('API request failed');
+                
+                const result = await response.json();
+                if (result.predictions && result.predictions[0]) {
+                    characterImage = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                    layer.innerHTML = `
+                        <div class="w-full h-full relative group">
+                            <img src="${characterImage}" class="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-[10s] ease-out opacity-90">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-100/40 via-transparent to-transparent"></div>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('No image');
+                }
+            } catch (err) {
+                console.error(err);
+                layer.innerHTML = `
+                    <div class="w-full h-full bg-gradient-to-br from-slate-200 to-slate-100 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-40 bg-pink-500/10 -rotate-12 blur-3xl animate-pulse"></div>
+                        <div class="relative z-10 text-center">
+                            <div class="relative inline-block mb-4">
+                                <i data-lucide="hard-hat" class="w-32 h-32 text-slate-300/50"></i>
+                                <div class="absolute bottom-2 right-2 w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-bounce">
+                                    <i data-lucide="paintbrush" class="w-4 h-4 text-white"></i>
+                                </div>
+                            </div>
+                            <p class="text-slate-400 font-bold max-w-[200px] mx-auto text-sm">Painter is currently prepping the wall...</p>
+                        </div>
+                    </div>
+                `;
+                lucide.createIcons();
+            } finally {
+                isLoadingImage = false;
+                refreshIcon.classList.remove('animate-spin');
+            }
+        }
+
+        // Initialize
+        window.onload = () => {
+            renderFaqs();
+            renderAnswer();
+            generateCharacterImage();
+        };
+    </script>
+</body>
+</html>

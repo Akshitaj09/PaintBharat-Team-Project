@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Premier Painting & Wallpapers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-script {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Card Styles:
+           - Soft gradient background with visible transparency (0.75 opacity)
+           - Smooth transition for the interactive hover border
+        */
+        .faq-card {
+            background: linear-gradient(135deg, rgba(252, 219, 210, 0.75), rgba(244, 222, 242, 0.75)) padding-box,
+                        transparent border-box;
+            border: 2px solid transparent;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .faq-card:hover {
+            /* Navy Blue to Purple gradient border as requested */
+            background: linear-gradient(rgba(252, 219, 210, 0.85), rgba(244, 222, 242, 0.85)) padding-box,
+                        linear-gradient(135deg, #1e3a8a, #7e22ce) border-box;
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px rgba(30, 58, 138, 0.12);
+        }
+
+        /* Paint Drop Animations */
+        @keyframes bounce-drop {
+            0%, 100% { transform: translateY(0px) scaleX(1) scaleY(1); }
+            50% { transform: translateY(-30px) scaleX(0.92) scaleY(1.08); }
+        }
+        @keyframes heart-float {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-60px) scale(1.5); opacity: 0; }
+        }
+        @keyframes button-shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+        @keyframes button-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .animate-drop {
+            animation: bounce-drop 4s ease-in-out infinite;
+        }
+        .heart-particle {
+            position: absolute;
+            color: #cf8992;
+            animation: heart-float 2.5s ease-out infinite;
+        }
+        .btn-shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shine-effect::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -100%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(25deg);
+            transition: none;
+        }
+        .btn-shine-effect:hover::after {
+            animation: button-shine 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-pulse {
+            animation: button-pulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen relative overflow-x-hidden text-[#262626]">
+
+    <!-- Main Container -->
+    <div class="w-full px-6 md:px-12 lg:px-24 xl:px-32 py-24 relative z-10">
+        
+        <div class="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
+            
+            <!-- Left Side: Sticky Heading & Large Character -->
+            <div class="w-full lg:w-2/5 lg:sticky lg:top-24 flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div class="mb-2">
+                    <h4 class="text-[#cf8992] tracking-widest uppercase text-sm font-semibold mb-3">Expert Services</h4>
+                    <h1 class="font-script text-6xl md:text-8xl font-semibold mb-6 text-[#262626]">
+                        FAQ
+                    </h1>
+                </div>
+                
+                <p class="text-gray-400 leading-relaxed max-w-sm mb-12 text-lg">
+                    Transforming your spaces with premium finishes. Hover over our most common service queries below.
+                </p>
+
+                <!-- Enlarged Paint Drop Character Section -->
+                <div class="relative mt-4 group">
+                    <!-- Floating Hearts representing our love for craft -->
+                    <div class="heart-particle left-10 top-0 text-3xl" style="animation-delay: 0s">♥</div>
+                    <div class="heart-particle right-4 top-10 text-2xl" style="animation-delay: 0.8s">♥</div>
+                    <div class="heart-particle left-20 top-20 text-4xl" style="animation-delay: 1.6s">♥</div>
+
+                    <div class="animate-drop">
+                        <svg width="280" height="320" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="dropGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#fcdbd2;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#f4def2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M80 20C80 20 30 90 30 130C30 157.614 52.3858 180 80 180C107.614 180 130 157.614 130 130C130 90 80 20 80 20Z" fill="url(#dropGradient)" />
+                            <path d="M80 170C102.091 170 120 152.091 120 130C120 100 80 45 80 45V170Z" fill="white" fill-opacity="0.3" />
+
+                            <!-- Eyes -->
+                            <circle cx="65" cy="135" r="5" fill="#262626" />
+                            <circle cx="95" cy="135" r="5" fill="#262626" />
+                            <circle cx="66.5" cy="133.5" r="2" fill="white" />
+                            <circle cx="96.5" cy="133.5" r="2" fill="white" />
+                            
+                            <!-- Blush -->
+                            <circle cx="50" cy="145" r="7" fill="#fcdbd2" opacity="0.9" />
+                            <circle cx="110" cy="145" r="7" fill="#fcdbd2" opacity="0.9" />
+                            
+                            <!-- Smile -->
+                            <path d="M72 152C75 156 85 156 88 152" stroke="#262626" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </div>
+
+                    <div class="mt-8">
+                        <h3 class="font-script text-3xl text-[#262626]">Ready for a fresh coat?</h3>
+                        
+                        <!-- Improved Animated Button -->
+                        <button class="mt-6 px-10 py-4 bg-gradient-to-r from-[#1e3a8a] to-[#7e22ce] text-white rounded-full font-semibold tracking-wide shadow-xl shadow-blue-900/20 hover:shadow-2xl hover:shadow-indigo-500/40 hover:-translate-y-1 active:scale-95 transition-all duration-300 btn-shine-effect btn-pulse">
+                            <span class="relative z-10">Book Inspection</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: FAQ Cards -->
+            <div class="w-full lg:w-3/5 flex flex-col gap-10">
+                
+                <!-- Card 1: Painting Services -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl border border-gray-50">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-[#262626] text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            Interior vs Exterior: What's the difference?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-56 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-700 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-black/10 pt-6 mt-6 max-w-2xl">
+                                Interior paints focus on aesthetics and scrub-resistance, while exterior paints are specifically formulated to withstand harsh weather, UV rays, and moisture to prevent fading and cracking.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Wallpaper -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl border border-gray-50">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-[#262626] text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            Can you apply wallpaper over paint?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-56 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-700 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-black/10 pt-6 mt-6 max-w-2xl">
+                                Yes, as long as the surface is smooth and primed. We ensure a professional finish by treating the wall first, preventing any peeling or bubbling of your luxury wallpaper.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Waterproofing -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl border border-gray-50">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-[#262626] text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            How long does waterproofing last?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-56 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-700 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-black/10 pt-6 mt-6 max-w-2xl">
+                                With our high-grade industrial sealants, our waterproofing services typically provide protection for 10-15 years, depending on the exposure and structural conditions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Consultation -->
+                <div class="faq-card group relative w-full px-8 md:px-16 py-12 cursor-pointer rounded-2xl overflow-visible">
+                    <div class="absolute -right-6 top-1/2 transform -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl border border-gray-50">
+                        <span class="font-script text-3xl text-[#cf8992]">?</span>
+                    </div>
+
+                    <div class="flex flex-col items-center lg:items-start">
+                        <h2 class="font-script text-[#262626] text-[26px] md:text-[36px] font-medium text-center lg:text-left leading-[1.2] w-full pr-12">
+                            Do you help with color selection?
+                        </h2>
+                        <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-56 opacity-0 group-hover:opacity-100 w-full">
+                            <p class="text-gray-700 text-center lg:text-left text-[16px] md:text-[18px] font-medium leading-relaxed border-t border-black/10 pt-6 mt-6 max-w-2xl">
+                                Absolutely! Our experts provide a personalized color consultation to help you choose palettes that match your lighting, furniture, and desired ambiance.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

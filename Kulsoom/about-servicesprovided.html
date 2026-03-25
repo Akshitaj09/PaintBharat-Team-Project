@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services we provide | The Master Palette</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --text-dark: #1A1A1A;
+            --bg-light: #FFFFFF;
+        }
+
+        body {
+            background-color: #f8f8f8; /* Slightly off-white background to define the 2047x913 canvas */
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+
+        @keyframes fadeUpBlur {
+            0% { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-title {
+            animation: fadeUpBlur 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .reveal-delay-1 { transition-delay: 100ms; }
+        .reveal-delay-2 { transition-delay: 200ms; }
+        .reveal-delay-3 { transition-delay: 300ms; }
+        .reveal-delay-4 { transition-delay: 400ms; }
+
+        .img-container img {
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .group:hover .img-container img {
+            transform: scale(1.08);
+        }
+
+        /* Fixed Dimensions for the specific request */
+        .fixed-canvas {
+            width: 2047px;
+            height: 913px;
+            background-color: var(--bg-light);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.05);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-light); }
+        ::-webkit-scrollbar-thumb { background: #eee; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-serif antialiased">
+
+    <!-- The 2047x913 Container -->
+    <main class="fixed-canvas flex flex-col justify-center px-24">
+        
+        <div class="w-full max-w-[1800px] mx-auto">
+            
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-black/5 pb-8">
+                <div class="overflow-hidden">
+                    <h2 class="text-5xl md:text-6xl font-light tracking-tight animate-title">
+                        Services we <span class="italic text-[#D4AF37]">provide</span>
+                    </h2>
+                </div>
+                <div class="mt-4 md:mt-0 text-right reveal active">
+                    <p class="font-sans text-[10px] tracking-[0.4em] uppercase text-black/40 mb-1">Artisan Standard</p>
+                    <p class="font-sans text-xs tracking-widest uppercase text-[#D4AF37] font-semibold">Curated Collections</p>
+                </div>
+            </div>
+
+            <!-- Single Row Grid (4 Cards Wide) -->
+            <div class="grid grid-cols-4 gap-0 border-t border-black/5">
+                
+                <!-- Service Item 01 -->
+                <div class="reveal reveal-delay-1 group relative bg-white p-8 overflow-hidden cursor-pointer border-r border-black/5 transition-all duration-700 hover:bg-stone-50">
+                    <div class="img-container relative aspect-[4/5] overflow-hidden mb-8 bg-stone-100">
+                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" alt="Interior" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute top-6 left-6 p-3 bg-white/95 backdrop-blur text-[#D4AF37]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>
+                        </div>
+                        <div class="absolute top-6 right-6 text-[9px] font-sans text-white bg-black/20 backdrop-blur px-3 py-1.5 tracking-[0.2em] uppercase">Interior</div>
+                    </div>
+
+                    <div class="px-2 pb-4">
+                        <h3 class="text-2xl md:text-3xl font-light text-black group-hover:translate-x-2 transition-transform duration-700 ease-out">
+                            Interior <span class="italic text-[#D4AF37]">Design</span>
+                        </h3>
+                        <p class="text-[10px] font-sans uppercase tracking-[0.4em] text-black/30 mt-2 mb-6 group-hover:text-black/60 transition-colors">Residential Mastery</p>
+
+                        <div class="flex items-center gap-3 text-[#D4AF37] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                            <div class="h-[1px] w-6 bg-[#D4AF37]"></div>
+                            <span class="text-[9px] uppercase tracking-[0.3em] font-sans font-bold">Discover Suite</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Item 02 -->
+                <div class="reveal reveal-delay-2 group relative bg-white p-8 overflow-hidden cursor-pointer border-r border-black/5 transition-all duration-700 hover:bg-stone-50">
+                    <div class="img-container relative aspect-[4/5] overflow-hidden mb-8 bg-stone-100">
+                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800" alt="Exterior" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute top-6 left-6 p-3 bg-white/95 backdrop-blur text-[#D4AF37]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div class="absolute top-6 right-6 text-[9px] font-sans text-white bg-black/20 backdrop-blur px-3 py-1.5 tracking-[0.2em] uppercase">Exterior</div>
+                    </div>
+
+                    <div class="px-2 pb-4">
+                        <h3 class="text-2xl md:text-3xl font-light text-black group-hover:translate-x-2 transition-transform duration-700 ease-out">
+                            Exterior <span class="italic text-[#D4AF37]">Finish</span>
+                        </h3>
+                        <p class="text-[10px] font-sans uppercase tracking-[0.4em] text-black/30 mt-2 mb-6 group-hover:text-black/60 transition-colors">Resilient Façades</p>
+
+                        <div class="flex items-center gap-3 text-[#D4AF37] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                            <div class="h-[1px] w-6 bg-[#D4AF37]"></div>
+                            <span class="text-[9px] uppercase tracking-[0.3em] font-sans font-bold">View Portfolio</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Item 03 -->
+                <div class="reveal reveal-delay-3 group relative bg-white p-8 overflow-hidden cursor-pointer border-r border-black/5 transition-all duration-700 hover:bg-stone-50">
+                    <div class="img-container relative aspect-[4/5] overflow-hidden mb-8 bg-stone-100">
+                        <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=800" alt="Wallpaper" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute top-6 left-6 p-3 bg-white/95 backdrop-blur text-[#D4AF37]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                        </div>
+                        <div class="absolute top-6 right-6 text-[9px] font-sans text-white bg-black/20 backdrop-blur px-3 py-1.5 tracking-[0.2em] uppercase">Surface</div>
+                    </div>
+
+                    <div class="px-2 pb-4">
+                        <h3 class="text-2xl md:text-3xl font-light text-black group-hover:translate-x-2 transition-transform duration-700 ease-out">
+                            Wallpaper <span class="italic text-[#D4AF37]">Art</span>
+                        </h3>
+                        <p class="text-[10px] font-sans uppercase tracking-[0.4em] text-black/30 mt-2 mb-6 group-hover:text-black/60 transition-colors">Curated Textures</p>
+
+                        <div class="flex items-center gap-3 text-[#D4AF37] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                            <div class="h-[1px] w-6 bg-[#D4AF37]"></div>
+                            <span class="text-[9px] uppercase tracking-[0.3em] font-sans font-bold">Explore Art</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Item 04 -->
+                <div class="reveal reveal-delay-4 group relative bg-white p-8 overflow-hidden cursor-pointer transition-all duration-700 hover:bg-stone-50">
+                    <div class="img-container relative aspect-[4/5] overflow-hidden mb-8 bg-stone-100">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6199f7e009?auto=format&fit=crop&q=80&w=800" alt="Protection" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                        <div class="absolute top-6 left-6 p-3 bg-white/95 backdrop-blur text-[#D4AF37]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                        </div>
+                        <div class="absolute top-6 right-6 text-[9px] font-sans text-white bg-black/20 backdrop-blur px-3 py-1.5 tracking-[0.2em] uppercase">Protection</div>
+                    </div>
+
+                    <div class="px-2 pb-4">
+                        <h3 class="text-2xl md:text-3xl font-light text-black group-hover:translate-x-2 transition-transform duration-700 ease-out">
+                            Surface <span class="italic text-[#D4AF37]">Care</span>
+                        </h3>
+                        <p class="text-[10px] font-sans uppercase tracking-[0.4em] text-black/30 mt-2 mb-6 group-hover:text-black/60 transition-colors">Longevity Focus</p>
+
+                        <div class="flex items-center gap-3 text-[#D4AF37] opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                            <div class="h-[1px] w-6 bg-[#D4AF37]"></div>
+                            <span class="text-[9px] uppercase tracking-[0.3em] font-sans font-bold">Details</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const observerOptions = { threshold: 0.05 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

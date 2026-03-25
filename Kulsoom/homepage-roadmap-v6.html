@@ -1,0 +1,528 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { MessageCircle, Sparkles, Search, Package, Truck, Home, CheckCircle } from 'lucide-react';
+
+const HowWeWork = () => {
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState(0);
+  const [headerOpacity, setHeaderOpacity] = useState(1);
+  const containerRef = useRef(null);
+  const sectionsRef = useRef([]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      
+      const scrollTop = window.scrollY;
+      const sections = sectionsRef.current;
+      
+      // Handle header fade out
+      const fadeOutPoint = 300;
+      const opacity = Math.max(0, 1 - (scrollTop / fadeOutPoint));
+      setHeaderOpacity(opacity);
+      
+      sections.forEach((section, index) => {
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          
+          if (rect.top <= windowHeight / 2 && rect.bottom >= windowHeight / 2) {
+            setActiveSection(index);
+          }
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const sections = [
+    {
+      id: 1,
+      title: "Personal Design Session",
+      subtitle: "Discover Your Essence",
+      description: "A tailored session where we translate your unique journey into color, pattern and texture.",
+      scene: "consultation"
+    },
+    {
+      id: 2,
+      title: "Curate Your Style",
+      subtitle: "Tailored Style Curation",
+      description: "Browse our vault of handmade works and custom designs, hand-picked for your aesthetic.",
+      scene: "browsing"
+    },
+    {
+      id: 3,
+      title: "Seamless Logistics",
+      subtitle: "Effortless Delivery",
+      description: "One-click starts the movement. We handle the sourcing, shipping, and flawless installation.",
+      scene: "shipping"
+    },
+    {
+      id: 4,
+      title: "Expert Execution",
+      subtitle: "Meticulous Install",
+      description: "Our certified installers transform your space with meticulous attention to detail.",
+      scene: "installation"
+    },
+    {
+      id: 5,
+      title: "Live in Artistry",
+      subtitle: "Experience Beauty",
+      description: "Step into your new world. A place that wasn't real, that became the place you came home.",
+      scene: "living"
+    }
+  ];
+
+  const ConsultationScene = ({ isActive }) => (
+    <div className="relative w-full h-96 flex items-center justify-center">
+      {/* Designer character - actual person */}
+      <div className={`absolute left-1/4 transition-all duration-1000 ${isActive ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0'}`}>
+        <div className="relative">
+          {/* Designer body */}
+          <div className="flex flex-col items-center">
+            {/* Head */}
+            <div className="w-20 h-20 bg-pink-200 rounded-full mb-2 relative shadow-lg">
+              <div className="absolute top-6 left-5 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute top-6 right-5 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-6 h-1 bg-pink-400 rounded-full"></div>
+            </div>
+            {/* Body */}
+            <div className="w-16 h-24 bg-gradient-to-b from-pink-300 to-pink-400 rounded-2xl relative shadow-lg">
+              {/* Arms */}
+              <div className="absolute -left-6 top-2 w-6 h-16 bg-pink-300 rounded-full rotate-12"></div>
+              <div className="absolute -right-6 top-2 w-6 h-16 bg-pink-300 rounded-full -rotate-12"></div>
+            </div>
+            {/* Legs */}
+            <div className="flex gap-2 mt-1">
+              <div className="w-5 h-12 bg-pink-400 rounded-b-lg"></div>
+              <div className="w-5 h-12 bg-pink-400 rounded-b-lg"></div>
+            </div>
+          </div>
+          {/* Speech bubble */}
+          <div className={`absolute -top-20 left-1/2 -translate-x-1/2 bg-white px-6 py-3 rounded-2xl shadow-xl transition-all duration-700 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '300ms' }}>
+            <p className="text-sm font-medium text-gray-700 whitespace-nowrap">Let's create magic!</p>
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Client character - actual person */}
+      <div className={`absolute right-1/4 transition-all duration-1000 ${isActive ? 'translate-x-0 opacity-100' : 'translate-x-20 opacity-0'}`} style={{ transitionDelay: '200ms' }}>
+        <div className="relative">
+          {/* Client body */}
+          <div className="flex flex-col items-center">
+            {/* Head */}
+            <div className="w-20 h-20 bg-rose-200 rounded-full mb-2 relative shadow-lg">
+              <div className="absolute top-6 left-5 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute top-6 right-5 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-6 h-1 bg-rose-400 rounded-full"></div>
+            </div>
+            {/* Body */}
+            <div className="w-16 h-24 bg-gradient-to-b from-gray-700 to-gray-900 rounded-2xl relative shadow-lg">
+              {/* Arms */}
+              <div className="absolute -left-6 top-2 w-6 h-16 bg-gray-700 rounded-full -rotate-12"></div>
+              <div className="absolute -right-6 top-2 w-6 h-16 bg-gray-700 rounded-full rotate-12"></div>
+            </div>
+            {/* Legs */}
+            <div className="flex gap-2 mt-1">
+              <div className="w-5 h-12 bg-gray-800 rounded-b-lg"></div>
+              <div className="w-5 h-12 bg-gray-800 rounded-b-lg"></div>
+            </div>
+          </div>
+          {/* Speech bubble */}
+          <div className={`absolute -top-20 left-1/2 -translate-x-1/2 bg-white px-6 py-3 rounded-2xl shadow-xl transition-all duration-700 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '500ms' }}>
+            <p className="text-sm font-medium text-gray-700 whitespace-nowrap">I'm so excited!</p>
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Connecting sparkles */}
+      <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-1000 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} style={{ transitionDelay: '700ms' }}>
+        <div className="flex gap-2">
+          <div className="w-3 h-3 bg-pink-300 rounded-full animate-bounce"></div>
+          <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '100ms' }}></div>
+          <div className="w-3 h-3 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '200ms' }}></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const BrowsingScene = ({ isActive }) => (
+    <div className="relative w-full h-96 flex items-center justify-center">
+      {/* Character looking at options */}
+      <div className={`absolute left-1/4 transition-all duration-1000 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+        <div className="flex flex-col items-center">
+          {/* Head */}
+          <div className="w-20 h-20 bg-rose-200 rounded-full mb-2 relative shadow-lg">
+            <div className="absolute top-6 left-5 w-2 h-2 bg-gray-800 rounded-full"></div>
+            <div className="absolute top-6 right-5 w-2 h-2 bg-gray-800 rounded-full"></div>
+            <div className="absolute bottom-7 left-1/2 -translate-x-1/2 w-4 h-3 bg-gray-800 rounded-full"></div>
+          </div>
+          {/* Body */}
+          <div className="w-16 h-24 bg-gradient-to-b from-gray-700 to-gray-900 rounded-2xl relative shadow-lg">
+            {/* Arm pointing */}
+            <div className="absolute -right-8 top-4 w-6 h-12 bg-gray-700 rounded-full rotate-45"></div>
+          </div>
+          {/* Legs */}
+          <div className="flex gap-2 mt-1">
+            <div className="w-5 h-12 bg-gray-800 rounded-b-lg"></div>
+            <div className="w-5 h-12 bg-gray-800 rounded-b-lg"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Design options floating around */}
+      <div className="absolute right-1/4 flex flex-col gap-4">
+        {[1, 2, 3].map((item, index) => (
+          <div
+            key={item}
+            className={`w-48 h-32 bg-gradient-to-br from-pink-200 to-rose-300 rounded-3xl shadow-xl transition-all duration-1000 transform hover:scale-110 cursor-pointer ${
+              isActive ? 'translate-x-0 opacity-100' : 'translate-x-32 opacity-0'
+            }`}
+            style={{ transitionDelay: `${index * 200}ms` }}
+          >
+            <div className="w-full h-full flex items-center justify-center relative overflow-hidden">
+              {/* Wallpaper pattern */}
+              <div className="absolute inset-0 opacity-30">
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="absolute w-4 h-4 bg-white rounded-full" style={{
+                    top: `${(i % 4) * 25}%`,
+                    left: `${Math.floor(i / 4) * 33}%`
+                  }}></div>
+                ))}
+              </div>
+              <div className="text-center relative z-10">
+                <div className="w-16 h-16 bg-white rounded-2xl mx-auto mb-2 flex items-center justify-center shadow-lg">
+                  <Package className="w-8 h-8 text-pink-500" />
+                </div>
+                <p className="text-xs font-medium text-gray-700">Design {item}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Selection indicator */}
+      <div className={`absolute bottom-12 left-1/2 -translate-x-1/2 transition-all duration-1000 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
+        <div className="bg-pink-400 text-white px-6 py-2 rounded-full text-sm font-medium shadow-lg">
+          Choosing the perfect design...
+        </div>
+      </div>
+    </div>
+  );
+
+  const ShippingScene = ({ isActive }) => (
+    <div className="relative w-full h-96 flex items-center justify-center overflow-hidden">
+      {/* Package at start */}
+      <div className={`absolute left-12 transition-all duration-2000 ${isActive ? 'translate-x-[60vw] opacity-100' : 'translate-x-0 opacity-60'}`}>
+        <div className="relative">
+          <div className="w-32 h-32 bg-gradient-to-br from-pink-300 to-rose-300 rounded-3xl flex items-center justify-center shadow-2xl transform rotate-12">
+            <Package className="w-16 h-16 text-white" />
+            {/* Decorative pattern on package */}
+            <div className="absolute inset-2 border-2 border-white border-dashed rounded-2xl opacity-50"></div>
+          </div>
+          <div className="absolute -top-3 -right-3 w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
+            <CheckCircle className="w-6 h-6 text-white" />
+          </div>
+        </div>
+      </div>
+
+      {/* Delivery person with truck */}
+      <div className={`absolute right-32 transition-all duration-2000 ${isActive ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '500ms' }}>
+        <div className="flex items-end gap-4">
+          {/* Delivery person */}
+          <div className="flex flex-col items-center">
+            {/* Head */}
+            <div className="w-16 h-16 bg-pink-200 rounded-full mb-1 relative shadow-lg">
+              <div className="absolute top-4 left-3 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute top-4 right-3 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-5 h-1 bg-pink-400 rounded-full"></div>
+            </div>
+            {/* Body */}
+            <div className="w-12 h-16 bg-gradient-to-b from-gray-700 to-gray-900 rounded-xl shadow-lg"></div>
+          </div>
+          
+          {/* Truck */}
+          <div className="w-32 h-24 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl relative">
+            <div className="absolute top-2 left-2 right-2 h-8 bg-gray-700 rounded-lg"></div>
+            <Truck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 text-white" />
+            {/* Wheels */}
+            <div className="absolute -bottom-2 left-4 w-6 h-6 bg-gray-600 rounded-full border-2 border-gray-400"></div>
+            <div className="absolute -bottom-2 right-4 w-6 h-6 bg-gray-600 rounded-full border-2 border-gray-400"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Dotted path */}
+      <div className="absolute top-1/2 left-0 right-0 h-1 border-t-2 border-dashed border-pink-300"></div>
+    </div>
+  );
+
+  const InstallationScene = ({ isActive }) => (
+    <div className="relative w-full h-96 flex items-center justify-center">
+      {/* Wall outline */}
+      <div className="relative w-96 h-72 border-4 border-gray-300 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 shadow-2xl">
+        {/* Wallpaper being installed with beautiful pattern */}
+        <div className={`absolute inset-0 bg-gradient-to-br from-pink-200 via-rose-200 to-pink-300 transition-all duration-2000 ${isActive ? 'translate-y-0' : 'translate-y-full'}`}>
+          <div className="absolute inset-0 opacity-40">
+            {/* Floral pattern */}
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="absolute" style={{ 
+                top: `${(i % 3) * 33}%`, 
+                left: `${Math.floor(i / 3) * 25}%`,
+              }}>
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-pink-400 rounded-full"></div>
+                </div>
+                <div className="absolute top-0 left-0 w-8 h-8 bg-white rounded-full"></div>
+                <div className="absolute top-0 right-0 w-8 h-8 bg-white rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-8 h-8 bg-white rounded-full"></div>
+                <div className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full"></div>
+              </div>
+            ))}
+          </div>
+          {/* Geometric accent pattern */}
+          <div className="absolute inset-0 opacity-20">
+            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <circle cx="20" cy="20" r="3" fill="white"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#dots)" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Installer character */}
+        <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 transition-all duration-1000 ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '1000ms' }}>
+          <div className="flex flex-col items-center">
+            {/* Head */}
+            <div className="w-16 h-16 bg-pink-200 rounded-full mb-1 relative shadow-lg">
+              <div className="absolute top-4 left-3 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute top-4 right-3 w-2 h-2 bg-gray-800 rounded-full"></div>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-5 h-1 bg-pink-400 rounded-full"></div>
+            </div>
+            {/* Body with tool */}
+            <div className="w-12 h-16 bg-gradient-to-b from-gray-700 to-gray-900 rounded-xl shadow-lg relative">
+              <div className="absolute -right-6 top-2 w-8 h-2 bg-gray-600 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const LivingScene = ({ isActive }) => (
+    <div className="relative w-full h-96 flex items-center justify-center">
+      {/* Beautiful room */}
+      <div className="relative w-[500px] h-80 bg-gradient-to-br from-pink-100 to-rose-100 rounded-[3rem] shadow-2xl overflow-hidden">
+        {/* Installed wallpaper */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-200 via-rose-200 to-pink-300 opacity-60">
+          <div className="absolute inset-0">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className={`absolute w-12 h-12 bg-white rounded-full opacity-40 transition-all duration-1000 ${isActive ? 'scale-100' : 'scale-0'}`} style={{ 
+                top: `${Math.random() * 100}%`, 
+                left: `${Math.random() * 100}%`,
+                transitionDelay: `${i * 50}ms`
+              }}></div>
+            ))}
+          </div>
+        </div>
+
+        {/* Furniture - Couch */}
+        <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-1000 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '300ms' }}>
+          <div className="w-40 h-16 bg-gray-800 rounded-t-3xl shadow-lg relative">
+            <div className="absolute -top-4 left-4 w-12 h-12 bg-gray-700 rounded-lg"></div>
+            <div className="absolute -top-4 right-4 w-12 h-12 bg-gray-700 rounded-lg"></div>
+          </div>
+        </div>
+
+        {/* Plant decoration */}
+        <div className={`absolute bottom-8 left-8 transition-all duration-1000 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} style={{ transitionDelay: '500ms' }}>
+          <div className="w-12 h-20 bg-green-600 rounded-t-full relative">
+            <div className="absolute -top-2 -left-2 w-8 h-8 bg-green-500 rounded-full"></div>
+            <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full"></div>
+            <div className="absolute bottom-0 w-12 h-4 bg-pink-900 rounded-lg"></div>
+          </div>
+        </div>
+
+        {/* Picture frame on wall */}
+        <div className={`absolute top-12 right-12 transition-all duration-1000 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} style={{ transitionDelay: '700ms' }}>
+          <div className="w-20 h-16 bg-white rounded-lg shadow-md border-4 border-gray-800 flex items-center justify-center">
+            <div className="w-12 h-8 bg-gradient-to-br from-pink-300 to-rose-300 rounded"></div>
+          </div>
+        </div>
+
+        {/* Happy character in room */}
+        <div className={`absolute bottom-24 left-1/2 -translate-x-1/2 transition-all duration-1000 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} style={{ transitionDelay: '900ms' }}>
+          <div className="relative">
+            <div className="w-20 h-20 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center shadow-2xl">
+              <Home className="w-10 h-10 text-white" />
+            </div>
+            {/* Hearts floating up */}
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="absolute -top-8 left-1/2 -translate-x-1/2 animate-bounce" style={{ animationDelay: `${i * 200}ms`, left: `${50 + (i - 1) * 20}%` }}>
+                <div className="text-xl" style={{ animationDelay: `${i * 300}ms` }}>❤️</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Sparkles around the room */}
+        {isActive && [...Array(6)].map((_, i) => (
+          <div key={i} className="absolute animate-pulse" style={{ 
+            top: `${20 + Math.random() * 60}%`, 
+            left: `${10 + Math.random() * 80}%`,
+            animationDelay: `${i * 150}ms`
+          }}>
+            <Sparkles className="w-4 h-4 text-pink-400" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const getScene = (sceneType, isActive) => {
+    switch(sceneType) {
+      case 'consultation': return <ConsultationScene isActive={isActive} />;
+      case 'browsing': return <BrowsingScene isActive={isActive} />;
+      case 'shipping': return <ShippingScene isActive={isActive} />;
+      case 'installation': return <InstallationScene isActive={isActive} />;
+      case 'living': return <LivingScene isActive={isActive} />;
+      default: return null;
+    }
+  };
+
+  return (
+    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100 relative overflow-hidden">
+      {/* Decorative background wallpaper patterns */}
+      <div className="fixed inset-0 opacity-10 pointer-events-none">
+        {/* Large circles pattern */}
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={`circle-${i}`}
+            className="absolute bg-pink-400 rounded-full"
+            style={{
+              width: `${Math.random() * 200 + 50}px`,
+              height: `${Math.random() * 200 + 50}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animation: `float ${Math.random() * 20 + 10}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 5}s`
+            }}
+          />
+        ))}
+        {/* Wavy lines */}
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="waves" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+              <path d="M0,100 Q50,50 100,100 T200,100" fill="none" stroke="currentColor" strokeWidth="2" className="text-pink-300"/>
+              <path d="M0,150 Q50,100 100,150 T200,150" fill="none" stroke="currentColor" strokeWidth="2" className="text-rose-300"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#waves)" />
+        </svg>
+        {/* Geometric shapes */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`shape-${i}`}
+            className="absolute border-4 border-pink-300 rotate-45"
+            style={{
+              width: `${Math.random() * 100 + 30}px`,
+              height: `${Math.random() * 100 + 30}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              borderRadius: Math.random() > 0.5 ? '50%' : '20%',
+              animation: `float ${Math.random() * 25 + 15}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 5}s`
+            }}
+          />
+        ))}
+      </div>
+
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-30px) rotate(180deg); }
+        }
+      `}</style>
+      {/* Header */}
+      <div 
+        className="text-center py-20 sticky top-0 bg-gradient-to-b from-rose-50 to-transparent z-10 transition-opacity duration-500 pointer-events-none"
+        style={{ opacity: headerOpacity }}
+      >
+        <p className="text-pink-400 text-sm tracking-widest uppercase mb-4">Our Refined Process</p>
+        <h1 className="text-7xl font-serif mb-6">
+          How We <span className="text-pink-400">Work</span>
+        </h1>
+        <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          Scroll to see your journey unfold
+        </p>
+      </div>
+
+      {/* Sections */}
+      {sections.map((section, index) => (
+        <div
+          key={section.id}
+          ref={el => sectionsRef.current[index] = el}
+          className="min-h-screen flex items-center justify-center px-8 py-20"
+        >
+          <div className="max-w-6xl w-full">
+            <div className="grid grid-cols-2 gap-16 items-center">
+              {/* Scene Animation */}
+              <div className={index % 2 === 0 ? 'order-1' : 'order-2'}>
+                {getScene(section.scene, activeSection === index)}
+              </div>
+
+              {/* Text Content */}
+              <div className={`${index % 2 === 0 ? 'order-2' : 'order-1'} transition-all duration-1000 ${activeSection === index ? 'translate-x-0 opacity-100' : index % 2 === 0 ? 'translate-x-12 opacity-0' : '-translate-x-12 opacity-0'}`}>
+                <div className="inline-flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-500 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-white font-bold">{section.id}</span>
+                  </div>
+                  <p className="text-pink-400 text-xs tracking-widest uppercase">
+                    {section.subtitle}
+                  </p>
+                </div>
+                <h2 className="text-5xl font-serif text-gray-900 mb-6 leading-tight">
+                  {section.title}
+                </h2>
+                <p className="text-gray-600 text-xl leading-relaxed">
+                  {section.description}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {/* CTA Section */}
+      <div className="min-h-screen flex items-center justify-center px-8">
+        <div className="bg-gray-900 rounded-[3rem] p-20 max-w-4xl w-full shadow-2xl text-center">
+          <h2 className="text-6xl font-serif text-white mb-6 leading-tight">
+            Your story starts<br />
+            <span className="text-pink-400">on your walls.</span>
+          </h2>
+          <p className="text-gray-400 mb-10 text-lg">
+            Experience the beauty of premium wallart designed for the taste of today.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <button className="px-10 py-4 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-full font-medium hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              Explore Collections
+            </button>
+            <button className="px-10 py-4 bg-white text-gray-900 rounded-full font-medium hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              About
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HowWeWork;

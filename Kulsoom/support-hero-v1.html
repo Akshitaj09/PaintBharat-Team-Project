@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - Painting & Decor Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --brand-navy: #0f172a;      
+            --brand-navy-muted: #334155;
+            --brand-pink-accent: #fbcfe8; 
+            --brand-pink-soft: #fff1f2;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff; 
+            overflow-x: hidden;
+            color: var(--brand-navy);
+        }
+        .font-serif-heading {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Navy Side Accent Bar */
+        .navy-accent-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            background-color: var(--brand-navy);
+            z-index: 40;
+        }
+
+        /* Subtle Navy/Pink Accents */
+        .paint-splash {
+            position: absolute;
+            background: #f1f5f9; /* Navy tinted white */
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0.6;
+            animation: moveSplash 25s infinite alternate ease-in-out;
+        }
+
+        @keyframes moveSplash {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, -30px) scale(1.1); }
+        }
+
+        .character-anim {
+            animation: floatCharacter 6s ease-in-out infinite;
+        }
+
+        @keyframes floatCharacter {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .btn-navy {
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s ease;
+            background-color: var(--brand-navy);
+            color: white;
+        }
+        .btn-navy:hover {
+            background-color: var(--brand-navy-muted);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+        }
+
+        .remove-bg {
+            mix-blend-mode: multiply;
+        }
+
+        /* Vertical Text for Side Bar */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative">
+
+    <!-- Navy Side Bar (Brand Statement) -->
+    <div class="hidden lg:flex navy-accent-bar flex-col items-center justify-between py-12 text-white">
+        <div class="font-bold tracking-tighter text-xl">D</div>
+        <div class="vertical-text text-[10px] tracking-[0.8em] font-bold uppercase opacity-40">
+            Premium Decor Support
+        </div>
+        <div class="space-y-6">
+            <i data-lucide="instagram" class="w-4 h-4 opacity-50 hover:opacity-100 cursor-pointer"></i>
+            <i data-lucide="facebook" class="w-4 h-4 opacity-50 hover:opacity-100 cursor-pointer"></i>
+        </div>
+    </div>
+
+    <!-- Subtle Background Details -->
+    <div class="paint-splash w-[800px] h-[800px] -top-40 -right-20"></div>
+    <div class="paint-splash w-[400px] h-[400px] bottom-0 left-20" style="background: var(--brand-pink-soft); opacity: 0.4;"></div>
+
+    <!-- Main Hero -->
+    <main class="flex-1 flex flex-col md:flex-row relative px-8 md:px-16 lg:pl-40 lg:pr-24 items-center overflow-hidden z-10">
+        
+        <!-- Left: Text Content -->
+        <div class="w-full md:w-1/2 flex flex-col justify-center relative z-20 py-12 md:py-0">
+            <div class="space-y-6">
+                <!-- Minor Pink Detail -->
+                <div class="flex items-center gap-4 mb-2">
+                    <span class="h-[2px] w-12 bg-pink-300"></span>
+                    <span class="text-[11px] tracking-[0.6em] text-slate-400 font-bold uppercase">Help Center</span>
+                </div>
+                
+                <div class="relative">
+                    <!-- Faint Navy Background Text -->
+                    <span class="absolute -top-12 -left-4 text-[140px] font-bold text-slate-800 opacity-[0.03] select-none pointer-events-none uppercase tracking-tighter">Support</span>
+                    
+                    <h1 class="font-serif-heading text-6xl md:text-8xl lg:text-[115px] text-[#0f172a] leading-[0.85] tracking-tighter">
+                        TRUSTED <br> 
+                        <span class="italic font-normal text-pink-400">hands</span>
+                    </h1>
+                </div>
+                
+                <p class="text-slate-500 text-base md:text-lg leading-relaxed max-w-md lg:max-w-xl pt-4 mb-10">
+                    Our master painters provide the specialized support you need. From post-project care to material consultations, we’re committed to the longevity of your space.
+                </p>
+                
+                <div class="flex flex-wrap gap-8 items-center">
+                    <a href="#" class="btn-navy inline-flex items-center px-16 py-6 text-sm tracking-[0.2em] font-bold uppercase rounded-sm group">
+                        Chat With Us
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    
+                    <a href="#" class="text-xs tracking-[0.2em] font-bold uppercase flex items-center group text-slate-400 hover:text-pink-400 transition-colors">
+                        Knowledge Base 
+                        <i data-lucide="plus" class="w-4 h-4 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Character Image -->
+        <div class="w-full md:w-1/2 relative flex justify-center md:justify-end items-center h-[500px] md:h-screen lg:pr-10">
+            
+            <!-- Navy & Pink Decorative Circles (Strengthened Navy) -->
+            <div class="absolute w-[80%] h-[80%] md:w-[600px] md:h-[600px] border-[2px] border-slate-100 rounded-full z-0"></div>
+            <div class="absolute w-[65%] h-[65%] md:w-[480px] md:h-[480px] border-[1px] border-pink-100 rounded-full z-0 opacity-40"></div>
+            <!-- Strong Navy Circle Accent -->
+            <div class="absolute w-[45%] h-[45%] md:w-[320px] md:h-[320px] border-[0.5px] border-slate-200 rounded-full z-0"></div>
+
+            <!-- Character Image Container -->
+            <div class="relative z-10 w-full h-full flex items-center justify-center md:justify-end character-anim">
+                <img src="images/Painter.png" 
+                     alt="Painter Character" 
+                     class="w-[85%] md:w-[100%] max-w-[550px] object-contain remove-bg select-none pointer-events-none drop-shadow-2xl">
+                
+                <!-- Floating Info Badge in Navy -->
+                <div class="absolute top-[20%] right-[5%] bg-[#0f172a] p-6 hidden lg:block rounded-sm shadow-2xl rotate-3">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-pink-300"></i>
+                        </div>
+                        <div>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Support Policy</p>
+                            <p class="text-xs font-bold text-white">Premium Care</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Indicator in Navy & Pink Detail -->
+        <div class="absolute bottom-12 left-8 md:left-16 lg:left-40 flex items-center gap-6">
+            <div class="flex flex-col gap-2">
+                <div class="w-2 h-6 bg-[#0f172a]"></div>
+                <div class="w-2 h-2 bg-pink-200"></div>
+                <div class="w-2 h-2 bg-slate-100"></div>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[10px] font-bold tracking-[0.4em] text-slate-900 uppercase">Step 01</span>
+                <span class="text-[9px] font-medium text-slate-400 uppercase">Consultation</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

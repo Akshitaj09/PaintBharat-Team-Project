@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat - How We Work</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.8; }
+        }
+        @keyframes fill-up {
+            from { height: 0; }
+            to { height: 50px; }
+        }
+        @keyframes checkmark {
+            from { stroke-dashoffset: 20; }
+            to { stroke-dashoffset: 0; }
+        }
+        .animate-float { animation: float 2s infinite ease-in-out; }
+        .animate-fill { animation: fill-up 2s infinite ease-in-out; }
+        .checkmark-path { stroke-dasharray: 20; animation: checkmark 2s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-white font-sans text-slate-900" x-data="{ 
+    activeStage: 1,
+    stages: [
+        { id: 1, label: 'Consult', desc: 'Initial interaction' },
+        { id: 2, label: 'Choose', desc: 'Office & design selection' },
+        { id: 3, label: 'Order', desc: 'Order placement' },
+        { id: 4, label: 'Install', desc: 'Home visit & installation' },
+        { id: 5, label: 'Enjoy', desc: 'Happy client' }
+    ]
+}" x-init="setInterval(() => { activeStage = (activeStage % 5) + 1 }, 4000)">
+
+    <div class="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
+        <div class="max-w-6xl w-full">
+            
+            <header class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mb-2">How We Work</h2>
+                <p class="text-slate-500 max-w-lg mx-auto">
+                    Experience the seamless transformation of your home with PaintBharat’s professional touch.
+                </p>
+            </header>
+
+            <div class="relative w-full py-10 overflow-x-auto no-scrollbar">
+                <div class="absolute top-1/2 left-0 w-full h-0.5 -translate-y-1/2 hidden md:block">
+                    <svg width="100%" height="20" class="absolute top-[-10px]">
+                        <line x1="10%" y1="10" x2="90%" y2="10" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6 6">
+                            <animate attributeName="stroke-dashoffset" from="100" to="0" dur="20s" repeatCount="indefinite" />
+                        </line>
+                    </svg>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between items-center md:items-start min-w-max md:min-w-0 space-y-12 md:space-y-0 md:px-10">
+                    <template x-for="stage in stages" :key="stage.id">
+                        <div class="relative flex flex-col items-center group cursor-pointer w-48" @click="activeStage = stage.id">
+                            
+                            <div :class="activeStage === stage.id ? 'bg-sky-500 text-white ring-4 ring-sky-100' : 'bg-slate-100 text-slate-400'"
+                                class="z-10 w-8 h-8 rounded-full flex items-center justify-center mb-4 text-sm font-bold transition-colors duration-500">
+                                <span x-text="stage.id"></span>
+                            </div>
+
+                            <div :class="activeStage === stage.id ? 'bg-white shadow-xl scale-110' : 'bg-transparent opacity-60'"
+                                class="relative mb-4 p-2 rounded-2xl transition-all duration-500">
+                                
+                                <div class="w-20 h-20 md:w-24 md:h-24">
+                                    <template x-if="stage.id === 1">
+                                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                                            <g class="animate-float" transform="translate(-10, 0)">
+                                                <rect x="15" y="45" width="20" height="25" rx="5" fill="#0f172a" />
+                                                <circle cx="25" cy="35" r="8" fill="#ffdbac" />
+                                                <path d="M17 32c0-5 3-8 8-8s8 3 8 8" fill="#1e293b" />
+                                                <rect x="30" y="50" width="3" height="4" fill="#38bdf8" />
+                                            </g>
+                                            <g style="animation-delay: 0.2s" class="animate-float" transform="translate(15, 0)">
+                                                <rect x="15" y="45" width="20" height="25" rx="8" fill="#64748b" />
+                                                <circle cx="25" cy="35" r="8" fill="#f1c27d" />
+                                                <path d="M17 32c0-5 3-8 8-8s8 3 8 8" fill="#475569" />
+                                            </g>
+                                        </svg>
+                                    </template>
+
+                                    <template x-if="stage.id === 2">
+                                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                                            <rect x="25" y="40" width="50" height="40" rx="4" fill="#e2e8f0" />
+                                            <rect x="30" y="45" width="10" height="15" fill="#f43f5e" class="animate-float" />
+                                            <rect x="45" y="45" width="10" height="15" fill="#0ea5e9" class="animate-float" style="animation-delay: 0.5s"/>
+                                            <rect x="60" y="45" width="10" height="15" fill="#10b981" class="animate-float" style="animation-delay: 1s"/>
+                                        </svg>
+                                    </template>
+
+                                    <template x-if="stage.id === 3">
+                                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                                            <rect x="30" y="35" width="40" height="30" rx="2" fill="#334155" />
+                                            <rect x="33" y="38" width="34" height="20" fill="#fff" />
+                                            <path d="M40 50 l5 5 l10 -10" fill="none" stroke="#10b981" stroke-width="4" class="checkmark-path" />
+                                        </svg>
+                                    </template>
+
+                                    <template x-if="stage.id === 4">
+                                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                                            <rect x="20" y="30" width="60" height="50" fill="#f1f5f9" stroke="#cbd5e1" />
+                                            <rect x="20" y="30" width="30" height="50" fill="#38bdf8" class="animate-fill" />
+                                            <path d="M50 30 v50" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 2" />
+                                        </svg>
+                                    </template>
+
+                                    <template x-if="stage.id === 5">
+                                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                                            <rect x="15" y="25" width="70" height="60" rx="4" fill="#ecfdf5" />
+                                            <g class="animate-float">
+                                                <rect x="15" y="45" width="20" height="25" rx="8" fill="#64748b" />
+                                                <circle cx="25" cy="35" r="8" fill="#f1c27d" />
+                                                <path d="M70 40 l2 2 l4 -4 M80 35 l1 1 l2 -2" stroke="#10b981" stroke-width="2" fill="none" class="animate-pulse" />
+                                            </g>
+                                        </svg>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <h3 :class="activeStage === stage.id ? 'text-sky-600' : 'text-slate-400'"
+                                    class="font-bold text-lg mb-1 transition-colors" x-text="stage.label">
+                                </h3>
+                                <p x-show="activeStage === stage.id" 
+                                   x-transition:enter="transition ease-out duration-300"
+                                   x-transition:enter-start="opacity-0 transform translate-y-2"
+                                   x-transition:enter-end="opacity-100 transform translate-y-0"
+                                   class="text-xs text-slate-500 font-medium uppercase tracking-wider hidden md:block" 
+                                   x-text="stage.desc">
+                                </p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="mt-8 md:hidden w-full bg-slate-50 rounded-xl p-6 text-center shadow-sm">
+                <p class="text-slate-700 font-medium" x-text="stages.find(s => s.id === activeStage)?.desc"></p>
+            </div>
+
+            <footer class="mt-16 text-center">
+                <button class="px-8 py-3 bg-slate-900 text-white rounded-full font-semibold hover:bg-slate-800 transition-all transform hover:scale-105 shadow-lg active:scale-95">
+                    Book a Consultation
+                </button>
+            </footer>
+        </div>
+    </div>
+
+</body>
+</html>

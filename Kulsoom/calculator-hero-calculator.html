@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | The Art of Refined Surfaces</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --gold: #C5A059;
+            --gold-light: #E2C28E;
+            --obsidian: #1A1512;
+            --mocha: #2D241E;
+            --alabaster: #FCFAF7;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--alabaster);
+            color: var(--obsidian);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #C5A059 0%, #E2C28E 50%, #B38B45 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none !important;
+        }
+
+        .luxury-shadow {
+            box-shadow: 0 40px 100px rgba(26, 21, 18, 0.1);
+        }
+
+        /* Hero Banner & Background Animation */
+        .hero-banner {
+            position: relative;
+            height: 95vh;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        .hero-bg-image {
+            position: absolute;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1560448204-61dc36dc98c8?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+            animation: slowZoom 30s ease-in-out infinite;
+        }
+
+        @keyframes slowZoom {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.18); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .animate-reveal {
+            animation: reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* DRAMATIC PRICE ANIMATIONS */
+        @keyframes tremor {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
+            20%, 40%, 60%, 80% { transform: translateX(1px); }
+        }
+
+        @keyframes ashify {
+            0% { color: #ffffff; filter: brightness(1); }
+            100% { color: #9ca3af; filter: brightness(0.8); }
+        }
+
+        @keyframes strike {
+            0% { width: 0; box-shadow: 0 0 0px var(--gold); }
+            100% { width: 115%; box-shadow: 0 0 30px var(--gold), 0 0 10px rgba(197, 160, 89, 0.5); }
+        }
+
+        .legacy-price {
+            position: relative;
+            display: inline-block;
+            color: #ffffff;
+            animation: tremor 0.3s ease-in-out infinite 1.4s, ashify 0.6s ease-in-out forwards 1.8s;
+            transition: all 0.4s ease;
+        }
+
+        .legacy-price::after {
+            content: '';
+            position: absolute;
+            top: 55%;
+            left: -7.5%;
+            width: 0;
+            height: 10px;
+            background: var(--gold);
+            transform: translateY(-50%) rotate(-1.5deg);
+            animation: strike 0.5s cubic-bezier(0.65, 0, 0.35, 1) forwards 1.8s;
+            z-index: 2;
+            border-radius: 10px;
+        }
+
+        /* Hero Text Shadows */
+        .text-drama {
+            text-shadow: 0 10px 40px rgba(0,0,0,0.9), 0 5px 15px rgba(0,0,0,0.7);
+        }
+
+        /* Blinking Cursor Animation */
+        @keyframes blink {
+            0%, 100% { border-right: 3px solid var(--gold); }
+            50% { border-right: 3px solid transparent; }
+        }
+
+        .num-input {
+            border-right: 3px solid var(--gold);
+            animation: blink 1s step-end infinite;
+            padding-right: 10px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: var(--gold);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .num-input::-webkit-inner-spin-button, 
+        .num-input::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        .num-input:focus {
+            outline: none;
+        }
+
+        .gold-border-hover {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .gold-border-hover:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .split-banner-img {
+            background: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1500');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="selection:bg-[#C5A059] selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-stone-100">
+        <div class="container mx-auto px-8 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tighter flex items-center gap-2">
+                <span class="w-8 h-8 bg-stone-900 rounded-full flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 bg-[#C5A059] rounded-full"></div>
+                </span>
+                <span class="uppercase tracking-widest text-sm font-bold">PaintBharat</span>
+            </div>
+            <div class="hidden md:flex space-x-12 text-[10px] uppercase tracking-[0.2em] font-semibold text-stone-500">
+                <a href="#calculator" class="hover:text-stone-900 transition-colors">Atelier</a>
+                <a href="#comparison" class="hover:text-stone-900 transition-colors">Economics</a>
+            </div>
+            <button class="px-6 py-2 border border-stone-900 text-[10px] uppercase tracking-widest font-bold hover:bg-stone-900 hover:text-white transition-all duration-500">
+                Concierge
+            </button>
+        </div>
+    </nav>
+
+    <!-- Luxury Hero Banner -->
+    <header class="pt-0">
+        <div class="hero-banner">
+            <div class="hero-bg-image"></div>
+            <div class="hero-bg-overlay"></div>
+            
+            <div class="relative z-10 px-6 max-w-7xl mx-auto text-center">
+                <span class="text-[#C5A059] uppercase tracking-[1em] text-[12px] mb-12 block animate-reveal font-bold">The New Standard</span>
+                
+                <h1 class="text-white animate-reveal leading-none serif italic text-drama">
+                    <div class="text-5xl md:text-7xl font-light mb-12 tracking-tight flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
+                        <span class="not-italic opacity-100">Why pay</span>
+                        <span class="legacy-price not-italic font-bold tracking-tighter">₹1,20,000</span>
+                    </div>
+                    
+                    <div class="mt-8 flex flex-col items-center justify-center">
+                        <span class="text-white text-3xl md:text-5xl not-italic font-extrabold tracking-[0.2em] uppercase mb-8">When you can</span>
+                        <span class="gold-gradient not-italic tracking-tighter text-6xl md:text-[8rem] font-bold leading-none">Save ₹20,000</span>
+                        <span class="text-white text-3xl md:text-5xl not-italic font-extrabold tracking-[0.2em] uppercase mt-8">Instead.</span>
+                    </div>
+                </h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Calculator Atelier -->
+    <section id="calculator" class="py-32 bg-white relative z-10 -mt-24" x-data="{ 
+        area: 2500, 
+        type: 'interior',
+        get price() {
+            let rates = {
+                'interior': 12,
+                'exterior': 15,
+                'wallpaper': 45,
+                'waterproofing': 35
+            };
+            return this.area * rates[this.type];
+        }
+    }">
+        <div class="container mx-auto px-8">
+            <div class="bg-white rounded-[4rem] overflow-hidden luxury-shadow flex flex-col lg:flex-row border border-stone-50">
+                <!-- Input Side -->
+                <div class="p-12 lg:p-24 lg:w-3/5 space-y-16">
+                    <div>
+                        <span class="text-[#C5A059] uppercase tracking-widest text-[10px] font-bold block mb-4">The Atelier Tool</span>
+                        <h2 class="text-5xl font-bold tracking-tight">Project Parameters</h2>
+                    </div>
+
+                    <div class="space-y-16">
+                        <!-- Numeric Area Input with Blinking cursor -->
+                        <div class="space-y-8">
+                            <div class="flex justify-between items-end border-b border-stone-200 pb-4">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400">Total Surface Area</label>
+                                <div class="flex items-center">
+                                    <input type="number" x-model="area" 
+                                           class="num-input text-6xl font-light text-right w-48 bg-transparent serif transition-all text-stone-900"
+                                           @input="if(area > 15000) area = 15000; if(area < 0) area = 0">
+                                    <span class="text-stone-300 text-sm ml-6 font-light uppercase tracking-widest">sqft</span>
+                                </div>
+                            </div>
+                            <input type="range" min="500" max="15000" step="100" x-model="area" 
+                                   class="w-full h-[1.5px] bg-stone-100 appearance-none cursor-pointer">
+                        </div>
+
+                        <!-- Service Selection Groups -->
+                        <div class="space-y-12">
+                            <!-- Group 1: Painting -->
+                            <div class="space-y-6">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400">Painting Services</label>
+                                <div class="grid grid-cols-2 gap-6">
+                                    <button @click="type = 'interior'" 
+                                            :class="type === 'interior' ? 'bg-stone-950 text-white shadow-xl scale-105' : 'bg-white text-stone-400 border-stone-100'"
+                                            class="py-6 border text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 rounded-2xl">
+                                        Interior Painting
+                                    </button>
+                                    <button @click="type = 'exterior'" 
+                                            :class="type === 'exterior' ? 'bg-stone-950 text-white shadow-xl scale-105' : 'bg-white text-stone-400 border-stone-100'"
+                                            class="py-6 border text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 rounded-2xl">
+                                        Exterior Painting
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Group 2: Specialized -->
+                            <div class="space-y-6">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-stone-400">Specialized Services</label>
+                                <div class="grid grid-cols-2 gap-6">
+                                    <button @click="type = 'wallpaper'" 
+                                            :class="type === 'wallpaper' ? 'bg-stone-950 text-white shadow-xl scale-105' : 'bg-white text-stone-400 border-stone-100'"
+                                            class="py-6 border text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 rounded-2xl">
+                                        Wallpaper
+                                    </button>
+                                    <button @click="type = 'waterproofing'" 
+                                            :class="type === 'waterproofing' ? 'bg-stone-950 text-white shadow-xl scale-105' : 'bg-white text-stone-400 border-stone-100'"
+                                            class="py-6 border text-[10px] uppercase tracking-[0.3em] font-bold transition-all duration-500 rounded-2xl">
+                                        Waterproofing
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Panel -->
+                <div class="bg-stone-950 p-12 lg:p-24 lg:w-2/5 flex flex-col justify-center text-center text-white relative">
+                    <div class="absolute inset-0 opacity-10">
+                        <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(var(--gold) 0.5px, transparent 0.5px); background-size: 40px 40px;"></div>
+                    </div>
+                    <div class="relative z-10">
+                        <i data-lucide="calculator" class="mx-auto text-white mb-10 opacity-30" size="32"></i>
+                        <p class="text-white uppercase tracking-widest text-[10px] font-bold mb-8 opacity-60">Direct Valuation</p>
+                        <div class="text-8xl font-bold mb-8 gold-gradient tracking-tighter">
+                            <span class="text-3xl font-light align-top mr-1">₹</span><span x-text="price.toLocaleString()"></span>
+                        </div>
+                        <p class="text-white font-light text-sm mb-16 leading-loose max-w-xs mx-auto uppercase tracking-widest text-[10px] opacity-80">
+                            Retail Comparison Estimate: <span class="line-through decoration-white/40">₹1,20,000</span>
+                        </p>
+                        <button class="w-full py-6 bg-[#C5A059] text-stone-950 font-bold uppercase tracking-widest text-[10px] hover:bg-white transition-all duration-700 rounded-full shadow-2xl">
+                            Reserve Quote
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="py-32 bg-stone-50">
+        <div class="container mx-auto px-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-24">
+                    <span class="text-[#C5A059] uppercase tracking-[0.4em] text-[10px] font-bold mb-6 block">Transparent Economics</span>
+                    <h3 class="text-5xl font-light serif italic">Legacy Premium vs. PaintBharat</h3>
+                </div>
+
+                <div class="grid lg:grid-cols-1 gap-4">
+                    <div class="hidden lg:grid grid-cols-3 p-8 border-b border-stone-200 text-[10px] uppercase tracking-widest font-bold text-stone-400">
+                        <div>Key Metric</div>
+                        <div>Traditional Brand</div>
+                        <div class="text-stone-900">PaintBharat Atelier</div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-3 p-8 bg-white rounded-2xl border border-stone-100 gold-border-hover items-center gap-6">
+                        <div class="text-sm font-bold uppercase tracking-wider text-stone-900">Logistics</div>
+                        <div class="text-stone-500 font-light italic">Warehousing & Distributors</div>
+                        <div class="text-stone-900 font-bold flex items-center gap-3 italic">
+                            <i data-lucide="factory" class="w-4 h-4 text-[#C5A059]"></i>
+                            Direct-to-Surface
+                        </div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-3 p-8 bg-white rounded-2xl border border-stone-100 gold-border-hover items-center gap-6">
+                        <div class="text-sm font-bold uppercase tracking-wider text-stone-900">Marketing</div>
+                        <div class="text-stone-500 font-light italic">Celebrity Endorsements</div>
+                        <div class="text-[#C5A059] font-bold italic">Zero Ad Spend</div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-3 p-8 bg-white rounded-2xl border border-stone-100 gold-border-hover items-center gap-6">
+                        <div class="text-sm font-bold uppercase tracking-wider text-stone-900">Grade</div>
+                        <div class="text-stone-500 font-light italic">Commercial Standard</div>
+                        <div class="text-stone-900 font-bold flex items-center gap-3 italic text-lg">
+                            Architectural Resin
+                        </div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-3 p-10 bg-stone-900 text-white rounded-[2rem] items-center gap-6 shadow-2xl transform scale-[1.02]">
+                        <div class="text-sm font-bold uppercase tracking-widest text-stone-500">Total Valuation</div>
+                        <div class="text-stone-400 font-light line-through text-xl italic">₹1,20,000</div>
+                        <div class="text-[#C5A059] text-5xl font-bold tracking-tighter italic">₹20,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final Banner -->
+    <section class="min-h-[80vh] flex items-center justify-center p-8 bg-white">
+        <div class="container mx-auto max-w-7xl h-full flex flex-col md:flex-row rounded-[5rem] overflow-hidden luxury-shadow">
+            <!-- Left Side: Cinematic Visual -->
+            <div class="md:w-1/2 split-banner-img min-h-[500px] relative">
+                <div class="absolute inset-0 bg-stone-950/20"></div>
+                <div class="absolute bottom-16 left-16">
+                    <span class="px-6 py-4 bg-stone-900/40 backdrop-blur-2xl border border-white/20 text-white text-[10px] uppercase tracking-[0.5em] rounded-full">Atelier Standard 2026</span>
+                </div>
+            </div>
+            
+            <!-- Right Side: Clean Messaging -->
+            <div class="md:w-1/2 bg-stone-950 flex items-center justify-center p-20 md:p-32 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#C5A059]/10 blur-[100px]"></div>
+                
+                <div class="max-w-md relative z-10">
+                    <i data-lucide="shield-off" class="text-[#C5A059] mx-auto mb-12 opacity-40" size="48"></i>
+                    <h2 class="text-5xl md:text-7xl font-bold text-white mb-12 tracking-tight leading-[1.1]">
+                        Stop wasting money <br>
+                        <span class="gold-gradient italic">on labels.</span>
+                    </h2>
+                    <p class="text-stone-500 text-[11px] font-bold uppercase tracking-[0.4em] mb-16 leading-loose">
+                        Pure chemistry. Zero bloat. <br>The new gold standard.
+                    </p>
+                    <div class="flex flex-col gap-6">
+                        <button class="px-14 py-7 bg-white text-stone-950 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-[#C5A059] hover:text-white transition-all duration-700 rounded-full shadow-2xl">
+                            Request Private Consult
+                        </button>
+                        <button class="px-14 py-4 bg-transparent text-stone-500 font-bold uppercase tracking-widest text-[9px] hover:text-white transition-all duration-300">
+                            View Digital Lookbook
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Scroll Reveal Logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-reveal');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section > div').forEach(section => {
+            section.style.opacity = '0';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

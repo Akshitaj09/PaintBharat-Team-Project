@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Co. | Premium Interior Painting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Component Logic -->
+    <script>
+        function paintSlider() {
+            return {
+                index: 0,
+                direction: 'next',
+                isAnimating: false,
+                paints: [
+                    {
+                        id: 'indigo',
+                        name: 'MYSTIC INDIGO',
+                        description: 'A deep, sophisticated blue that brings a sense of calm and luxury to any interior. Perfect for accent walls in bedrooms or study areas.',
+                        colors: { text: '#1a1b3a', can: '#2b265c', label: '#3d3a7a', paint: '#1e1b4b' },
+                        colorCode: '#2B265C',
+                        finish: 'Matte Finish',
+                        texture: 'radial-gradient(circle at 20% 20%, #2e2a5e 0%, #1a1836 100%)'
+                    },
+                    {
+                        id: 'sage',
+                        name: 'SAGE MIST',
+                        description: 'A soft, earthy green that connects your indoor space with nature. This versatile shade is ideal for kitchens and living rooms.',
+                        colors: { text: '#1a3300', can: '#97c93e', label: '#7ba33d', paint: '#4d7c0f' },
+                        colorCode: '#97C93E',
+                        finish: 'Satin Finish',
+                        texture: 'radial-gradient(circle at 20% 20%, #a3cf4d 0%, #6b8e23 100%)'
+                    },
+                    {
+                        id: 'terracotta',
+                        name: 'SOFT CLAY',
+                        description: 'An inviting, clay-inspired hue that radiates warmth and energy. Excellent for dining areas and hallways.',
+                        colors: { text: '#4a2500', can: '#ff9f43', label: '#e67e22', paint: '#c2410c' },
+                        colorCode: '#FF9F43',
+                        finish: 'Eggshell Finish',
+                        texture: 'radial-gradient(circle at 20% 20%, #fb923c 0%, #cc6600 100%)'
+                    },
+                    {
+                        id: 'merlot',
+                        name: 'DEEP MERLOT',
+                        description: 'A rich, dramatic red that demands attention. This premium pigment is designed for high-impact spaces like formal dining rooms.',
+                        colors: { text: '#450a0a', can: '#b30000', label: '#800000', paint: '#7f1d1d' },
+                        colorCode: '#B30000',
+                        finish: 'Gloss Finish',
+                        texture: 'radial-gradient(circle at 20% 20%, #991b1b 0%, #660000 100%)'
+                    }
+                ],
+                icons: [],
+                init() {
+                    this.generateIcons();
+                },
+                generateIcons() {
+                    const svgs = {
+                        brush: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 21-1.5 1.5a2.12 2.12 0 0 1-3 0 2.12 2.12 0 0 1 0-3L9 18"/><path d="M12 21a2 2 0 0 1 2 2h2a2 2 0 0 1 2-2"/><path d="M20 15v-3a8 8 0 0 0-16 0v3"/><path d="M4 15c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2"/></svg>',
+                        bucket: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 11-8-8-8 8"/><path d="M5 11v9a2 2 0 0 0 2 2h10a2 2 0 0 1 2-2v-9"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+                        roller: '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="12" height="8" rx="2"/><path d="M14 10h4a2 2 0 0 1 2 2v6"/><path d="M19 18a1 1 0 0 0 1 1h1"/><path d="M15 18a1 1 0 0 0 1 1h1"/><path d="M17 19v3"/></svg>'
+                    };
+                    const keys = Object.keys(svgs);
+                    this.icons = Array.from({ length: 12 }, (_, i) => ({
+                        svg: svgs[keys[Math.floor(Math.random() * keys.length)]],
+                        style: `left: ${Math.random() * 100}%; top: ${Math.random() * 100}%; animation-delay: ${Math.random() * 5}s; --base-rotation: ${Math.random() * 360}deg;`
+                    }));
+                },
+                getRandomSplotch(color) {
+                    return `width: ${Math.random() * 250 + 100}px; height: ${Math.random() * 250 + 100}px; background: ${color}; left: ${Math.random() * 100}%; top: ${Math.random() * 100}%; transform: rotate(${Math.random() * 360}deg);`;
+                },
+                next() {
+                    if (this.isAnimating) return;
+                    this.isAnimating = true;
+                    this.direction = 'next';
+                    this.index = (this.index + 1) % this.paints.length;
+                    setTimeout(() => this.isAnimating = false, 1000);
+                },
+                prev() {
+                    if (this.isAnimating) return;
+                    this.isAnimating = true;
+                    this.direction = 'prev';
+                    this.index = (this.index - 1 + this.paints.length) % this.paints.length;
+                    setTimeout(() => this.isAnimating = false, 1000);
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,400;1,900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F2EFE9; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        
+        [x-cloak] { display: none !important; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(var(--base-rotation)); }
+            33% { transform: translate(40px, -60px) rotate(calc(var(--base-rotation) + 15deg)); }
+            66% { transform: translate(-30px, 30px) rotate(calc(var(--base-rotation) - 15deg)); }
+        }
+        .animate-float { animation: float 18s infinite ease-in-out; }
+
+        .slide-up-enter { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUp {
+            from { transform: translateY(40%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .curtain-next-enter { animation: curtainNext 1s ease-in-out forwards; }
+        .curtain-next-leave { animation: curtainNextLeave 1s ease-in-out forwards; }
+        .curtain-prev-enter { animation: curtainPrev 1s ease-in-out forwards; }
+        .curtain-prev-leave { animation: curtainPrevLeave 1s ease-in-out forwards; }
+
+        @keyframes curtainNext { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes curtainNextLeave { from { transform: translateY(0); } to { transform: translateY(-100%); } }
+        @keyframes curtainPrev { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        @keyframes curtainPrevLeave { from { transform: translateY(0); } to { transform: translateY(100%); } }
+    </style>
+</head>
+<body x-data="paintSlider()" class="overflow-hidden">
+
+    <div class="relative w-full h-screen">
+        
+        <!-- Left Panel: Content -->
+        <div class="absolute left-0 top-0 w-full md:w-[45%] h-full z-20 flex flex-col p-12 md:p-24 justify-center pointer-events-none">
+            <div class="pointer-events-auto">
+                <div class="mb-12">
+                    <h1 class="text-2xl font-serif italic text-stone-800 tracking-tight leading-tight">
+                        <span class="block text-[11px] font-sans not-italic uppercase tracking-[0.4em] mb-1 opacity-60">Professional</span>
+                        PAINTBHARAT CO.
+                    </h1>
+                </div>
+
+                <div class="max-w-md">
+                    <span class="text-xs font-bold tracking-widest text-stone-400 mb-6 block" x-text="'COLLECTION ' + (index + 1)"></span>
+                    
+                    <div class="overflow-visible mb-8 min-h-[160px] md:min-h-[220px] relative">
+                        <template x-for="(paint, i) in paints" :key="paint.id">
+                            <h2 x-show="index === i" 
+                                x-transition:enter="slide-up-enter"
+                                class="absolute top-0 left-0 text-5xl md:text-7xl font-black leading-[1.1] text-stone-900 uppercase"
+                                :style="{ color: paint.colors.text }">
+                                <span class="block" x-text="paint.name.split(' ')[0]"></span>
+                                <span class="block" x-text="paint.name.split(' ')[1]"></span>
+                            </h2>
+                        </template>
+                    </div>
+
+                    <p class="text-stone-600 text-lg leading-relaxed mb-10 opacity-80 font-medium" x-text="paints[index].description"></p>
+
+                    <button 
+                        class="group flex items-center space-x-4 px-10 py-5 text-white rounded-full transition-all hover:scale-105 active:scale-95 shadow-xl pointer-events-auto"
+                        :style="{ backgroundColor: paints[index].colors.text }">
+                        <span class="uppercase text-xs font-bold tracking-widest">Book Consultation</span>
+                        <svg class="w-4 h-4 transition-transform group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: The "Paint Window" Background -->
+        <div class="absolute right-0 top-0 w-full md:w-[55%] h-full z-0 overflow-hidden bg-stone-200">
+            <template x-for="(paint, i) in paints" :key="'bg-'+paint.id">
+                <div x-show="index === i" 
+                     :x-transition:enter="direction === 'next' ? 'curtain-next-enter' : 'curtain-prev-enter'"
+                     :x-transition:leave="direction === 'next' ? 'curtain-next-leave' : 'curtain-prev-leave'"
+                     class="absolute inset-0 w-full h-full"
+                     :style="{ background: paint.texture }">
+                    
+                    <!-- Decorative Splotches -->
+                    <template x-for="n in 8">
+                        <div class="absolute rounded-full opacity-30 blur-md mix-blend-multiply"
+                             :style="getRandomSplotch(paint.colors.paint)"></div>
+                    </template>
+
+                    <!-- Floating Icons -->
+                    <template x-for="icon in icons">
+                        <div class="absolute opacity-20 animate-float mix-blend-overlay pointer-events-none text-white"
+                             :style="icon.style"
+                             x-html="icon.svg"></div>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <!-- The Central Color Card Section -->
+        <div class="absolute right-0 top-0 w-full md:w-[55%] h-full z-30 flex items-center justify-center pointer-events-none">
+            <div class="relative w-[320px] h-[440px]">
+                <template x-for="(paint, i) in paints" :key="'card-'+paint.id">
+                    <div x-show="index === i" 
+                         x-transition:enter="slide-up-enter"
+                         class="absolute inset-0">
+                        
+                        <!-- Color Card Container -->
+                        <div class="relative w-full h-full rounded-b-[10px] rounded-t-[5px] overflow-hidden shadow-[0_40px_80px_-15px_rgba(0,0,0,0.6)] border-x-[1px] border-white/10"
+                             :style="{ background: 'linear-gradient(165deg,' + paint.colors.can + ',' + paint.colors.paint + ')' }">
+                            
+                            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/10 via-white/20 to-transparent opacity-40"></div>
+                            
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[82%] h-[60%] bg-white shadow-inner p-6 flex flex-col items-center justify-center text-center border-t border-b border-stone-50">
+                                <span class="text-[8px] font-bold tracking-[0.4em] text-stone-400 mb-2 uppercase">Premium Interior Paint</span>
+                                <div class="w-12 h-[2px] bg-stone-100 mb-4"></div>
+                                
+                                <h3 class="text-xl md:text-2xl font-serif font-black text-stone-800 leading-tight mb-4" x-text="paint.name"></h3>
+                                
+                                <div class="flex flex-col items-center space-y-3">
+                                    <div class="w-12 h-12 rounded-full border-4 border-stone-50 shadow-md" :style="{ backgroundColor: paint.colorCode }"></div>
+                                    <span class="text-[9px] font-bold text-stone-400 uppercase tracking-widest" x-text="paint.finish"></span>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-0 w-full h-2 bg-gradient-to-t from-black/20 to-transparent"></div>
+                        </div>
+
+                        <!-- SILVER TAPE -->
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-[100px] h-9 z-40">
+                            <div class="w-full h-full bg-gradient-to-b from-stone-200 via-stone-300 to-stone-400 rounded-sm shadow-md border-b border-stone-400/50 opacity-95 transform -rotate-1">
+                                <div class="w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-50"></div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="absolute bottom-12 left-12 md:left-24 flex items-center space-x-8 z-40">
+            <div class="flex space-x-2">
+                <button @click="prev()" class="p-4 rounded-full border border-stone-300 text-stone-800 hover:bg-stone-900 hover:text-white transition-all backdrop-blur-sm pointer-events-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button @click="next()" class="p-4 rounded-full border border-stone-300 text-stone-800 hover:bg-stone-900 hover:text-white transition-all backdrop-blur-sm pointer-events-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+            <div class="flex space-x-3 items-center">
+                <template x-for="(paint, i) in paints">
+                    <div @click="index = i" class="h-1 rounded-full transition-all duration-500 cursor-pointer pointer-events-auto"
+                        :class="index === i ? 'w-12 bg-stone-900' : 'w-4 bg-stone-300'"></div>
+                </template>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

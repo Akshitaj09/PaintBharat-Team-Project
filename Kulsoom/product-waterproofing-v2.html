@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaintBharat Co. | Waterproofing</title>
+
+<style>
+:root{
+    --bg:#f4efe9;
+    --card:#ffffff;
+    --gold:#c6a23a;
+    --dark:#3a2d23;
+    --light-text:#6b6b6b;
+    --fav:#c0392b;
+}
+
+body{
+    margin:0;
+    font-family:"Segoe UI",sans-serif;
+    background:var(--bg);
+}
+
+/* HEADER */
+header{
+    background:#ffffff;
+    padding:20px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+.logo{
+    font-size:24px;
+    font-weight:700;
+    color:var(--dark);
+}
+.logo span{ color:var(--gold); }
+
+.reset{
+    color:#e74c3c;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* LAYOUT */
+.layout{
+    display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:240px;
+    padding:30px 20px;
+}
+
+.side-btn{
+    background:var(--dark);
+    color:white;
+    padding:14px 20px;
+    border-radius:40px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:600;
+    box-shadow:0 8px 18px rgba(0,0,0,0.1);
+}
+
+/* MAIN */
+.main{
+    flex:1;
+    padding:30px 40px;
+}
+
+/* BRAND TABS */
+.brand-tabs{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
+
+.brand-tabs button{
+    padding:10px 20px;
+    border:none;
+    border-radius:30px;
+    background:#e9e3dc;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.brand-tabs button.active{
+    background:var(--dark);
+    color:white;
+}
+
+/* CARDS */
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:var(--card);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    transition:all 0.4s ease;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 12px 28px rgba(198,162,58,0.25);
+}
+
+.card img{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    transition:0.4s;
+}
+
+.card:hover img{
+    transform:scale(1.05);
+}
+
+.card-content{
+    padding:18px;
+}
+
+.brand-name{
+    font-size:13px;
+    font-weight:700;
+    color:var(--gold);
+    margin-bottom:6px;
+    letter-spacing:1px;
+}
+
+.card h3{
+    margin:0;
+    font-size:17px;
+    color:var(--dark);
+    transition:0.4s;
+}
+
+.card:hover h3{
+    background:linear-gradient(90deg,var(--dark),var(--gold),var(--dark));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-size:200%;
+    animation:shine 2s linear infinite;
+}
+
+@keyframes shine{
+    0%{background-position:-200%;}
+    100%{background-position:200%;}
+}
+
+.features{
+    margin-top:10px;
+    font-size:14px;
+    color:var(--light-text);
+    transition:0.3s;
+}
+
+.card:hover .features{
+    color:var(--dark);
+}
+
+.fav-btn{
+    margin-top:15px;
+    padding:8px 14px;
+    border:none;
+    border-radius:25px;
+    background:#efe8df;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.fav-btn:hover{
+    background:var(--gold);
+    color:white;
+}
+
+.fav-btn.active{
+    background:var(--fav);
+    color:white;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    background:#ffffff;
+    font-size:14px;
+    color:#777;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">PaintBharat <span>Co.</span></div>
+    <div class="reset" onclick="resetBrands()">RESET</div>
+</header>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="side-btn">
+            Waterproofing
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <div class="brand-tabs">
+            <button class="active" onclick="filterBrand('all', this)">All</button>
+            <button onclick="filterBrand('asian', this)">Asian Paints</button>
+            <button onclick="filterBrand('drfixit', this)">Dr Fixit</button>
+            <button onclick="filterBrand('berger', this)">Berger</button>
+            <button onclick="filterBrand('nerolac', this)">Nerolac</button>
+        </div>
+
+        <div class="container" id="container"></div>
+
+    </div>
+</div>
+
+<footer>
+© 2026 PaintBharat Co. | Premium Waterproofing Solutions
+</footer>
+
+<script>
+const products = [
+
+{ brand:"asian", brandName:"Asian Paints", name:"SmartCare Damp Proof",
+  image:"https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
+  features:"Crack Bridging | UV Resistant | 5-10 Year Warranty" },
+
+{ brand:"asian", brandName:"Asian Paints", name:"SmartCare Terrace Tile Primer",
+  image:"https://images.unsplash.com/photo-1599423300746-b62533397364",
+  features:"High Adhesion | Long Durability" },
+
+{ brand:"drfixit", brandName:"Dr Fixit", name:"Dr Fixit LW+",
+  image:"https://images.unsplash.com/photo-1581578731548-c64695cc6952",
+  features:"Integral Waterproofing | 7-10 Year Protection" },
+
+{ brand:"drfixit", brandName:"Dr Fixit", name:"Dr Fixit Raincoat",
+  image:"https://images.unsplash.com/photo-1503387762-592deb58ef4e",
+  features:"Exterior Wall Protection | Weather Resistant" },
+
+{ brand:"berger", brandName:"Berger", name:"HomeShield Dampstop",
+  image:"https://images.unsplash.com/photo-1600566752227-8f3e5a0c2c62",
+  features:"Damp Resistant | Crack Filling" },
+
+{ brand:"nerolac", brandName:"Nerolac", name:"Nerolac Damp Proof",
+  image:"https://images.unsplash.com/photo-1600585154526-990dced4db0d",
+  features:"Anti-Algae | Long Durability" }
+
+];
+
+const container = document.getElementById("container");
+
+function displayProducts(list){
+    container.innerHTML="";
+    list.forEach(p=>{
+        container.innerHTML += `
+        <div class="card">
+            <img src="${p.image}">
+            <div class="card-content">
+                <div class="brand-name">${p.brandName}</div>
+                <h3>${p.name}</h3>
+                <div class="features">${p.features}</div>
+                <button class="fav-btn" onclick="toggleFav(this)">
+                    Save
+                </button>
+            </div>
+        </div>`;
+    });
+}
+
+function toggleFav(btn){
+    btn.classList.toggle("active");
+    btn.innerHTML = btn.classList.contains("active")
+        ? "Saved"
+        : "Save";
+}
+
+function filterBrand(brand, btn){
+    document.querySelectorAll(".brand-tabs button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    if(brand==="all"){
+        displayProducts(products);
+    } else {
+        displayProducts(products.filter(p=>p.brand===brand));
+    }
+}
+
+function resetBrands(){
+    document.querySelectorAll(".brand-tabs button").forEach(b=>b.classList.remove("active"));
+    document.querySelector(".brand-tabs button").classList.add("active");
+    displayProducts(products);
+}
+
+displayProducts(products);
+</script>
+
+</body>
+</html>

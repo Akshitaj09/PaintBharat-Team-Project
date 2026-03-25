@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Glassmorphism Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+        }
+
+        /* Background logic with centered color and white edges */
+        .bg-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(140px);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .blob-1 {
+            width: 800px;
+            height: 800px;
+            background: #3b82f6;
+            left: 50%;
+            top: 50%;
+            transform: translate(-70%, -50%);
+        }
+
+        .blob-2 {
+            width: 600px;
+            height: 600px;
+            background: #22d3ee;
+            left: 50%;
+            top: 50%;
+            transform: translate(-10%, -30%);
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 20%, #ffffff 85%);
+            z-index: 1;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(45px);
+            -webkit-backdrop-filter: blur(45px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 40px;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Updated Label Styling: Black, Bold, No complex shadows */
+        .input-label {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #1a1a1a; /* Rich Black */
+            margin-bottom: 10px;
+            display: block;
+            opacity: 0.9;
+        }
+
+        /* Input text color for readability */
+        .form-input {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .form-input::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            cursor: pointer;
+        }
+        .file-input-wrapper input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Grey text for choose file display */
+        #file-name-display {
+            color: #6b7280; /* Gray-500 for better contrast than Gray-300 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Layer -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="vignette"></div>
+    </div>
+
+    <!-- Main Section -->
+    <main class="w-full max-w-6xl px-6 py-12">
+        <div class="glass-container flex flex-col md:flex-row overflow-hidden min-h-[750px]">
+            
+            <!-- Left Side: Form -->
+            <div class="flex-1 p-10 md:p-20 flex flex-col justify-center">
+                <h1 class="text-5xl font-bold tracking-[0.25em] mb-14 text-center uppercase text-black">Email Us</h1>
+                
+                <form class="space-y-8">
+                    <div>
+                        <label class="input-label">Full Name</label>
+                        <input type="text" 
+                               class="form-input w-full bg-white/20 border border-black/10 rounded-full py-4 px-8 focus:outline-none focus:border-black/30 focus:bg-white/30 transition-all text-base"
+                               placeholder="Enter your name">
+                    </div>
+
+                    <div>
+                        <label class="input-label">Email Address</label>
+                        <input type="email" 
+                               class="form-input w-full bg-white/20 border border-black/10 rounded-full py-4 px-8 focus:outline-none focus:border-black/30 focus:bg-white/30 transition-all text-base"
+                               placeholder="Enter your email">
+                    </div>
+
+                    <div>
+                        <label class="input-label">Attach Resume</label>
+                        <div class="file-input-wrapper">
+                            <div class="w-full bg-white/20 border border-black/10 border-dashed rounded-full py-4 px-8 flex items-center justify-between text-base transition-all hover:bg-white/30">
+                                <span id="file-name-display" class="font-medium">Choose file...</span>
+                                <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                </svg>
+                            </div>
+                            <input type="file" id="resume-upload" onchange="const display = document.getElementById('file-name-display'); display.innerText = this.files[0].name; display.style.color = '#000000';">
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <button type="button" 
+                                class="w-full bg-black text-white font-extrabold py-5 rounded-full shadow-2xl hover:scale-[1.03] active:scale-95 transition-all uppercase tracking-widest text-lg">
+                            Send Message
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="text-sm font-bold text-black/60">Don't have an account?</p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Side: Visual Panel -->
+            <div class="hidden md:flex flex-[0.9] p-6">
+                <div class="bg-white w-full rounded-[3.5rem] flex flex-col items-center justify-center relative p-12 shadow-sm">
+                    
+                    <div class="relative w-72 h-72 flex items-center justify-center">
+                        <svg class="absolute w-full h-full text-cyan-50 opacity-60 translate-x-[-15px] translate-y-[-15px]" viewBox="0 0 200 200" fill="currentColor">
+                            <path d="M160,110c0-22.1-17.9-40-40-40c-2.3,0-4.5,0.2-6.7,0.6C105.7,50.2,84.4,40,60,40C32.4,40,10,62.4,10,90c0,1.3,0.1,2.6,0.2,3.8 C4.1,99.4,0,109.2,0,120c0,22.1,17.9,40,40,40h120c22.1,0,40-17.9,40-40S182.1,110,160,110z" />
+                        </svg>
+
+                        <div class="relative z-10 w-44 h-36 bg-[#b2ebf2] rounded-[2rem] flex flex-col items-center justify-center shadow-[inset_0_4px_12px_rgba(255,255,255,0.9)] border border-white/50">
+                            <div class="absolute -top-16 w-24 h-24 border-[12px] border-[#b2ebf2] rounded-t-full"></div>
+                            
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+                                <svg class="w-10 h-10 text-[#4dd0e1]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

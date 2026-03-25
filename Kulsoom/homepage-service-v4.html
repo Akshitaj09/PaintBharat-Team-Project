@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spatial UI Service Cards</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(88, 28, 135, 0.4), rgba(139, 92, 246, 0.2));
+            z-index: -1;
+        }
+
+        .spatial-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(32px) saturate(200%);
+            -webkit-backdrop-filter: blur(32px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 
+                0 12px 40px 0 rgba(0, 0, 0, 0.25),
+                0 0 1px 1px rgba(255, 255, 255, 0.2) inset;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1280px;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        .service-card {
+            border-radius: 40px;
+            padding: 2rem;
+            position: relative;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        background 0.3s ease, 
+                        box-shadow 0.4s ease;
+            color: #ffffff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            min-height: 380px;
+        }
+
+        .service-card:hover {
+            transform: scale(1.03) translateY(-8px);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.4);
+        }
+
+        .plus-button {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 300;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+        }
+
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 28px;
+        }
+
+        .category-tag {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .card-description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-button {
+            margin-top: auto;
+            background: #ffffff;
+            color: #000000;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .cta-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 640px) {
+            .card-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <!-- Card 1: Interior Painting -->
+        <div class="service-card spatial-glass">
+            <div class="plus-button">+</div>
+            <div class="icon-box">🎨</div>
+            <span class="category-tag">Premium</span>
+            <h3 class="card-title">Interior Painting</h3>
+            <p class="card-description">Precision finishes using high-quality, eco-friendly paints for your home.</p>
+            <button class="cta-button">Get Quote</button>
+        </div>
+
+        <!-- Card 2: Exterior Painting -->
+        <div class="service-card spatial-glass">
+            <div class="plus-button">+</div>
+            <div class="icon-box">🏠</div>
+            <span class="category-tag">Durable</span>
+            <h3 class="card-title">Exterior Painting</h3>
+            <p class="card-description">Weather-resistant coatings designed to protect and beautify your facade.</p>
+            <button class="cta-button">See Work</button>
+        </div>
+
+        <!-- Card 3: Waterproofing -->
+        <div class="service-card spatial-glass">
+            <div class="plus-button">+</div>
+            <div class="icon-box">💧</div>
+            <span class="category-tag">Protection</span>
+            <h3 class="card-title">Waterproofing</h3>
+            <p class="card-description">Advanced sealing solutions to prevent leaks and long-term moisture damage.</p>
+            <button class="cta-button">Consult Now</button>
+        </div>
+
+        <!-- Card 4: Wallpaper -->
+        <div class="service-card spatial-glass">
+            <div class="plus-button">+</div>
+            <div class="icon-box">✨</div>
+            <span class="category-tag">Decor</span>
+            <h3 class="card-title">Wallpaper</h3>
+            <p class="card-description">Expert installation of patterns and textures to add depth to your walls.</p>
+            <button class="cta-button">Browse Patterns</button>
+        </div>
+    </div>
+
+</body>
+</html>

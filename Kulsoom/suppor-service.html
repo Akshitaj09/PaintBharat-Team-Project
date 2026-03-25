@@ -1,0 +1,173 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Quote, 
+  Star, 
+  ArrowRight, 
+  Sparkles,
+  Heart,
+  Users
+} from 'lucide-react';
+
+const TestimonialCard = ({ name, role, content, image }) => {
+  const cardRef = useRef(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      className="relative flex-1 min-w-[340px] h-[420px] group transition-all duration-700 ease-out"
+    >
+      {/* Circular Profile Photo - Overlapping top edge */}
+      <div className="absolute -top-10 left-8 z-30 w-24 h-24 transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-110">
+        <div className="relative w-full h-full rounded-full bg-[#d4b99a] p-1 shadow-2xl transition-all duration-500 group-hover:shadow-[#d4b99a]/40 overflow-hidden">
+          <img 
+            src={image} 
+            alt={name}
+            className="w-full h-full object-cover rounded-full"
+          />
+        </div>
+        {/* Decorative Ring on Hover */}
+        <div className="absolute inset-0 rounded-full border border-[#d4b99a]/50 scale-125 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 pointer-events-none" />
+      </div>
+
+      {/* Card Body */}
+      <div 
+        className="relative w-full h-full bg-[#161616]/95 backdrop-blur-2xl rounded-[3rem] p-10 pt-20 flex flex-col border border-white/5 transition-all duration-500 group-hover:bg-[#1f1f1f] group-hover:border-white/10"
+        style={{
+          boxShadow: isHovering 
+            ? '0 40px 80px -20px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05)' 
+            : '0 20px 40px -20px rgba(0,0,0,0.4)',
+          transform: isHovering ? 'translateY(-10px)' : 'translateY(0)'
+        }}
+      >
+        {/* Dynamic Shine Effect */}
+        <div 
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{
+            background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(212, 185, 154, 0.08), transparent 80%)`
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-10">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-xl font-serif text-[#e5e5e5] tracking-wide mb-1 group-hover:text-white transition-colors">
+                {name}
+              </h3>
+              <p className="text-[#d4b99a] text-[10px] font-bold uppercase tracking-widest opacity-80">
+                {role}
+              </p>
+            </div>
+            <Quote className="text-white/10 group-hover:text-[#d4b99a]/20 transition-colors" size={32} />
+          </div>
+
+          <div className="flex gap-1 mb-6">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={14} fill="#d4b99a" className="text-[#d4b99a] group-hover:scale-110 transition-transform" style={{ transitionDelay: `${i * 50}ms` }} />
+            ))}
+          </div>
+
+          <p className="text-[#999] leading-relaxed text-sm font-light italic group-hover:text-[#ccc] transition-colors line-clamp-4">
+            "{content}"
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-auto pt-8 border-t border-white/5 flex items-center justify-between opacity-60 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-2 text-[10px] font-bold text-[#d4b99a] tracking-widest">
+            <Heart size={12} />
+            TEAM MEMBER
+          </div>
+          <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-[#d4b99a] group-hover:text-[#161616] transition-all duration-300">
+            <ArrowRight size={14} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default function App() {
+  const testimonials = [
+    {
+      name: "Elena Rodriguez",
+      role: "Senior Artisan",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+      content: "The creative freedom here is unmatched. Management actually listens to our artistic input on every project, making it feel like a shared vision."
+    },
+    {
+      name: "Marcus Chen",
+      role: "Project Director",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+      content: "Our culture prioritizes quality over speed. It's refreshing to work for a company that allows us the time to achieve absolute perfection for our clients."
+    },
+    {
+      name: "Sarah Jenkins",
+      role: "Design Lead",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
+      content: "Collaborating with such a talented team is a daily inspiration. The internal mentorship program has helped me grow faster than I ever thought possible."
+    },
+    {
+      name: "David Vane",
+      role: "Technical Specialist",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
+      content: "Transparency is the foundation here. We always know the 'why' behind decisions, which builds incredible trust across the entire organization."
+    }
+  ];
+
+  return (
+    <div className="min-h-screen w-full bg-[#0a0a0a] flex flex-col items-center justify-center p-6 md:p-12 overflow-x-hidden font-sans">
+      
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[15%] w-[60%] h-[60%] bg-[#d4b99a]/5 rounded-full blur-[160px]" />
+        <div className="absolute bottom-[-10%] right-[5%] w-[40%] h-[40%] bg-white/[0.02] rounded-full blur-[120px]" />
+      </div>
+
+      {/* Header */}
+      <div className="relative z-10 text-center mb-28 max-w-2xl">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#d4b99a] text-[10px] uppercase tracking-[0.4em] font-bold mb-8">
+          <Users size={12} />
+          Internal Culture
+        </div>
+        <h1 className="text-5xl md:text-6xl font-serif text-white tracking-tight mb-6">
+          Voices from the Studio
+        </h1>
+        <p className="text-white/40 font-light text-lg italic leading-relaxed">
+          "The strength of the team is each individual member. The strength of each member is the team."
+        </p>
+      </div>
+
+      {/* Horizontal Row Layout */}
+      <div className="relative z-10 flex flex-nowrap lg:flex-row flex-col gap-12 w-full max-w-7xl overflow-x-auto lg:overflow-visible pb-20 no-scrollbar px-4">
+        {testimonials.map((t, index) => (
+          <TestimonialCard key={index} {...t} />
+        ))}
+      </div>
+
+      {/* CSS Utility */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap');
+        
+        .font-serif { font-family: 'Playfair Display', serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; }
+      `}} />
+    </div>
+  );
+}

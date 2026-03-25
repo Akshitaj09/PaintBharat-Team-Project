@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | PaintBharat Co.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --gold: #D4AF37;
+            --gold-shimmer: linear-gradient(45deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            --aesthetic-brown: #2d241e;
+            --beige: #F5F1EA;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .hero-heading {
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+        }
+
+        .perspective-container {
+            perspective: 1200px;
+        }
+
+        /* Shining Gold Box Lining */
+        .card-brutalist {
+            border: 1px solid var(--gold);
+            background: #000;
+            color: #fff;
+            box-shadow: 6px 6px 0px rgba(212, 175, 55, 0.15);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .card-brutalist:hover {
+            box-shadow: 12px 12px 0px var(--gold);
+            transform: translateY(-8px);
+        }
+
+        .btn-gold {
+            background: var(--gold-shimmer);
+            background-size: 200% auto;
+            color: #000;
+            transition: 0.5s;
+        }
+        .btn-gold:hover {
+            background-position: right center;
+            transform: scale(1.05);
+        }
+
+        .text-huge {
+            font-size: clamp(3.5rem, 11vw, 12rem);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-black">
+
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full p-6 flex justify-between items-center z-40 border-b border-white/5 bg-black/70 backdrop-blur-lg -translate-y-full">
+        <div class="text-xl font-black tracking-tighter uppercase text-white">PAINTBHARAT <span style="color: var(--gold);">CO.</span></div>
+        <div class="flex gap-8 text-[10px] uppercase tracking-[0.3em] font-bold text-white">
+            <a href="#" class="hover:text-[var(--gold)] transition-colors">Services</a>
+            <a href="#" class="hover:text-[var(--gold)] transition-colors underline decoration-[var(--gold)] decoration-2 underline-offset-4">Our Story</a>
+            <a href="#" class="hover:text-[var(--gold)] transition-colors">Contact</a>
+        </div>
+    </nav>
+
+    <main class="relative">
+        
+        <!-- Hero Section Pinned (Black Background for Slide 1 & 2) -->
+        <section id="hero-section" class="h-[500vh] relative">
+            
+            <div id="hero-pin" class="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center bg-black">
+                
+                <!-- Content Wrapper -->
+                <div class="relative z-10 text-center px-6 w-full max-w-7xl">
+                    
+                    <!-- Headlines -->
+                    <div class="relative h-[45vh] md:h-[55vh] flex items-center justify-center">
+                        <h1 id="main-title" class="hero-heading text-huge absolute opacity-1 scale-1 whitespace-nowrap text-white">
+                            SERVICE<br><span style="color: var(--gold);">DEFINED</span>
+                        </h1>
+                        <h1 id="secondary-title" class="hero-heading text-huge absolute translate-x-[100vw] whitespace-nowrap text-white">
+                            PREMIUM<br>FINISH
+                        </h1>
+                    </div>
+
+                    <!-- Subhead & CTAs -->
+                    <div id="ui-meta" class="mt-4 opacity-0 translate-y-16">
+                        <p class="text-gray-400 text-xs md:text-sm max-w-2xl mx-auto font-bold uppercase tracking-[0.3em] leading-relaxed">
+                            <span class="text-white">Interior</span> • <span style="color: var(--gold);">Exterior</span> • <span class="text-white">Wallpaper</span> • Waterproofing
+                        </p>
+                        <div class="mt-8 flex flex-wrap justify-center gap-4">
+                            <button class="btn-gold px-10 py-4 font-black uppercase tracking-tighter text-sm shadow-lg">
+                                Explore Services
+                            </button>
+                            <button class="px-10 py-4 border border-white/20 text-white font-black uppercase tracking-tighter text-sm hover:bg-white hover:text-black transition-all">
+                                Get a Quote
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Cards -->
+                <div id="cards-container" class="absolute inset-0 perspective-container pointer-events-none">
+                    <div class="hero-card card-brutalist absolute top-[12%] left-[6%] p-6 w-64 opacity-0 -translate-z-60">
+                        <span class="text-[9px] text-[var(--gold)] block mb-1 uppercase tracking-[0.2em]">Service 01</span>
+                        <h3 class="text-sm font-black uppercase italic text-white">Interior Painting</h3>
+                        <p class="text-[10px] text-gray-400 mt-2 lowercase">Luxe textures and flawless walls for your premium living space.</p>
+                    </div>
+                    <div class="hero-card card-brutalist absolute bottom-[20%] right-[6%] p-6 w-64 opacity-0 -translate-z-60">
+                        <span class="text-[9px] text-[var(--gold)] block mb-1 uppercase tracking-[0.2em]">Service 02</span>
+                        <h3 class="text-sm font-black uppercase italic text-white">Exterior Shield</h3>
+                        <p class="text-[10px] text-gray-400 mt-2 lowercase">Weather-proof aesthetics that stand the test of time.</p>
+                    </div>
+                    <div class="hero-card card-brutalist absolute top-[20%] right-[10%] p-5 w-56 opacity-0 -translate-z-60">
+                        <span class="text-[9px] text-[var(--gold)] block mb-1 uppercase tracking-[0.2em]">Service 03</span>
+                        <h3 class="text-sm font-black uppercase italic text-white">Wallpaper Art</h3>
+                        <p class="text-[10px] text-gray-400 mt-2 lowercase">Handpicked patterns for high-end bespoke feature walls.</p>
+                    </div>
+                    <div class="hero-card card-brutalist absolute bottom-[28%] left-[12%] p-5 w-56 opacity-0 -translate-z-60">
+                        <span class="text-[9px] text-[var(--gold)] block mb-1 uppercase tracking-[0.2em]">Service 04</span>
+                        <h3 class="text-sm font-black uppercase italic text-white">Waterproofing</h3>
+                        <p class="text-[10px] text-gray-400 mt-2 lowercase">Scientific protection against moisture and leakage.</p>
+                    </div>
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div id="scroll-hint" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+                    <span class="text-[9px] uppercase tracking-[0.4em] font-bold text-gray-500">Scroll to View</span>
+                    <div class="w-px h-10 bg-[var(--gold)]/30 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1/2 bg-[var(--gold)] animate-[scroll_2s_infinite]"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Final Content Section (Aesthetic Beige) -->
+        <section class="h-screen bg-[var(--beige)] text-black flex flex-col items-center justify-center p-12 z-20 relative border-t border-black/5">
+            <h2 class="text-[10px] uppercase tracking-[0.5em] mb-12 font-bold text-[var(--gold)]">PaintBharat Co. &copy; 2026</h2>
+            <div class="max-w-5xl text-center">
+                <p class="text-3xl md:text-6xl font-black uppercase leading-[0.9] tracking-tighter">
+                    We cover every corner.<br><span style="color: var(--aesthetic-brown);">With precision and pride.</span>
+                </p>
+                <div class="mt-12 h-px w-32 bg-[var(--gold)] mx-auto"></div>
+                <p class="mt-8 text-sm uppercase tracking-widest font-bold text-gray-500">Transforming spaces across India with premium artistry.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes scroll {
+                0% { transform: translateY(-100%); }
+                100% { transform: translateY(200%); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        window.onload = () => {
+            // ENTRANCE ANIMATION: Immediate view
+            const entranceTl = gsap.timeline();
+            
+            entranceTl.from("#main-title", {
+                opacity: 0,
+                scale: 1.4,
+                duration: 1.2,
+                ease: "expo.out"
+            })
+            .to("#navbar", {
+                y: 0,
+                duration: 0.8,
+                ease: "power3.out"
+            }, "-=0.6")
+            .to("#ui-meta", {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power2.out"
+            }, "-=0.4");
+
+            // SCROLL-DRIVEN TIMELINE
+            const scrollTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#hero-section",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.5,
+                    pin: "#hero-pin",
+                    snap: {
+                        snapTo: [0, 0.33, 0.66, 1],
+                        duration: 0.5,
+                        delay: 0.1,
+                        ease: "power2.inOut"
+                    }
+                }
+            });
+
+            // PHASE 1: Cards animation
+            scrollTl.to(".hero-card", {
+                opacity: 1,
+                z: 0,
+                stagger: 0.2,
+                duration: 2,
+                ease: "expo.out"
+            }, 0.5);
+
+            // PHASE 2: Headline transition
+            scrollTl.to("#main-title", {
+                x: "-120vw",
+                opacity: 0,
+                duration: 1.5,
+                ease: "expo.in"
+            }, 2.5);
+
+            scrollTl.to("#secondary-title", {
+                x: 0,
+                duration: 1.5,
+                ease: "expo.out"
+            }, 2.8);
+
+            // PHASE 3: Fade out elements
+            scrollTl.to("#scroll-hint", {
+                opacity: 0,
+                duration: 0.5
+            }, 3.5);
+
+            // Mouse interaction
+            if (window.matchMedia("(min-width: 1024px)").matches) {
+                document.addEventListener('mousemove', (e) => {
+                    const moveX = (e.clientX / window.innerWidth - 0.5) * 30;
+                    const moveY = (e.clientY / window.innerHeight - 0.5) * 30;
+                    
+                    gsap.to("#cards-container", {
+                        x: moveX,
+                        y: moveY,
+                        rotationY: moveX / 12,
+                        rotationX: -moveY / 12,
+                        duration: 1.5,
+                        ease: "power2.out"
+                    });
+                });
+            }
+        };
+    </script>
+</body>
+</html>

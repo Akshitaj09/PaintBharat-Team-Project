@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAINTBHARAT CO. - Premium Finishes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcf9f2;
+            color: #1e293b;
+            user-select: none;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .house-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(0.9) contrast(1.02); 
+            transform: scale(1.02);
+            animation: slowPan 40s ease-in-out infinite alternate;
+        }
+
+        @keyframes slowPan {
+            from { transform: scale(1.02) translateX(-1%); }
+            to { transform: scale(1.08) translateX(1%); }
+        }
+
+        .house-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
+        }
+
+        /* ENHANCED GLASSMORPHISM: More "milky" and less transparent */
+        .glass {
+            background: rgba(255, 255, 255, 0.75); /* Increased opacity for frosted effect */
+            backdrop-filter: blur(40px); /* Increased blur for deep frosted look */
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.8); /* Brighter border to catch light */
+            border-radius: 32px;
+            box-shadow: 
+                0 20px 50px -15px rgba(0, 0, 0, 0.15),
+                inset 0 0 20px rgba(255, 255, 255, 0.3); /* Subtle inner glow */
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #main-title {
+            filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 35px rgba(255, 255, 255, 0.5));
+            color: #1e293b;
+        }
+
+        .visual-transition {
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center center;
+        }
+        .visual-exit { transform: rotate(10deg) scale(0.6) translate(30px, -15px); opacity: 0; }
+        .visual-enter { transform: rotate(-10deg) scale(0.6) translate(-30px, 15px); opacity: 0; }
+
+        .float-anim {
+            animation: float 8s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .fade-up { opacity: 0; transform: translateY(15px); animation: fadeIn 0.8s ease-out forwards; }
+        .fade-down { opacity: 0; transform: translateY(-15px); animation: fadeIn 0.8s ease-out forwards; }
+        .fade-left { opacity: 0; transform: translateX(25px); animation: fadeIn 1s ease-out forwards; }
+        @keyframes fadeIn { to { opacity: 1; transform: translate(0); } }
+
+        .timer-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.03);
+            z-index: 100;
+        }
+        #timer-progress {
+            height: 100%;
+            width: 0%;
+            transition: background-color 1s ease;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+    </style>
+</head>
+<body class="relative flex flex-col items-center" id="main-body">
+
+    <div id="house-bg" class="house-bg"></div>
+    <div class="house-overlay"></div>
+
+    <div class="timer-container">
+        <div id="timer-progress"></div>
+    </div>
+
+    <main class="relative z-10 w-full flex flex-col p-6 lg:p-10 max-w-[1200px] mx-auto pb-32">
+        
+        <div class="h-10 mb-10 fade-down"></div>
+
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6 mb-20 min-h-[50vh]">
+            
+            <div class="w-full lg:w-1/2 flex flex-col items-start space-y-4">
+                <h1 id="main-title" class="text-5xl lg:text-8xl font-black leading-[0.85] tracking-tighter uppercase transition-all duration-700">
+                    RASPBERRY<br>LUXE
+                </h1>
+
+                <div class="relative w-full flex items-center justify-start py-8 fade-up">
+                    <div id="visual-wrapper" class="relative visual-transition">
+                        <div id="glow-bg" class="absolute -inset-20 rounded-full blur-[120px] -z-10 transition-colors duration-1000 opacity-70"></div>
+                        <div class="float-anim">
+                            <div id="main-color-circle" class="w-48 h-48 lg:w-72 lg:h-72 rounded-full border-[15px] border-white shadow-2xl transition-all duration-700"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-[400px] fade-left">
+                <!-- Main Analysis Card with glassmorphism -->
+                <div class="glass p-10 flex flex-col gap-8">
+                    <div class="flex gap-4 border-b border-black/5 pb-4">
+                        <button id="analysis-tab" class="font-black text-xs border-b-2 pb-4 -mb-[18px] uppercase tracking-widest transition-colors duration-700">Analysis</button>
+                    </div>
+
+                    <div class="flex items-center gap-6">
+                        <div class="relative w-24 h-24">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="48" cy="48" r="42" stroke="rgba(0,0,0,0.05)" stroke-width="10" fill="transparent" />
+                                <circle id="rating-circle" cx="48" cy="48" r="42" stroke-width="10" fill="transparent" stroke-dasharray="263.8" stroke-dashoffset="30" class="transition-all duration-1000" />
+                            </svg>
+                            <div id="main-rating" class="absolute inset-0 flex items-center justify-center text-3xl font-black text-slate-800">4.9</div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-slate-400 text-[9px] font-black uppercase tracking-[0.2em] mb-2">Density</div>
+                            <div class="flex gap-1 mb-3" id="star-rating"></div>
+                            <div class="h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
+                                <div id="density-bar" class="h-full transition-all duration-1000"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <h3 id="item-title-desc" class="text-3xl font-black text-slate-800 uppercase leading-none tracking-tight">Raspberry Luxe</h3>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-black/5">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md border border-slate-100">
+                                <svg id="heart-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            </div>
+                            <span class="text-slate-800 font-bold text-sm">3.5k Saves</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="w-10 h-10 bg-white/70 rounded-full flex items-center justify-center hover:bg-white transition-all border border-black/5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#1e293b" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
+                            </button>
+                            <button class="w-10 h-10 bg-white/70 rounded-full flex items-center justify-center hover:bg-white transition-all border border-black/5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" stroke="#1e293b" stroke-width="2.5" fill="none" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.5 2 7a7 7 0 0 1-7 7c-1.66 0-3.13-.59-4.2-1.58"/><path d="M9 21v-3.5"/><path d="M15 21v-3.5"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+            <div class="feature-card glass p-8 flex flex-col gap-5">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transition-colors duration-700 icon-bg">
+                    <span class="text-white font-bold text-lg">$</span>
+                </div>
+                <h4 class="font-black text-sm uppercase tracking-tight text-slate-800">Consultation</h4>
+                <p class="text-slate-500 text-[11px] leading-relaxed">Expert color mapping for your specific lighting.</p>
+            </div>
+            <div class="feature-card glass p-8 flex flex-col gap-5">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transition-colors duration-700 icon-bg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h4 class="font-black text-sm uppercase tracking-tight text-slate-800">Protection</h4>
+                <p class="text-slate-500 text-[11px] leading-relaxed">Advanced scuff-resistant polymer finish.</p>
+            </div>
+            <div class="feature-card glass p-8 flex flex-col gap-5">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transition-colors duration-700 icon-bg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" stroke="white" stroke-width="2" fill="none" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                </div>
+                <h4 class="font-black text-sm uppercase tracking-tight text-slate-800">Nature First</h4>
+                <p class="text-slate-500 text-[11px] leading-relaxed">Zero-VOC organic pigment bases.</p>
+            </div>
+        </section>
+
+        <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50">
+            <div class="bg-white/95 backdrop-blur-md px-10 py-5 rounded-full flex items-center gap-14 shadow-2xl border border-white/50">
+                <button class="text-slate-800 hover:scale-125 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                </button>
+                <button onclick="nextItem()" class="hover:scale-125 transition-all cycle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M16 3h5v5"/><path d="M21 3l-7 7"/></svg>
+                </button>
+                <button class="text-slate-300 hover:scale-125 transition-transform">
+                    <span class="text-2xl font-black">$</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const colorData = [
+            {
+                title: "RASPBERRY<br>LUXE",
+                descTitle: "Raspberry Luxe",
+                rating: 4.9,
+                hex: "#713232", 
+                houseImage: "https://images.unsplash.com/photo-1594142465967-a41296ea30bb?q=80&w=2000"
+            },
+            {
+                title: "ALABASTER<br>SILK",
+                descTitle: "Alabaster Silk",
+                rating: 4.7,
+                hex: "#D7CFC4", 
+                houseImage: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?q=80&w=2000"
+            },
+            {
+                title: "OCEAN<br>TEAL",
+                descTitle: "Ocean Teal",
+                rating: 4.8,
+                hex: "#344D52", 
+                houseImage: "https://images.unsplash.com/photo-1615529328331-f8917597711f?q=80&w=2000"
+            },
+            {
+                title: "EMERALD<br>REGAL",
+                descTitle: "Emerald Regal",
+                rating: 4.9,
+                hex: "#2D4138", 
+                houseImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=2000"
+            },
+            {
+                title: "MIDNIGHT<br>ROYAL",
+                descTitle: "Midnight Royal",
+                rating: 4.8,
+                hex: "#2A3548", 
+                houseImage: "https://images.unsplash.com/photo-1534349762230-e0cadf78f5db?q=80&w=2000" 
+            },
+            {
+                title: "TERRACOTTA<br>WARMTH",
+                descTitle: "Terracotta Warmth",
+                rating: 4.6,
+                hex: "#A25E49", 
+                houseImage: "https://images.unsplash.com/photo-1597218868981-1b68e15f0065?q=80&w=2000"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isAnimating = false;
+        let isPaused = false;
+        const TIMER_DURATION = 5000;
+        const timerProgressEl = document.getElementById('timer-progress');
+
+        const nextItem = () => {
+            if (isAnimating) return;
+            currentIndex = (currentIndex + 1) % colorData.length;
+            updateUI();
+        };
+
+        const updateUI = () => {
+            isAnimating = true;
+            const data = colorData[currentIndex];
+            const wrapper = document.getElementById('visual-wrapper');
+            const colorCircle = document.getElementById('main-color-circle');
+            const glow = document.getElementById('glow-bg');
+            const bgHouse = document.getElementById('house-bg');
+            const iconBgs = document.querySelectorAll('.icon-bg');
+            const cycleBtn = document.querySelector('.cycle-btn');
+            const analysisTab = document.getElementById('analysis-tab');
+            const heartIcon = document.getElementById('heart-icon');
+
+            wrapper.classList.add('visual-exit');
+            timerProgressEl.style.width = '0%';
+
+            setTimeout(() => {
+                document.getElementById('main-title').innerHTML = data.title;
+                document.getElementById('main-rating').textContent = data.rating;
+                document.getElementById('item-title-desc').textContent = data.descTitle;
+                
+                const starRating = document.getElementById('star-rating');
+                starRating.innerHTML = '';
+                for(let i=0; i<5; i++) {
+                    starRating.innerHTML += `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="${i < Math.floor(data.rating) ? data.hex : '#cbd5e1'}" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+                }
+                
+                const densityBar = document.getElementById('density-bar');
+                densityBar.style.width = (data.rating / 5 * 100) + '%';
+                densityBar.style.backgroundColor = data.hex;
+
+                colorCircle.style.backgroundColor = data.hex;
+                glow.style.backgroundColor = data.hex;
+                bgHouse.style.backgroundImage = `url(${data.houseImage})`;
+                timerProgressEl.style.backgroundColor = data.hex;
+                
+                iconBgs.forEach(el => el.style.backgroundColor = data.hex);
+                cycleBtn.style.color = data.hex;
+                analysisTab.style.borderColor = data.hex;
+                analysisTab.style.color = data.hex;
+                heartIcon.style.fill = data.hex;
+
+                const circle = document.getElementById('rating-circle');
+                const circumference = 263.8; 
+                const offset = circumference - (data.rating / 5) * circumference;
+                circle.style.strokeDashoffset = offset;
+                circle.style.stroke = data.hex;
+
+                wrapper.classList.remove('visual-exit');
+                wrapper.classList.add('visual-enter');
+                void wrapper.offsetWidth; 
+                wrapper.classList.remove('visual-enter');
+                
+                setTimeout(() => {
+                    isAnimating = false;
+                    startTimer();
+                }, 1200);
+            }, 600);
+        };
+
+        let autoInterval;
+        let startTime;
+        const startTimer = () => {
+            if (autoInterval) clearInterval(autoInterval);
+            startTime = Date.now();
+            autoInterval = setInterval(() => {
+                if(!isPaused && !isAnimating) {
+                    const elapsed = Date.now() - startTime;
+                    const progress = (elapsed / TIMER_DURATION) * 100;
+                    timerProgressEl.style.width = progress + '%';
+                    if(progress >= 100) {
+                        nextItem();
+                    }
+                }
+            }, 50);
+        };
+
+        const body = document.getElementById('main-body');
+        body.addEventListener('mousedown', () => isPaused = true);
+        window.addEventListener('mouseup', () => { isPaused = false; startTime = Date.now(); });
+        
+        window.onload = () => {
+            updateUI();
+        };
+    </script>
+</body>
+</html>

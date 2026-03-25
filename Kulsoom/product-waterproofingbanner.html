@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Protection Systems</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .luxury-shadow {
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.35);
+        }
+        
+        /* Keyframe Entry Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-reveal {
+            opacity: 0;
+            animation: fadeInUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+        }
+
+        /* Video-Style Button Animation */
+        .btn-fill-animation {
+            position: relative;
+            background-color: #000;
+            color: #fff;
+            transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-fill-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .btn-fill-animation:hover {
+            color: #000;
+        }
+
+        .btn-fill-animation:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .loader {
+            border: 2px solid #333;
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="p-4 md:p-12">
+
+    <!-- Hero Section -->
+    <div id="hero-container" class="relative w-full max-w-[1280px] h-[520px] rounded-[32px] overflow-hidden luxury-shadow bg-[#1a1a1a]">
+        
+        <!-- Background Image Container -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div id="image-placeholder" class="absolute inset-0 flex items-center justify-center bg-[#1a1a1a] z-10">
+                <div class="flex flex-col items-center gap-3">
+                    <div class="loader"></div>
+                    <p class="text-neutral-500 text-[10px] tracking-widest uppercase">Rendering Architectural Vision</p>
+                </div>
+            </div>
+            <img id="hero-image" src="" alt="Architectural Waterproofing" 
+                 class="absolute inset-0 w-full h-full object-cover opacity-0 transition-all duration-[2000ms] ease-out scale-105"
+                 style="transition-property: opacity, transform;">
+        </div>
+
+        <!-- Layout Overlays -->
+        <!-- Solid Left Bar framing -->
+        <div class="absolute inset-y-0 left-0 w-16 md:w-24 bg-[#111]/80 backdrop-blur-md z-20"></div>
+        <!-- Left-to-Right protection gradient -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent z-20"></div>
+
+        <!-- Content Area -->
+        <div class="relative z-30 h-full flex flex-col justify-center px-24 md:px-32 lg:px-40">
+            <div class="max-w-xl text-white">
+                <span class="animate-reveal inline-block text-[10px] md:text-xs uppercase tracking-[0.4em] font-semibold text-neutral-400 mb-6" 
+                      style="animation-delay: 200ms;">
+                    Advanced Protection Systems
+                </span>
+                
+                <h1 class="animate-reveal serif text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-8" 
+                    style="animation-delay: 400ms;">
+                    Invisible Shield.<br>
+                    <span class="italic font-light text-neutral-100">Enduring Integrity.</span>
+                </h1>
+                
+                <p class="animate-reveal text-neutral-300 text-xs md:text-sm font-light leading-relaxed mb-10 max-w-[340px]" 
+                   style="animation-delay: 600ms;">
+                    Discover the future of architectural preservation with our transparent membrane technology. Engineered for high-performance rooftops.
+                </p>
+                
+                <div class="animate-reveal flex items-center" style="animation-delay: 800ms;">
+                    <!-- New Button with Video-style Animation -->
+                    <button class="btn-fill-animation px-12 py-4 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-4 group">
+                        Request System Specs
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transform group-hover:translate-x-1.5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Right Badge -->
+            <div class="animate-reveal absolute bottom-10 right-10 text-[9px] tracking-[0.3em] text-neutral-400 uppercase font-medium" 
+                 style="animation-delay: 1100ms;">
+                Certified Structural Protection Experts
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = "";
+
+        async function generateHeroImage() {
+            const prompt = "modern building rooftop waterproofing system, protective transparent coating visualized on high-end concrete and glass, dramatic sky clearing after rain with warm puddles, architectural realism, cinematic lighting, premium construction materials, wide hero banner frame, left-side negative space for typography, clean luxury aesthetic, no people, warm daylight, magazine-style photography";
+            
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        instances: [{ prompt: prompt }],
+                        parameters: { sampleCount: 1 }
+                    })
+                });
+
+                const result = await response.json();
+                if (result.predictions && result.predictions[0]) {
+                    const imageUrl = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                    const img = document.getElementById('hero-image');
+                    img.src = imageUrl;
+                    img.onload = () => {
+                        document.getElementById('image-placeholder').style.opacity = '0';
+                        setTimeout(() => {
+                            document.getElementById('image-placeholder').style.display = 'none';
+                        }, 500);
+                        
+                        img.classList.remove('opacity-0', 'scale-105');
+                        img.classList.add('opacity-100', 'scale-100');
+                    };
+                }
+            } catch (error) {
+                console.error("Image generation failed:", error);
+            }
+        }
+
+        window.onload = generateHeroImage;
+    </script>
+</body>
+</html>

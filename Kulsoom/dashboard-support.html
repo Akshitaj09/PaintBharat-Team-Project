@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Power AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0a09; 
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Full Page Interior Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('img/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.6; 
+            z-index: -2;
+        }
+
+        .page-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(28, 25, 23, 0.25), rgba(12, 10, 9, 0.75) 100%);
+            z-index: -1;
+        }
+
+        /* FAQ Heading Premium Hover */
+        .faq-title {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+            display: inline-block;
+        }
+        .faq-title:hover {
+            transform: scale(1.02);
+            text-shadow: 0 0 25px rgba(214, 211, 209, 0.5);
+            letter-spacing: -0.02em;
+        }
+
+        /* Typewriter Cursor - Beige */
+        .typewriter-cursor {
+            border-right: 3px solid #d6d3d1;
+            animation: blink-caret 0.75s step-end infinite;
+            padding-right: 4px;
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #d6d3d1; }
+        }
+
+        /* Premium Button Styling - Rich Beige Background */
+        .btn-contact {
+            background: #d6c9b0; 
+            color: #1c1917;
+            padding: 14px 36px;
+            border-radius: 100px;
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        .btn-contact:hover {
+            transform: translateY(-5px) scale(1.05);
+            background: #e5dccb; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Glassmorphism Styling */
+        .glass-card {
+            background: rgba(28, 25, 23, 0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(214, 211, 209, 0.15);
+            border-radius: 24px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(214, 211, 209, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.8s;
+            opacity: 0;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(214, 211, 209, 0.5); 
+            background: rgba(41, 37, 36, 0.7);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+        }
+
+        .glass-card:hover::after {
+            opacity: 1;
+            left: 100%;
+        }
+
+        .glass-card.active-card {
+            border-color: rgba(214, 211, 209, 0.7);
+            background: rgba(41, 37, 36, 0.8);
+            box-shadow: 0 0 35px rgba(214, 211, 209, 0.25);
+        }
+
+        /* FAQ Item Styling */
+        .faq-item {
+            margin-bottom: 20px;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .question-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .question-wrapper:hover .icon-circle {
+            transform: scale(1.15) rotate(10deg);
+            background: #ffffff;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+
+        .question-wrapper:hover .question-pill {
+            background: rgba(41, 37, 36, 0.8);
+            border-color: rgba(214, 211, 209, 0.4);
+            transform: translateX(8px);
+        }
+
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #e7e5e4; 
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+            font-size: 1.3rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .question-pill {
+            font-family: 'Outfit', sans-serif;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(214, 211, 209, 0.1);
+            border-radius: 100px;
+            padding: 16px 32px;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            color: #fff;
+            flex-grow: 1;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .answer-wrapper {
+            display: none; 
+            align-items: center;
+            gap: 16px;
+            margin-top: 10px;
+            margin-left: 64px;
+            width: calc(100% - 64px);
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-15px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .answer-pill {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(214, 211, 209, 0.1);
+            border-radius: 24px;
+            padding: 18px 24px;
+            color: rgba(231, 229, 228, 0.95);
+            font-size: 1rem;
+            line-height: 1.6;
+            flex-grow: 1;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .answer-wrapper:hover .answer-pill {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(214, 211, 209, 0.3);
+            color: #fff;
+        }
+
+        .chat-icon-box {
+            width: 48px;
+            height: 48px;
+            background: rgba(231, 229, 228, 0.15);
+            border: 1px solid rgba(214, 211, 209, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .question-pill {
+            background: rgba(0, 0, 0, 0.75);
+            border-color: rgba(214, 211, 209, 0.5);
+        }
+
+        .faq-item.active .answer-wrapper {
+            display: flex;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(214, 211, 209, 0.4); border-radius: 10px; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <div class="page-overlay"></div>
+
+    <main class="max-w-6xl mx-auto px-6 pt-24">
+        
+        <!-- Hero Section: Left Aligned Text + Right Side Info Card -->
+        <section class="flex flex-col md:flex-row items-stretch gap-12 mb-32">
+            
+            <!-- Left Side: Text Elements -->
+            <div class="w-full md:w-3/5 text-left flex flex-col justify-center">
+                <nav class="flex items-center space-x-2 text-xs uppercase tracking-widest text-stone-400 mb-8 font-bold">
+                    <span class="opacity-80">Home</span>
+                    <span class="text-stone-700">/</span>
+                    <span class="text-stone-200">FAQ</span>
+                </nav>
+                <h1 class="faq-title text-7xl md:text-8xl font-black tracking-tighter drop-shadow-2xl mb-10">FAQ</h1>
+                
+                <div class="min-h-[5rem]">
+                    <p class="text-stone-100 font-semibold text-lg md:text-xl leading-relaxed drop-shadow-lg inline-block">
+                        <span id="typewriter" class="typewriter-cursor"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Side: Still Have Questions Card -->
+            <div class="w-full md:w-2/5 flex">
+                <div class="glass-card w-full p-10 flex flex-col items-start justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-stone-100 mb-6 font-['Outfit']">Still have a questions?</h2>
+                        <p class="text-stone-400 text-sm leading-relaxed mb-8">
+                            Our team is dedicated to providing you with the best support possible. Whether you have a specific technical query or just want to learn more about how our AI can transform your business, we are here to help. Reach out to our experts today for a personalized consultation.
+                        </p>
+                    </div>
+                    
+                    <div class="block">
+                        <a href="#" class="btn-contact">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Category Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-24">
+            <div id="card-about" class="glass-card p-12 text-center flex flex-col items-center active-card" onclick="switchCategory('about')">
+                <div class="w-16 h-16 rounded-2xl bg-stone-200/10 flex items-center justify-center mb-8 border border-stone-200/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">About PaintBharat</h3>
+                <p class="text-stone-400 text-sm uppercase tracking-widest font-black">Learn More</p>
+            </div>
+
+            <div id="card-privacy" class="glass-card p-12 text-center flex flex-col items-center" onclick="switchCategory('privacy')">
+                <div class="w-16 h-16 rounded-2xl bg-stone-200/10 flex items-center justify-center mb-8 border border-stone-200/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Privacy & Policy</h3>
+                <p class="text-stone-400 text-sm uppercase tracking-widest font-black">View Terms</p>
+            </div>
+
+            <div id="card-support" class="glass-card p-12 text-center flex flex-col items-center" onclick="switchCategory('support')">
+                <div class="w-16 h-16 rounded-2xl bg-stone-200/10 flex items-center justify-center mb-8 border border-stone-200/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Support & More</h3>
+                <p class="text-stone-400 text-sm uppercase tracking-widest font-black">Get Help</p>
+            </div>
+        </div>
+
+        <!-- FAQ Container -->
+        <div id="faq-container" class="max-w-4xl mx-auto mb-20 space-y-5">
+            <!-- Content dynamically injected -->
+        </div>
+    </main>
+
+    <script>
+        const faqData = {
+            about: [
+                { q: "Do You Offer Revisions On Designs?", a: "Yes, I provide revisions to ensure the final design aligns perfectly with your expectations." },
+                { q: "How Does Power AI Differ From Others?", a: "We focus on human-centric AI that feels natural and integrates deeply into your existing workflow." },
+                { q: "What Is Your Mission?", a: "Our mission is to empower creativity using advanced machine learning tools." }
+            ],
+            privacy: [
+                { q: "How Is My Data Secured?", a: "We use AES-256 encryption and decentralized storage to ensure your business data remains private and secure." },
+                { q: "Do You Sell Data To Third Parties?", a: "Absolutely not. Your data belongs to you, and we never share it with external advertisers." },
+                { q: "Can I Delete My Account Data?", a: "Yes, you can request a complete data wipe at any time through your dashboard settings." }
+            ],
+            support: [
+                { q: "What Is The Cost Of Your Services?", a: "Pricing depends on the scope of work. We offer both project-based rates and flexible monthly retainer plans." },
+                { q: "How Can I Contact Support?", a: "You can reach us 24/7 via live chat or by emailing support@powerai.com." },
+                { q: "What Is The Average Response Time?", a: "Our average response time for premium users is under 30 minutes during business hours." }
+            ]
+        };
+
+        function toggleFaq(trigger) {
+            const item = trigger.closest('.faq-item');
+            const isActive = item.classList.contains('active');
+
+            document.querySelectorAll('.faq-item').forEach(faq => {
+                faq.classList.remove('active');
+            });
+
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+
+        function switchCategory(category) {
+            document.querySelectorAll('.glass-card').forEach(card => card.classList.remove('active-card'));
+            const activeCard = document.getElementById(`card-${category}`);
+            if (activeCard) activeCard.classList.add('active-card');
+
+            const faqContainer = document.getElementById('faq-container');
+            const items = faqData[category];
+            faqContainer.innerHTML = items.map((item, index) => `
+                <div class="faq-item ${index === 0 ? 'active' : ''}">
+                    <div class="question-wrapper" onclick="toggleFaq(this)">
+                        <div class="icon-circle">?</div>
+                        <div class="question-pill">${item.q}</div>
+                    </div>
+                    <div class="answer-wrapper">
+                        <div class="answer-pill">${item.a}</div>
+                        <div class="chat-icon-box">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        const phrases = [
+            "We help solve client problems with high quality AI solutions.",
+            "Unlock the full potential of your business with Power AI.",
+            "Transforming customer support through intelligent automation.",
+            "Explore our knowledge base for instant clarity and support."
+        ];
+
+        let currentPhraseIndex = 0;
+        let currentCharIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const typewriterElement = document.getElementById('typewriter');
+            if (!typewriterElement) return;
+
+            const currentPhrase = phrases[currentPhraseIndex];
+            
+            if (isDeleting) {
+                currentCharIndex--;
+            } else {
+                currentCharIndex++;
+            }
+
+            typewriterElement.textContent = currentPhrase.substring(0, currentCharIndex);
+
+            if (!isDeleting && currentCharIndex === currentPhrase.length) {
+                isDeleting = true;
+                setTimeout(type, 2500); 
+            } else if (isDeleting && currentCharIndex === 0) {
+                isDeleting = false;
+                currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+                setTimeout(type, 500); 
+            } else {
+                setTimeout(type, isDeleting ? 30 : 60);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            type();
+            switchCategory('about'); 
+        });
+    </script>
+</body>
+</html>
+apps-fileview.texmex_20260225.11_p1
+support_page2.html
+Displaying support_page2.html.

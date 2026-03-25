@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Stats Section</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:italic&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fdfaf5;
+            color: #4a3a30;
+            overflow-x: hidden;
+        }
+        .font-serif {
+            font-family: 'Instrument Serif', serif;
+        }
+        .odometer-digit-container {
+            display: inline-flex;
+            flex-direction: column;
+            height: 1.1em;
+            overflow: hidden;
+            line-height: 1.1;
+        }
+        .digit-strip {
+            display: flex;
+            flex-direction: column;
+        }
+        .digit-strip span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 1.1em;
+        }
+        .glass-card {
+            background: rgba(250, 247, 242, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 1);
+        }
+        /* Custom Selection Colors */
+        ::selection {
+            background: #ffedd5;
+            color: #7c2d12;
+        }
+    </style>
+</head>
+<body class="min-h-screen selection:bg-orange-100 selection:text-orange-900">
+
+    <!-- Background Decorative Elements -->
+    <div class="fixed inset-0 pointer-events-none opacity-30 overflow-hidden -z-10">
+        <div id="blob1" class="absolute top-[10%] left-[5%] w-[400px] h-[400px] bg-amber-100 rounded-full blur-[100px]"></div>
+        <div id="blob2" class="absolute bottom-[10%] right-[5%] w-[300px] h-[300px] bg-orange-100 rounded-full blur-[80px]"></div>
+    </div>
+
+    <main class="min-h-screen flex items-center justify-center p-8">
+        <div class="w-full max-w-7xl relative z-10">
+            
+            <!-- Editorial Heading -->
+            <div id="header" class="text-center mb-20 opacity-0 transform translate-y-[-20px]">
+                <span class="text-[10px] uppercase tracking-[0.4em] text-[#4a3a30]/50 font-bold">Our Impact</span>
+                <h1 class="text-4xl md:text-5xl font-serif text-[#4a3a30] mt-4 italic">Numbers that tell a story.</h1>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="stats-grid">
+                
+                <!-- Card 1 -->
+                <div class="stat-card opacity-0 translate-y-8" data-value="3.5" data-suffix="L+">
+                    <div class="relative group h-full">
+                        <div class="absolute inset-x-4 -bottom-4 h-full bg-stone-900/5 blur-2xl rounded-3xl transition-all duration-500 group-hover:bg-stone-900/10"></div>
+                        <div class="glass-card relative h-full px-6 py-16 rounded-[2.5rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02]">
+                            <div class="mb-2 text-7xl md:text-8xl font-serif font-light tracking-tighter text-[#4a3a30] flex items-baseline justify-center">
+                                <span class="odometer" data-target="3.5"></span>
+                                <span class="text-4xl md:text-5xl ml-1 font-sans font-normal opacity-80">L+</span>
+                            </div>
+                            <div class="overflow-hidden">
+                                <p class="stat-label text-[#6d5c52] font-sans text-sm md:text-base font-medium tracking-wide max-w-[180px] translate-y-full">Consumer homes painted</p>
+                            </div>
+                            <div class="mt-6 h-[3px] w-0 bg-orange-400/40 rounded-full transition-all duration-300 group-hover:w-10"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="stat-card opacity-0 translate-y-8" data-value="95" data-suffix="%+">
+                    <div class="relative group h-full">
+                        <div class="absolute inset-x-4 -bottom-4 h-full bg-stone-900/5 blur-2xl rounded-3xl transition-all duration-500 group-hover:bg-stone-900/10"></div>
+                        <div class="glass-card relative h-full px-6 py-16 rounded-[2.5rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02]">
+                            <div class="mb-2 text-7xl md:text-8xl font-serif font-light tracking-tighter text-[#4a3a30] flex items-baseline justify-center">
+                                <span class="odometer" data-target="95"></span>
+                                <span class="text-4xl md:text-5xl ml-1 font-sans font-normal opacity-80">%+</span>
+                            </div>
+                            <div class="overflow-hidden">
+                                <p class="stat-label text-[#6d5c52] font-sans text-sm md:text-base font-medium tracking-wide max-w-[180px] translate-y-full">On Time Site Completion</p>
+                            </div>
+                            <div class="mt-6 h-[3px] w-0 bg-orange-400/40 rounded-full transition-all duration-300 group-hover:w-10"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="stat-card opacity-0 translate-y-8" data-value="650" data-suffix="+">
+                    <div class="relative group h-full">
+                        <div class="absolute inset-x-4 -bottom-4 h-full bg-stone-900/5 blur-2xl rounded-3xl transition-all duration-500 group-hover:bg-stone-900/10"></div>
+                        <div class="glass-card relative h-full px-6 py-16 rounded-[2.5rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02]">
+                            <div class="mb-2 text-7xl md:text-8xl font-serif font-light tracking-tighter text-[#4a3a30] flex items-baseline justify-center">
+                                <span class="odometer" data-target="650"></span>
+                                <span class="text-4xl md:text-5xl ml-1 font-sans font-normal opacity-80">+</span>
+                            </div>
+                            <div class="overflow-hidden">
+                                <p class="stat-label text-[#6d5c52] font-sans text-sm md:text-base font-medium tracking-wide max-w-[180px] translate-y-full">Towns serviceable across India</p>
+                            </div>
+                            <div class="mt-6 h-[3px] w-0 bg-orange-400/40 rounded-full transition-all duration-300 group-hover:w-10"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="stat-card opacity-0 translate-y-8" data-value="10" data-suffix="L">
+                    <div class="relative group h-full">
+                        <div class="absolute inset-x-4 -bottom-4 h-full bg-stone-900/5 blur-2xl rounded-3xl transition-all duration-500 group-hover:bg-stone-900/10"></div>
+                        <div class="glass-card relative h-full px-6 py-16 rounded-[2.5rem] flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:-translate-y-2 group-hover:scale-[1.02]">
+                            <div class="mb-2 text-7xl md:text-8xl font-serif font-light tracking-tighter text-[#4a3a30] flex items-baseline justify-center">
+                                <span class="odometer" data-target="10"></span>
+                                <span class="text-4xl md:text-5xl ml-1 font-sans font-normal opacity-80">L</span>
+                            </div>
+                            <div class="overflow-hidden">
+                                <p class="stat-label text-[#6d5c52] font-sans text-sm md:text-base font-medium tracking-wide max-w-[180px] translate-y-full">Lakhs Satisfied customers</p>
+                            </div>
+                            <div class="mt-6 h-[3px] w-0 bg-orange-400/40 rounded-full transition-all duration-300 group-hover:w-10"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Initialize Odometer elements
+        function initOdometer(el) {
+            const target = el.getAttribute('data-target');
+            const digits = target.split('');
+            el.innerHTML = ''; // Clear
+
+            digits.forEach(digit => {
+                if (isNaN(parseInt(digit))) {
+                    const span = document.createElement('span');
+                    span.innerText = digit;
+                    el.appendChild(span);
+                } else {
+                    const container = document.createElement('div');
+                    container.className = 'odometer-digit-container';
+                    
+                    const strip = document.createElement('div');
+                    strip.className = 'digit-strip';
+                    
+                    for (let i = 0; i <= 9; i++) {
+                        const num = document.createElement('span');
+                        num.innerText = i;
+                        strip.appendChild(num);
+                    }
+                    
+                    container.appendChild(strip);
+                    el.appendChild(container);
+                    
+                    // Store the target digit for animation
+                    strip.dataset.targetDigit = digit;
+                }
+            });
+        }
+
+        // Run Init
+        document.querySelectorAll('.odometer').forEach(initOdometer);
+
+        // Animation Timeline
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#stats-grid",
+                start: "top 80%",
+                once: true
+            }
+        });
+
+        // Header Reveal
+        tl.to("#header", { opacity: 1, y: 0, duration: 1, ease: "power4.out" });
+
+        // Cards Staggered Reveal
+        tl.to(".stat-card", {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "expo.out",
+            onComplete: () => {
+                // Trigger label slide-up
+                gsap.to(".stat-label", { y: 0, duration: 0.6, stagger: 0.1, ease: "power2.out" });
+            }
+        }, "-=0.5");
+
+        // Odometer Rolling Animation
+        document.querySelectorAll('.odometer').forEach((odo) => {
+            const strips = odo.querySelectorAll('.digit-strip');
+            
+            strips.forEach((strip, index) => {
+                const targetDigit = parseInt(strip.dataset.targetDigit);
+                
+                gsap.to(strip, {
+                    y: `-${targetDigit * 10}%`,
+                    duration: 2.5,
+                    delay: 0.5 + (Math.random() * 0.5),
+                    ease: "power4.inOut",
+                    scrollTrigger: {
+                        trigger: odo,
+                        start: "top 85%",
+                        once: true
+                    }
+                });
+            });
+        });
+
+        // Floating background blobs
+        gsap.to("#blob1", {
+            scale: 1.2,
+            x: 50,
+            duration: 10,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+        gsap.to("#blob2", {
+            scale: 1.1,
+            x: -30,
+            duration: 8,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+    </script>
+</body>
+</html>

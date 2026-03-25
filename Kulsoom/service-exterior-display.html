@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Co. | Premium Exterior Finishes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        [x-cloak] { display: none !important; }
+        
+        /* Background transition */
+        .bg-transition { transition: opacity 1500ms ease-in-out; }
+        
+        /* Smooth, direct horizontal motion without vertical 'drop' */
+        .circle-anim { 
+            transition: transform 1200ms cubic-bezier(0.16, 1, 0.3, 1), 
+                        opacity 1000ms ease-out; 
+        }
+
+        /* Direct horizontal slide for hero text */
+        .hero-text-anim {
+            transition: all 900ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Quick crossfade for the static card content */
+        .content-fade {
+            transition: opacity 400ms ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 overflow-hidden">
+
+<div x-data="{ 
+    activeIdx: 0,
+    brandRed: '#d11141',
+    services: [
+        {
+            id: 1,
+            title: 'ROYAL',
+            subtitle: 'SHIELD FINISH',
+            colorName: 'Majestic Blue',
+            hex: '#2563eb', 
+            image: 'images/navyblue_ex_8.jpg'
+        },
+        {
+            id: 2,
+            title: 'WARM',
+            subtitle: 'SANDSTONE',
+            colorName: 'Golden Dune',
+            hex: '#d4b483', 
+            image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=1200'
+        },
+        {
+            id: 3,
+            title: 'HERITAGE',
+            subtitle: 'RESTORATION',
+            colorName: 'Terracotta Red',
+            hex: '#9a3412', 
+            image: 'images/ex_6.jpg'
+        },
+        {
+            id: 4,
+            title: 'MODERN',
+            subtitle: 'MINIMALIST',
+            colorName: 'Slate Grey',
+            hex: '#475569', 
+            image: 'images/grey_Ex_7.jpg'
+        }
+    ],
+    next() { this.activeIdx = (this.activeIdx + 1) % this.services.length },
+    prev() { this.activeIdx = (this.activeIdx - 1 + this.services.length) % this.services.length },
+    init() {
+        setInterval(() => { this.next() }, 5000);
+    }
+}" class="relative w-full h-screen overflow-hidden">
+
+    <!-- Background Images -->
+    <template x-for="(service, index) in services" :key="service.id">
+        <div 
+            class="absolute inset-0 bg-cover bg-center bg-transition"
+            :style="'background-image: url(' + service.image + ')'"
+            :class="activeIdx === index ? 'opacity-100 z-0' : 'opacity-0 -z-10'"
+        >
+            <div class="absolute inset-0 bg-white/30 backdrop-blur-[1px]"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-white/50 via-transparent to-transparent"></div>
+        </div>
+    </template>
+
+    <!-- UI Layer -->
+    <div class="relative z-10 w-full h-full p-6 md:p-10 flex flex-col justify-between max-w-7xl mx-auto">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 flex items-center justify-center p-1 bg-white/20 backdrop-blur-md rounded-full shadow-sm border border-white/30">
+                    <img src="Logo2.png" alt="Logo" class="w-8 h-8 object-contain">
+                </div>
+                <span class="font-black text-xl tracking-tighter text-gray-900">
+                    PAINTBHARAT <span :style="'color: ' + brandRed">CO.</span>
+                </span>
+            </div>
+        </header>
+
+        <!-- Hero Content Section -->
+        <main class="flex-grow flex items-center justify-between">
+            
+            <!-- Left Side: Circle with Pure Horizontal Glide -->
+            <div class="w-1/2 relative flex justify-center items-center h-[400px]">
+                <template x-for="(service, index) in services" :key="'swatch-'+service.id">
+                    <div 
+                        x-show="activeIdx === index"
+                        x-transition:enter="circle-anim"
+                        x-transition:enter-start="translate-x-[-300px] opacity-0 scale-95"
+                        x-transition:enter-end="translate-x-0 opacity-100 scale-100"
+                        x-transition:leave="circle-anim"
+                        x-transition:leave-start="translate-x-0 opacity-100 scale-100"
+                        x-transition:leave-end="translate-x-[300px] opacity-0 scale-95"
+                        class="absolute flex items-center justify-center"
+                    >
+                        <div class="relative">
+                            <div 
+                                class="w-[260px] h-[260px] md:w-[360px] md:h-[360px] rounded-full border-[12px] border-white shadow-2xl relative overflow-hidden"
+                                :style="'background-color: ' + service.hex"
+                            >
+                                <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.3),transparent)]"></div>
+                            </div>
+                            <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[70%] h-8 bg-black/10 blur-2xl rounded-[100%]"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Right Side: Text Slide -->
+            <div class="w-1/2 pl-6 flex flex-col items-start justify-center relative">
+                <template x-for="(service, index) in services" :key="'text-'+service.id">
+                    <div 
+                        x-show="activeIdx === index"
+                        x-transition:enter="hero-text-anim"
+                        x-transition:enter-start="translate-x-[60px] opacity-0"
+                        x-transition:enter-end="translate-x-0 opacity-100"
+                        x-transition:leave="hero-text-anim"
+                        x-transition:leave-start="translate-x-0 opacity-100"
+                        x-transition:leave-end="translate-x-[-60px] opacity-0"
+                        class="space-y-4 absolute"
+                    >
+                        <div>
+                            <p class="text-[9px] uppercase tracking-[0.3em] font-black" :style="'color: ' + brandRed">
+                                #4 ARCHITECT'S PICK
+                            </p>
+                            <h1 class="text-6xl md:text-7xl font-black leading-[0.9] tracking-tighter text-gray-900 select-none">
+                                <span x-text="service.title"></span> <br>
+                                <span class="text-gray-900 font-extrabold" x-text="service.subtitle"></span>
+                            </h1>
+                        </div>
+
+                        <div class="pt-2">
+                            <button 
+                                class="flex items-center gap-2 px-6 py-3 text-sm text-white rounded-lg font-bold shadow-lg hover:scale-105 transition-all active:scale-95"
+                                :style="'background-color: ' + brandRed"
+                            >
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="m9 14 2 2 4-4"></path></svg>
+                                Get Free Quote
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </main>
+
+        <!-- Footer Section (Static Containers) -->
+        <footer class="flex justify-between items-end pb-2">
+            
+            <!-- Left space where Nav Bar was removed -->
+            <div class="w-1/4"></div>
+
+            <!-- Swatch Slider: STATIC CONTAINER -->
+            <div class="flex items-center gap-4 bg-white/60 backdrop-blur-md p-3 rounded-[30px] shadow-sm border border-white/40 mb-1">
+                <button @click="prev" class="text-gray-400 hover:text-gray-900 transition-colors">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                
+                <div class="flex gap-3">
+                    <template x-for="(item, idx) in services" :key="'thumb-'+item.id">
+                        <button 
+                            @click="activeIdx = idx"
+                            class="w-10 h-10 rounded-xl transition-all duration-500 border-[2px]"
+                            :class="activeIdx === idx ? 'scale-110 shadow-md' : 'border-white opacity-60'"
+                            :style="'background-color: ' + item.hex + '; border-color: ' + (activeIdx === idx ? brandRed : 'white')"
+                        ></button>
+                    </template>
+                </div>
+
+                <button @click="next" class="text-gray-400 hover:text-gray-900 transition-colors">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+
+            <!-- Info Card: STATIC CONTAINER (Only text inside updates) -->
+            <div class="bg-white p-6 rounded-[30px] shadow-2xl border border-white min-w-[300px] relative mb-1">
+                <!-- Premium Badge -->
+                <div class="absolute -top-4 right-8 bg-gray-900 px-3 py-2 rounded-xl shadow-lg flex flex-col items-center">
+                    <span class="text-[8px] font-black text-white uppercase tracking-widest mb-0.5">PREMIUM</span>
+                    <div class="flex gap-0.5">
+                        <template x-for="i in 5">
+                            <svg class="w-2 h-2" :style="'fill: ' + brandRed + '; color: ' + brandRed" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Content updates dynamically without moving the card -->
+                <div class="space-y-0.5">
+                    <p class="text-[8px] uppercase tracking-[0.2em] font-black" :style="'color: ' + brandRed">FEATURED SHADE</p>
+                    <h3 class="text-3xl font-black text-gray-900 tracking-tight" x-text="services[activeIdx].colorName"></h3>
+                    <div class="pt-4 flex items-center gap-2 text-[9px] font-bold text-gray-400 uppercase tracking-wide">
+                        <svg class="w-3.5 h-3.5 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                        <span>Weather-Proof 10yr Warranty</span>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+    </div>
+
+    <!-- Decorative vertical accent -->
+    <div class="absolute top-0 right-20 pointer-events-none opacity-10">
+        <div class="w-[1px] h-24 bg-black"></div>
+        <div class="w-6 h-8 bg-black rounded-b-lg ml-[-12px] shadow-xl"></div>
+    </div>
+
+</div>
+
+</body>
+</html>

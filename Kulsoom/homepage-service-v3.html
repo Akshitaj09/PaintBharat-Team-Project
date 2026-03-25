@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina Architecture Hero</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        .perspective-2000 {
+            perspective: 2000px;
+        }
+        .heading-60 {
+            font-size: 60px;
+        }
+        [x-cloak] { display: none !important; }
+        
+        /* Transition utility for smooth card movement */
+        .card-transition {
+            transition: all 1000ms cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: transform, opacity, filter;
+        }
+    </style>
+
+    <!-- Define the carousel logic before Alpine initializes -->
+    <script>
+        function carousel() {
+            return {
+                activeIndex: 0,
+                isAnimating: false,
+                timer: null,
+                services: [
+                    { id: 1, title: "Interior Design", category: "Luxury Living", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1000", description: "Curated atmospheres for sophisticated modern living." },
+                    { id: 2, title: "Architecture", category: "Modern Facades", image: "https://images.unsplash.com/photo-1600607687940-4e2a09695d51?auto=format&fit=crop&q=80&w=1000", description: "Architectural landmarks defined by structural integrity." },
+                    { id: 3, title: "Waterproofing", category: "Wall Treatment", image: "https://images.unsplash.com/photo-1541829070764-84a7d30dee3f?auto=format&fit=crop&q=80&w=1000", description: "Advanced industrial protection for lasting structures." },
+                    { id: 4, title: "Textured Finish", category: "Premium Wallpaper", image: "https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&q=80&w=1000", description: "Decorative surfaces with artisanal tactile qualities." },
+                    { id: 5, title: "Landscape Design", category: "Outdoor Living", image: "https://images.unsplash.com/photo-1558603668-6570496b66f8?auto=format&fit=crop&q=80&w=1000", description: "Harmonizing nature with modern structural elements." },
+                    { id: 6, title: "Custom Cabinetry", category: "Bespoke Joinery", image: "https://images.unsplash.com/photo-1556912177-c540357ad24d?auto=format&fit=crop&q=80&w=1000", description: "Precision-crafted storage solutions for high-end interiors." },
+                    { id: 7, title: "Smart Integration", category: "Modern Tech", image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=1000", description: "Seamless automation for lighting, climate, and security." },
+                    { id: 8, title: "Renovation", category: "Heritage Restoration", image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&q=80&w=1000", description: "Breathing new life into timeless architectural spaces." }
+                ],
+
+                startTimer() {
+                    if (this.timer) clearInterval(this.timer);
+                    this.timer = setInterval(() => {
+                        this.next();
+                    }, 5000);
+                },
+
+                resetTimer() {
+                    clearInterval(this.timer);
+                    this.startTimer();
+                },
+
+                next() {
+                    if (this.isAnimating) return;
+                    this.isAnimating = true;
+                    this.activeIndex = (this.activeIndex + 1) % this.services.length;
+                    setTimeout(() => { this.isAnimating = false; }, 800);
+                },
+
+                prev() {
+                    if (this.isAnimating) return;
+                    this.isAnimating = true;
+                    this.activeIndex = (this.activeIndex - 1 + this.services.length) % this.services.length;
+                    setTimeout(() => { this.isAnimating = false; }, 800);
+                },
+
+                setActive(index) {
+                    if (this.isAnimating || index === this.activeIndex) return;
+                    this.isAnimating = true;
+                    this.activeIndex = index;
+                    this.resetTimer();
+                    setTimeout(() => { this.isAnimating = false; }, 800);
+                },
+
+                getCardStyle(index) {
+                    const total = this.services.length;
+                    const position = (index - this.activeIndex + total) % total;
+
+                    // Center Card
+                    if (position === 0) {
+                        return 'transform: translateX(0%) translateY(0%) scale(1.1) rotateY(0deg); z-index: 50; opacity: 1; filter: blur(0px);';
+                    } 
+                    
+                    // Spread Right
+                    if (position === 1) {
+                        return 'transform: translateX(110%) translateY(5%) scale(0.85) rotateY(-20deg); z-index: 40; opacity: 0.7; filter: blur(1px);';
+                    }
+                    if (position === 2) {
+                        return 'transform: translateX(200%) translateY(15%) scale(0.65) rotateY(-30deg); z-index: 30; opacity: 0.4; filter: blur(2px);';
+                    }
+
+                    // Spread Left
+                    if (position === total - 1) {
+                        return 'transform: translateX(-110%) translateY(5%) scale(0.85) rotateY(20deg); z-index: 40; opacity: 0.7; filter: blur(1px);';
+                    }
+                    if (position === total - 2) {
+                        return 'transform: translateX(-200%) translateY(15%) scale(0.65) rotateY(30deg); z-index: 30; opacity: 0.4; filter: blur(2px);';
+                    }
+
+                    // Hidden / Far Background
+                    return 'transform: translateX(0%) translateY(30%) scale(0.5) rotateY(0deg); z-index: 10; opacity: 0; filter: blur(10px);';
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js for State Management (Fixed: added defer to ensure carousel() is available) -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-[#FDFDFD] text-[#1A1A1A] overflow-hidden selection:bg-black selection:text-white">
+
+    <!-- x-cloak prevents flicker, initialized with carousel() function -->
+    <div x-data="carousel()" 
+         x-init="startTimer(); lucide.createIcons();"
+         x-cloak
+         class="min-h-screen flex flex-col items-center">
+        
+        <!-- Header Section -->
+        <header class="relative z-50 text-center pt-24 px-8 max-w-4xl">
+            <div class="flex flex-col items-center space-y-4">
+                <h1 class="heading-60 font-playfair tracking-tight leading-tight">
+                    Services We Provide
+                </h1>
+                
+                <p class="text-lg text-neutral-500 max-w-xl leading-relaxed mx-auto">
+                    Bespoke construction and interior solutions for the modern minimalist. 
+                    Where structural integrity meets artistic vision.
+                </p>
+            </div>
+        </header>
+
+        <!-- Spread Carousel Section -->
+        <main class="flex-1 w-full relative flex flex-col items-center justify-center min-h-[700px]">
+            <!-- Soft Background Depth Accent -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-neutral-100 rounded-full blur-[160px] -z-10 opacity-60"></div>
+
+            <div class="relative w-full max-w-[1400px] h-[500px] perspective-2000 flex items-center justify-center">
+                <template x-for="(service, index) in services" :key="service.id">
+                    <div
+                        class="absolute w-[280px] md:w-[320px] h-[450px] md:h-[500px] card-transition cursor-pointer"
+                        :style="getCardStyle(index)"
+                        @click="setActive(index)"
+                    >
+                        <div :class="activeIndex === index ? 'ring-1 ring-black/5' : ''" 
+                             class="group relative w-full h-full rounded-[48px] overflow-hidden shadow-2xl bg-white border border-white transition-all duration-700">
+                            
+                            <!-- Image Layer -->
+                            <div class="absolute inset-0 scale-105 group-hover:scale-100 transition-transform duration-1000">
+                                <img :src="service.image" :alt="service.title" class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-1000" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1000'">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                            </div>
+
+                            <!-- Card Content -->
+                            <div class="absolute inset-0 p-8 flex flex-col justify-end text-white">
+                                <div class="transition-all duration-700" 
+                                     :class="activeIndex === index ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'">
+                                    <span x-text="service.category" class="text-[10px] font-bold tracking-[0.4em] uppercase text-white/60 mb-2 block"></span>
+                                    <h3 x-text="service.title" class="text-3xl font-playfair mb-3"></h3>
+                                    <p x-text="service.description" class="text-xs text-neutral-300 leading-relaxed font-light"></p>
+                                </div>
+                            </div>
+
+                            <!-- Glassmorphism Badge -->
+                            <div class="absolute top-6 right-6 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-bold uppercase tracking-widest text-white">
+                                <span x-text="String(index + 1).padStart(2, '0')"></span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Carousel Navigation -->
+            <div class="mt-8 flex items-center justify-center gap-10 z-50">
+                <button @click="prev()" class="w-12 h-12 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-black hover:text-white transition-all active:scale-90 bg-white shadow-lg group">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                </button>
+                
+                <div class="flex gap-2 px-5 py-2.5 rounded-full bg-white/50 backdrop-blur-sm border border-neutral-100">
+                    <template x-for="(service, i) in services">
+                        <button @click="setActive(i)"
+                                class="h-1.5 rounded-full transition-all duration-500"
+                                :class="activeIndex === i ? 'w-8 bg-black' : 'w-1.5 bg-neutral-300'">
+                        </button>
+                    </template>
+                </div>
+
+                <button @click="next()" class="w-12 h-12 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-black hover:text-white transition-all active:scale-90 bg-white shadow-lg group">
+                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- Final Action Section -->
+        <footer class="w-full flex flex-col items-center justify-center pb-24 z-50">
+            <button class="group flex items-center gap-3 bg-black text-white px-12 py-5 rounded-full hover:bg-neutral-800 transition-all shadow-2xl active:scale-95">
+                <span class="font-bold text-sm tracking-widest uppercase">Explore All Projects</span>
+                <i data-lucide="arrow-up-right" class="w-[18px] h-[18px] group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+            </button>
+        </footer>
+    </div>
+</body>
+</html>

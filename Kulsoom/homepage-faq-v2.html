@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | Premium Services</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blush-pink: #f4dada;
+            --blush-dark: #e8c4c4;
+            --charcoal: #2d2d2d;
+            --gray-text: #555555;
+            --bg-light: #fdfdfd;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Changed body font to Georgia */
+            font-family: 'Georgia', serif;
+            background-color: var(--bg-light);
+            color: var(--charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 60px 40px;
+            gap: 60px;
+            align-items: flex-start;
+        }
+
+        /* FAQ Content Side */
+        .faq-section {
+            flex: 1.2;
+        }
+
+        .header-section {
+            text-align: left;
+            margin-bottom: 50px;
+        }
+
+        /* Brand badge removed per request */
+
+        h1 {
+            /* Heading uses Playfair Display */
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            margin-bottom: 15px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-weight: normal;
+            font-style: italic;
+            color: var(--gray-text);
+            max-width: 450px;
+            font-size: 1.1rem;
+        }
+
+        .faq-wrapper {
+            display: grid;
+            gap: 16px;
+        }
+
+        .faq-item {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            border-color: var(--blush-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        .faq-trigger {
+            width: 100%;
+            padding: 24px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit; /* Inherits Georgia from body */
+        }
+
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--charcoal);
+            padding-right: 20px;
+        }
+
+        .plus-icon {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .plus-icon::before,
+        .plus-icon::after {
+            content: '';
+            position: absolute;
+            background-color: var(--charcoal);
+            transition: var(--transition);
+        }
+
+        .plus-icon::before {
+            width: 100%;
+            height: 1px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .plus-icon::after {
+            width: 1px;
+            height: 100%;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+            background-color: #fff;
+        }
+
+        .faq-text {
+            padding: 0 30px 24px 30px;
+            color: var(--gray-text);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .faq-item.active {
+            border-color: var(--blush-pink);
+            box-shadow: 0 15px 40px rgba(244, 218, 218, 0.15);
+        }
+
+        .faq-item.active .faq-content {
+            max-height: 300px;
+        }
+
+        .faq-item.active .plus-icon {
+            transform: rotate(45deg);
+        }
+
+        /* Animation Side */
+        .visual-section {
+            flex: 0.8;
+            position: sticky;
+            top: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 550px;
+            background: #fff;
+            border-radius: 24px;
+            border: 1px solid #f0f0f0;
+            overflow: hidden;
+        }
+
+        .painter-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fff 0%, #fafafa 100%);
+        }
+
+        .canvas-wall {
+            width: 200px;
+            height: 320px;
+            background: #eee;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+            margin-bottom: 80px;
+        }
+
+        .paint-stroke {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 0%;
+            background: var(--blush-pink);
+            animation: strokeHeight 4s ease-in-out infinite;
+        }
+
+        /* MINIMALIST CHARACTER STYLES */
+        .painter-character {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .char-head {
+            width: 38px;
+            height: 38px;
+            background: var(--charcoal);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 110px;
+            z-index: 6;
+        }
+
+        .char-head::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 10px;
+            background: var(--blush-dark);
+            border-radius: 20px 20px 0 0;
+            transform: translateY(-5px);
+        }
+
+        .char-body {
+            width: 65px;
+            height: 100px;
+            background: var(--charcoal);
+            border-radius: 25px 25px 5px 5px;
+            position: absolute;
+            bottom: 10px;
+            z-index: 5;
+        }
+
+        .char-arm-animated {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: rollerMove 4s ease-in-out infinite;
+        }
+
+        .roller-head {
+            width: 75px;
+            height: 28px;
+            background: var(--blush-dark);
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .roller-handle {
+            width: 4px;
+            height: 100px;
+            background: #444;
+            position: relative;
+        }
+
+        .roller-handle::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 40px;
+            background: var(--charcoal);
+            border-radius: 8px;
+        }
+
+        @keyframes rollerMove {
+            0%, 100% { transform: translate(-50%, 0px); }
+            50% { transform: translate(-50%, -240px); }
+        }
+
+        @keyframes strokeHeight {
+            0%, 100% { height: 0%; }
+            50% { height: 95%; }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                padding: 40px 20px;
+            }
+            .visual-section {
+                width: 100%;
+                min-height: 400px;
+                order: -1;
+                position: relative;
+                top: 0;
+                margin-bottom: 40px;
+            }
+            .header-section {
+                text-align: center;
+            }
+            .subtitle {
+                margin: 0 auto;
+            }
+            .painter-character {
+                height: 320px;
+            }
+            @keyframes rollerMove {
+                0%, 100% { transform: translate(-50%, 0px); }
+                50% { transform: translate(-50%, -180px); }
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <div class="faq-section">
+        <div class="header-section">
+            <!-- Brand badge removed -->
+            <h1>Curated Clarity</h1>
+            <p class="subtitle">Answers to your most frequent inquiries about our premium transformation services.</p>
+        </div>
+
+        <div class="faq-wrapper">
+            <div class="faq-item">
+                <button class="faq-trigger">
+                    <span class="faq-question">What services are provided?</span>
+                    <div class="plus-icon"></div>
+                </button>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        We specialize in premium interior and exterior painting, custom wall treatments, and artisanal finishes. Our team also manages light renovations and maintenance to ensure every surface of your home reflects excellence.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-trigger">
+                    <span class="faq-question">How can I obtain a project estimate?</span>
+                    <div class="plus-icon"></div>
+                </button>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Simply click the "Consultation" button or reach out via our contact page. We schedule a site visit to assess your space's unique requirements before providing a comprehensive, transparent quote tailored to your vision.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-trigger">
+                    <span class="faq-question">Are you fully licensed and insured?</span>
+                    <div class="plus-icon"></div>
+                </button>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Yes, our services are fully licensed and carry comprehensive liability insurance. We prioritize the safety of your property and our artisans, providing you with absolute peace of mind throughout the project.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-trigger">
+                    <span class="faq-question">How long does a typical project take?</span>
+                    <div class="plus-icon"></div>
+                </button>
+                <div class="faq-content">
+                    <div class="faq-text">
+                        Project timelines vary based on scope and detail. A standard room may take 2-3 days, while a full residence transformation can range from 1 to 3 weeks. We provide a guaranteed timeline before we begin work.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="visual-section">
+        <div class="painter-container">
+            <div class="canvas-wall">
+                <div class="paint-stroke"></div>
+            </div>
+            
+            <div class="painter-character">
+                <div class="char-head"></div>
+                <div class="char-body"></div>
+                
+                <div class="char-arm-animated">
+                    <div class="roller-head"></div>
+                    <div class="roller-handle"></div>
+                </div>
+            </div>
+
+            <svg style="position:absolute; width:100%; height:100%; pointer-events:none;">
+                <circle cx="20%" cy="20%" r="40" fill="var(--blush-pink)" opacity="0.1" />
+                <circle cx="85%" cy="80%" r="60" fill="var(--blush-dark)" opacity="0.1" />
+            </svg>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const trigger = item.querySelector('.faq-trigger');
+            
+            trigger.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                faqItems.forEach(i => i.classList.remove('active'));
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

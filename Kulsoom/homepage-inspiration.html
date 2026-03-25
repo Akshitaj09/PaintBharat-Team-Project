@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Homes | Artisan Excellence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blush: rgba(255, 182, 193, 0.4);
+            --blush-solid: #ffb6c1;
+            --blush-deep: rgba(255, 182, 193, 0.7);
+        }
+
+        /* Custom Selection Effect */
+        ::selection {
+            background-color: var(--blush-solid);
+            color: #1a1d23;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #1a1d23;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .main-heading {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 5rem;
+            color: #1a1d23;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            text-align: center;
+        }
+
+        /* Bento Grid Layout */
+        .bento-grid {
+            display: grid;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 200px);
+            grid-template-areas: 
+                "hero hero explore wallpaper"
+                "hero hero cabin wallpaper"
+                "unleash mountain cabin cuisine"
+                "unleash extra stay cuisine";
+        }
+
+        /* Responsive Bento */
+        @media (max-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
+                grid-template-areas: none;
+                display: flex;
+                flex-direction: column;
+            }
+            .card { height: 400px; }
+        }
+
+        /* Animation Classes */
+        .reveal {
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translate(0, 0) scale(1) !important;
+        }
+
+        .slide-up { transform: translateY(40px); }
+        .slide-down { transform: translateY(-40px); }
+        .slide-left { transform: translateX(40px); }
+        .slide-right { transform: translateX(-40px); }
+
+        /* Area Assignments */
+        .area-hero { grid-area: hero; }
+        .area-explore { grid-area: explore; }
+        .area-wallpaper { grid-area: wallpaper; }
+        .area-cabin { grid-area: cabin; }
+        .area-unleash { grid-area: unleash; }
+        .area-mountain { grid-area: mountain; }
+        .area-stay { grid-area: stay; }
+        .area-cuisine { grid-area: cuisine; }
+        .area-extra { grid-area: extra; }
+
+        /* Card Styling */
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) !important;
+            z-index: 10;
+            border-color: var(--blush-solid);
+            box-shadow: 0 30px 60px -12px var(--blush);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            background-color: #eee;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.1);
+        }
+
+        .text-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+            z-index: 2;
+            color: white;
+        }
+
+        .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+            font-weight: 600;
+        }
+
+        .btn-quote {
+            background: #ffffff;
+            color: #1a1d23;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 3;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-quote:hover {
+            background: var(--blush-solid);
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px var(--blush);
+        }
+
+        /* Image Placeholder styling */
+        .img-fallback {
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2 class="main-heading">
+            Beautiful <span class="italic font-serif">Homes</span>
+        </h2>
+    </header>
+
+    <div class="bento-grid" id="bento-grid">
+        
+        <!-- Main Hero Card -->
+        <div class="card area-hero reveal slide-right">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200" 
+                 onerror="this.src='https://via.placeholder.com/800x600?text=Interior+Design'" 
+                 alt="Luxury Interior" class="card-img">
+            <div class="text-overlay">
+                <span class="label">Living Spaces</span>
+                <h3 class="text-3xl italic">Interior Design</h3>
+            </div>
+        </div>
+
+        <div class="card area-explore reveal slide-down">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6199f7d009?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x400?text=Exterior'" 
+                 class="card-img" alt="Exterior Design">
+            <div class="text-overlay">
+                <span class="label">Residential</span>
+                <h3 class="text-xl italic">Exterior Facades</h3>
+            </div>
+        </div>
+
+        <div class="card area-wallpaper reveal slide-left">
+            <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x800?text=Wallpaper'" 
+                 alt="Wallpaper Detail" class="card-img">
+            <div class="text-overlay">
+                <span class="label">Wallcoverings</span>
+                <h3 class="text-xl italic">Wallpaper</h3>
+            </div>
+        </div>
+
+        <div class="card area-cabin reveal slide-up">
+            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x600?text=Protection'" 
+                 alt="Waterproofing" class="card-img">
+            <div class="text-overlay">
+                <span class="label">Protection</span>
+                <h3 class="text-xl italic">Waterproofing</h3>
+            </div>
+        </div>
+
+        <div class="card area-unleash reveal slide-right">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x800?text=Bespoke'" 
+                 class="card-img" alt="Bespoke Rooms">
+            <div class="text-overlay">
+                <span class="label">Bespoke Rooms</span>
+                <h3 class="text-2xl italic">Interior Curation</h3>
+            </div>
+        </div>
+
+        <div class="card area-mountain reveal slide-down">
+            <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x400?text=Architecture'" 
+                 alt="Modern Villa" class="card-img">
+            <div class="text-overlay">
+                <span class="label">Architecture</span>
+                <h3 class="text-lg italic">Exterior Concepts</h3>
+            </div>
+        </div>
+
+        <div class="card area-extra reveal slide-up">
+            <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x400?text=Patterns'" 
+                 alt="Minimalist Pattern" class="card-img">
+            <div class="text-overlay">
+                <span class="label">Patterns</span>
+                <h3 class="text-lg italic">Wall Art</h3>
+            </div>
+        </div>
+
+        <div class="card area-stay reveal slide-left">
+            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x400?text=Durability'" 
+                 class="card-img" alt="Durability">
+            <div class="text-overlay">
+                <span class="label">Durability</span>
+                <h3 class="text-lg italic">Sealant Tech</h3>
+            </div>
+        </div>
+
+        <div class="card area-cuisine flex flex-col reveal slide-up">
+            <img src="https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?auto=format&fit=crop&q=80&w=600" 
+                 onerror="this.src='https://via.placeholder.com/400x800?text=Service'" 
+                 alt="Full Service" class="card-img">
+            <div class="text-overlay">
+                <h3 class="text-2xl italic mb-12">Full Service Mastery</h3>
+            </div>
+            <button class="btn-quote" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Explore More</button>
+        </div>
+
+    </div>
+
+    <script>
+        const observerOptions = {
+            root: null,
+            threshold: 0.1,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // Staggered appearance
+                    setTimeout(() => {
+                        entry.target.classList.add('active');
+                    }, index * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.reveal').forEach((card) => {
+                observer.observe(card);
+            });
+        });
+    </script>
+
+</body>
+</html>

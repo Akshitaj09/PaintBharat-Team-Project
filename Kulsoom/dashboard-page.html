@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | Enterprise SaaS Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366F1',
+                        secondary: '#A855F7',
+                        accent: '#F43F5E',
+                        darkBg: '#0B0F1A',
+                        darkCard: '#151B2C',
+                        softBrown: '#D1B399',
+                        cyberAmber: '#D1B399',
+                        cyberOrange: '#A68B75',
+                    },
+                    borderRadius: {
+                        '2xl': '1.25rem',
+                        '3xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.4s ease;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .dark .glass {
+            background: rgba(21, 27, 44, 0.8);
+        }
+
+        .sidebar-transition {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition {
+            animation: slideUpFade 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .premium-gradient {
+            background: linear-gradient(135deg, #6366F1 0%, #A855F7 100%);
+        }
+
+        .card-base {
+            @apply bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-700/50 shadow-sm dark:shadow-[0_0_20px_rgba(255,255,255,0.08)] transition-all duration-300;
+        }
+
+        .card-base:hover {
+            @apply shadow-lg dark:shadow-[0_0_25px_rgba(255,255,255,0.12)] dark:border-indigo-500/30;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+        }
+
+        /* --- Theme Toggle Specific CSS --- */
+        .toggle-checkbox:checked + .toggle-slot .toggle-dot {
+            transform: translateX(1.5rem);
+        }
+
+        .toggle-dot {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: white;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+        }
+
+        .toggle-slot {
+            transition: background-color 0.3s ease;
+        }
+
+        /* --- Global Image Variables --- */
+        :root {
+            --sec-bg-img: url('images/Silk_background2.jpg');
+            --sec-card-bg: rgba(255, 255, 255, 0.38);
+            --sec-card-border: rgba(255, 255, 255, 0.75);
+            --sec-text: #3d3434;
+            --sec-text-muted: #7d6e6e;
+            --sec-input-bg: rgba(255, 255, 255, 0.5);
+            --sec-accent: #7c6a5a;
+        }
+
+        .dark {
+            --sec-bg-img: url('images/Silk_background1.jpg');
+            --sec-card-bg: rgba(15, 20, 32, 0.75);
+            --sec-card-border: rgba(255, 255, 255, 0.08);
+            --sec-text: #F8FAFC;
+            --sec-text-muted: #94A3B8;
+            --sec-input-bg: rgba(0, 0, 0, 0.3);
+            --sec-accent: #D1B399;
+        }
+
+        /* --- Security Page Styling --- */
+        #page-security {
+            z-index: 50;
+            overflow-y: auto;
+        }
+
+        .security-wrapper {
+            font-family: 'Inter', sans-serif;
+            background-image: var(--sec-bg-img);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100%;
+            width: 100%;
+            position: relative;
+            transition: background-image 0.5s ease;
+        }
+
+        .security-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            pointer-events: none;
+        }
+
+        /* REDUCED OVERLAY IN DARK MODE */
+        .dark .security-wrapper::before {
+            background: rgba(10, 15, 26, 0.45);
+        }
+
+        .luxury-glass-card {
+            background: var(--sec-card-bg);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--sec-card-border);
+            border-radius: 42px;
+            box-shadow: 0 15px 45px -12px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+        }
+
+        .luxury-glass-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.2);
+        }
+
+        .luxury-input {
+            background: var(--sec-input-bg);
+            border: 1px solid var(--sec-card-border);
+            border-radius: 20px;
+            color: var(--sec-text);
+            padding: 1.1rem 1.6rem;
+            transition: all 0.3s ease;
+        }
+
+        .luxury-input:focus {
+            outline: none;
+            border-color: var(--sec-accent);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .dark .luxury-input:focus {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .strength-meter-bar {
+            height: 8px;
+            border-radius: 4px;
+            transition: all 0.4s ease;
+            width: 0%;
+        }
+
+        .text-sec-accent { color: var(--sec-accent); }
+
+        /* --- HISTORY & LOGS EXCLUSIVE STYLES --- */
+        .cyber-history-bg {
+            background-image: var(--sec-bg-img);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        /* REDUCED OVERLAY IN DARK MODE */
+        .dark .cyber-history-bg {
+            background-image: linear-gradient(rgba(20, 18, 16, 0.5), rgba(20, 18, 16, 0.5)), var(--sec-bg-img);
+        }
+        
+        .history-card-glow {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        .dark .history-card-glow {
+            background: rgba(30, 25, 22, 0.8);
+            border: 1px solid rgba(209, 179, 153, 0.1);
+        }
+        
+        .history-card-glow:hover {
+            border-color: rgba(209, 179, 153, 0.4);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        }
+        .dark .history-card-glow:hover {
+            box-shadow: 0 0 30px rgba(209, 179, 153, 0.05);
+        }
+
+        .neon-brown-glow {
+            box-shadow: 0 0 15px rgba(209, 179, 153, 0.4);
+        }
+        .status-success-neon { color: #10B981; }
+        .status-warning-neon { color: #D97706; }
+        .status-error-neon { color: #DC2626; }
+        
+        .cyber-filter-input {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(209, 179, 153, 0.2);
+        }
+        .dark .cyber-filter-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- SHARED BACKGROUND STYLE (PROFILE/ADMIN) --- */
+        .frosted-app-bg {
+            background-image: var(--sec-bg-img);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* REMOVED RAINBOW GRADIENT EFFECT IN LIGHT MODE */
+        .frosted-app-bg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-color: rgba(245, 245, 245, 0.4); /* Subtle neutral frosting only */
+        }
+
+        /* REDUCED OVERLAY IN DARK MODE */
+        .dark .frosted-app-bg::before {
+            background: radial-gradient(circle at top left, #1a1b1e, transparent 70%),
+                        radial-gradient(circle at bottom right, #0f1012, transparent 70%),
+                        radial-gradient(circle at center, #050505, transparent 100%);
+            background-color: rgba(3, 3, 3, 0.5); 
+        }
+
+        .frosted-app-bg > * { position: relative; z-index: 1; }
+
+        .frosted-glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .frosted-glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .dark .frosted-glass-card {
+            background: rgba(20, 20, 23, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        .frosted-input {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .frosted-input {
+            background: rgba(10, 10, 12, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] dark:bg-darkBg text-slate-900 dark:text-slate-100 min-h-screen overflow-hidden">
+
+    <div class="flex h-screen">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar-transition w-72 bg-white dark:bg-darkCard border-r border-slate-200 dark:border-slate-800 flex flex-col z-50">
+            <div class="h-20 flex items-center px-8 shrink-0">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="w-10 h-10 premium-gradient rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 shrink-0">
+                        <i class="fas fa-paint-roller text-lg"></i>
+                    </div>
+                    <span class="font-extrabold text-xl tracking-tight sidebar-text bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">PaintBharat</span>
+                </div>
+            </div>
+
+            <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5 custom-scrollbar">
+                <p class="text-[10px] font-extrabold uppercase text-slate-400 dark:text-slate-500 mb-3 px-4 sidebar-text tracking-widest">Workspace</p>
+                <button onclick="navigate('profile')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400" data-page="profile">
+                    <i class="fas fa-circle-user w-5 text-center text-lg"></i>
+                    <span class="sidebar-text font-semibold text-sm">Profile</span>
+                </button>
+                <button onclick="navigate('projects')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400" data-page="projects">
+                    <i class="fas fa-layer-group w-5 text-center text-lg"></i>
+                    <span class="sidebar-text font-semibold text-sm">Projects</span>
+                </button>
+                <p class="text-[10px] font-extrabold uppercase text-slate-400 dark:text-slate-500 mt-8 mb-3 px-4 sidebar-text tracking-widest">Settings</p>
+                <button onclick="navigate('security')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400" data-page="security">
+                    <i class="fas fa-shield-halved w-5 text-center text-lg"></i>
+                    <span class="sidebar-text font-semibold text-sm">Account & Security</span>
+                </button>
+                <button onclick="navigate('notifications')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400" data-page="notifications">
+                    <i class="fas fa-sliders w-5 text-center text-lg"></i>
+                    <span class="sidebar-text font-semibold text-sm">Notifications & Preferences</span>
+                </button>
+                <div id="docs-nav-item">
+                    <button onclick="navigate('docs')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400" data-page="docs">
+                        <i class="fas fa-file-signature w-5 text-center text-lg"></i>
+                        <span class="sidebar-text font-semibold text-sm">Documents & Verification</span>
+                    </button>
+                </div>
+                <button onclick="navigate('history')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400" data-page="history">
+                    <i class="fas fa-list-ul w-5 text-center text-lg"></i>
+                    <span class="sidebar-text font-semibold text-sm">History / Logs</span>
+                </button>
+                <button onclick="navigate('support')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400" data-page="support">
+                    <i class="fas fa-headset w-5 text-center text-lg"></i>
+                    <span class="sidebar-text font-semibold text-sm">Support & Help</span>
+                </button>
+                <div id="admin-nav-item" class="hidden">
+                    <button onclick="navigate('admin')" class="nav-link w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl transition-all hover:bg-indigo-50 dark:hover:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400" data-page="admin">
+                        <i class="fas fa-crown w-5 text-center text-lg"></i>
+                        <span class="sidebar-text font-semibold text-sm">Admin Panel</span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-slate-50/50 dark:bg-darkCard">
+                <button onclick="toggleSidebar()" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl hover:bg-white dark:hover:bg-slate-800 text-slate-500 shadow-sm transition-all mb-2">
+                    <i class="fas fa-outdent w-5 text-center" id="sidebar-icon"></i>
+                    <span class="sidebar-text font-bold text-xs uppercase tracking-wider">Collapse</span>
+                </button>
+                <div class="my-2 border-t border-slate-100 dark:border-slate-800"></div>
+                <button onclick="showLogoutModal()" class="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950/30 text-red-500 transition-all">
+                    <i class="fas fa-power-off w-5 text-center text-lg"></i>
+                    <span class="sidebar-text font-bold text-sm">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col relative overflow-hidden h-full">
+            <header class="h-20 flex items-center justify-between px-10 glass border-b border-slate-200 dark:border-slate-800 sticky top-0 z-[60]">
+                <div class="flex items-center gap-6 w-1/3">
+                    <div class="relative w-full max-sm group">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm transition-colors group-focus-within:text-primary"></i>
+                        <input type="text" placeholder="Global Search..." class="w-full bg-slate-100 dark:bg-slate-900 border-transparent rounded-2xl py-2.5 pl-11 pr-4 text-sm focus:ring-2 focus:ring-primary/30 transition-all outline-none">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <div class="hidden lg:flex items-center bg-slate-100/50 dark:bg-slate-900/50 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800">
+                        <select onchange="switchRole(this.value)" class="bg-transparent text-[11px] font-extrabold border-none focus:ring-0 cursor-pointer px-4 text-slate-500 hover:text-primary transition-colors">
+                            <option value="Founder">Founder/Admin</option>
+                            <option value="Client">Client</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="Employee">Employee</option>
+                        </select>
+                    </div>
+
+                    <!-- Toggle Switch Header Component -->
+                    <div class="flex items-center gap-3 bg-slate-100/50 dark:bg-slate-900/50 px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-800 transition-all">
+                        <i class="fas fa-sun text-xs text-amber-500 opacity-60 dark:opacity-20"></i>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="theme-toggle" class="sr-only toggle-checkbox" onchange="toggleTheme()">
+                            <div class="w-11 h-6 rounded-full toggle-slot shadow-inner bg-slate-200 dark:bg-slate-700">
+                                <div class="toggle-dot absolute left-1 top-1 w-4 h-4 rounded-full bg-white transition-all shadow-sm"></div>
+                            </div>
+                        </label>
+                        <i class="fas fa-moon text-xs text-indigo-400 opacity-20 dark:opacity-100"></i>
+                    </div>
+
+                    <div class="flex items-center gap-4 pl-6 border-l border-slate-200 dark:border-slate-800">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-extrabold leading-none text-slate-900 dark:text-white">Alexander Wright</p>
+                            <p id="nav-role-badge" class="text-[10px] text-primary font-black mt-1.5 uppercase tracking-widest">Founder</p>
+                        </div>
+                        <img src="https://ui-avatars.com/api/?name=Alexander+Wright&background=6366F1&color=fff" class="w-11 h-11 rounded-2xl object-cover ring-2 ring-indigo-50 dark:ring-slate-800">
+                    </div>
+                </div>
+            </header>
+
+            <div id="main-scroll" class="flex-1 relative overflow-y-auto custom-scrollbar">
+                
+                <!-- Page: Profile -->
+                <section id="page-profile" class="page-transition max-w-5xl mx-auto space-y-10 p-10">
+                    <div class="card-base rounded-3xl overflow-hidden relative">
+                        <div class="h-40 premium-gradient opacity-90 relative">
+                             <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+                        </div>
+                        <div class="px-12 pb-10 flex flex-col md:flex-row gap-8">
+                            <div class="relative -mt-16 group shrink-0">
+                                <div class="w-36 h-36 rounded-3xl border-8 border-white dark:border-darkCard shadow-2xl overflow-hidden ring-1 ring-slate-200 dark:ring-slate-800 bg-white">
+                                    <img src="https://ui-avatars.com/api/?name=Alexander+Wright&size=200&background=6366F1&color=fff" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="flex-1 mt-6">
+                                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+                                    <div class="space-y-1">
+                                        <h1 class="text-3xl font-extrabold flex items-center gap-3 text-slate-900 dark:text-white">Alexander Wright</h1>
+                                        <p class="text-sm text-slate-500 font-medium">Head of Product Strategy · <span class="text-primary font-bold">@alex_wright</span></p>
+                                    </div>
+                                    <button class="px-6 py-3 bg-primary text-white rounded-2xl text-sm font-extrabold hover:bg-indigo-700 transition-colors">Edit Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Page: Projects -->
+                <section id="page-projects" class="hidden page-transition space-y-8 max-w-5xl mx-auto p-10">
+                    <h2 class="text-3xl font-extrabold tracking-tight">Active Ventures</h2>
+                </section>
+
+                <!-- Page: Account & Security (FULLY RESTORED) -->
+                <section id="page-security" class="hidden page-transition">
+                    <div class="security-wrapper p-10 lg:p-20">
+                        <div class="flex items-end justify-between mb-16 max-w-7xl mx-auto relative z-10">
+                            <div>
+                                <h2 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--sec-text)] mb-3">Account & Security</h2>
+                                <p class="text-[var(--sec-text-muted)] text-lg font-medium">Manage credentials, authentication, and platform protection.</p>
+                            </div>
+                            <div class="hidden lg:flex items-center gap-2 px-6 py-2.5 bg-white/40 dark:bg-black/40 text-[var(--sec-accent)] rounded-full border border-white/60 dark:border-white/10 shadow-sm">
+                                <i data-lucide="crown" class="w-4 h-4"></i>
+                                <span id="security-role-text" class="text-xs font-bold uppercase tracking-widest text-[var(--sec-text)]">Founder Access</span>
+                            </div>
+                        </div>
+
+                        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
+                            <div class="lg:col-span-7 space-y-10">
+                                <!-- 1. Password & Login -->
+                                <div class="luxury-glass-card p-12">
+                                    <div class="flex items-center justify-between mb-12">
+                                        <h2 class="text-2xl font-bold flex items-center gap-4 text-[var(--sec-text)]"><i data-lucide="key-round" class="w-7 h-7 text-[var(--sec-accent)]"></i>Password & Login</h2>
+                                        <span class="text-[10px] text-[var(--sec-text-muted)] font-bold uppercase tracking-[0.2em] px-4 py-1.5 bg-white/50 dark:bg-black/20 rounded-full border border-white/60 dark:border-white/5">Refined 18d ago</span>
+                                    </div>
+                                    <div class="space-y-10">
+                                        <div><label class="text-[11px] uppercase text-[var(--sec-text-muted)] font-black mb-3 block tracking-[0.2em] ml-2">Current Credential</label><input type="password" placeholder="••••••••" class="luxury-input w-full text-base"></div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                            <div><label class="text-[11px] uppercase text-[var(--sec-text-muted)] font-black mb-3 block tracking-[0.2em] ml-2">New Password</label><input id="new-password" type="password" placeholder="8+ characters" class="luxury-input w-full text-base"></div>
+                                            <div><label class="text-[11px] uppercase text-[var(--sec-text-muted)] font-black mb-3 block tracking-[0.2em] ml-2">Confirm New</label><input type="password" placeholder="Verify" class="luxury-input w-full text-base"></div>
+                                        </div>
+                                        <div class="pt-6 border-t border-white/50 dark:border-white/5">
+                                            <div class="flex justify-between items-center mb-4"><span class="text-[11px] uppercase text-[var(--sec-text-muted)] font-black tracking-[0.2em]">Security Strength</span><span id="strength-text" class="text-xs font-black text-rose-400 uppercase tracking-widest">Awaiting input</span></div>
+                                            <div class="bg-white/40 dark:bg-black/40 w-full h-3 rounded-full overflow-hidden shadow-inner"><div id="strength-bar" class="strength-meter-bar bg-rose-400"></div></div>
+                                        </div>
+                                        <button id="update-credentials-btn" class="w-full mt-4 bg-[#4A3E3E] dark:bg-[var(--sec-accent)] text-white dark:text-black hover:opacity-90 font-black py-6 rounded-[28px] shadow-xl transition-all flex items-center justify-center gap-3 text-sm uppercase tracking-widest active:scale-[0.98]">Update Credentials</button>
+                                    </div>
+                                </div>
+
+                                <!-- 2. Recent Login Activity -->
+                                <div class="luxury-glass-card p-12">
+                                    <h2 class="text-2xl font-bold mb-12 flex items-center gap-4 text-[var(--sec-text)]"><i data-lucide="history" class="w-7 h-7 text-[var(--sec-accent)]"></i>Recent Login Activity</h2>
+                                    <div class="space-y-8">
+                                        <div class="flex items-center justify-between p-8 bg-white/40 dark:bg-black/30 rounded-[36px] border border-white/70 dark:border-white/10 shadow-sm">
+                                            <div class="flex items-center gap-6">
+                                                <div class="w-16 h-16 rounded-[24px] bg-white/70 dark:bg-white/10 flex items-center justify-center shadow-sm"><i data-lucide="monitor" class="w-9 h-9 text-[var(--sec-accent)]"></i></div>
+                                                <div><p class="text-xl font-bold text-[var(--sec-text)] leading-tight">MacBook Pro M3 Max</p><p class="text-base text-[var(--sec-text-muted)] mt-2">London, UK • Active Now</p></div>
+                                            </div>
+                                            <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-[var(--sec-accent)] animate-pulse shadow-[0_0_10px_#D1B399]"></span><span class="text-xs font-black text-[var(--sec-text)] uppercase tracking-widest">Secure Session</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 3. Two-Factor Authentication (2FA) -->
+                                <div class="luxury-glass-card p-12">
+                                    <h2 class="text-2xl font-bold mb-12 flex items-center gap-4 text-[var(--sec-text)]"><i data-lucide="shield-check" class="w-7 h-7 text-[var(--sec-accent)]"></i>Two-Factor Authentication (2FA)</h2>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                        <div class="p-10 bg-white/40 dark:bg-black/30 rounded-[36px] border border-white/70 dark:border-white/10 flex justify-between items-center shadow-sm">
+                                            <div class="flex gap-6 items-center"><i data-lucide="smartphone" class="w-10 h-10 text-[var(--sec-text-muted)]"></i><div><p class="font-bold text-[var(--sec-text)] text-lg">SMS Guard</p><p class="text-sm text-[var(--sec-text-muted)] mt-1.5">Enabled</p></div></div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" class="sr-only toggle-checkbox" checked>
+                                                <!-- SOFT BROWN LIGHT TOGGLE COLOR -->
+                                                <div class="w-14 h-7 rounded-full toggle-slot shadow-inner bg-[#E5D3C2] dark:bg-slate-700">
+                                                    <div class="toggle-dot absolute left-1 top-1 w-5 h-5 rounded-full"></div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div class="p-10 bg-white/40 dark:bg-black/30 rounded-[36px] border border-white/70 dark:border-white/10 flex justify-between items-center shadow-sm">
+                                            <div class="flex gap-6 items-center"><i data-lucide="qr-code" class="w-10 h-10 text-[var(--sec-text-muted)]"></i><div><p class="font-bold text-[var(--sec-text)] text-lg">App Link</p><span class="text-[9px] px-3 py-1 bg-[var(--sec-accent)]/20 text-[var(--sec-accent)] font-black rounded-full uppercase mt-2 inline-block">Configured</span></div></div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" class="sr-only toggle-checkbox" checked>
+                                                <!-- SOFT BROWN LIGHT TOGGLE COLOR -->
+                                                <div class="w-14 h-7 rounded-full toggle-slot shadow-inner bg-[#E5D3C2] dark:bg-slate-700">
+                                                    <div class="toggle-dot absolute left-1 top-1 w-5 h-5 rounded-full"></div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lg:col-span-5 space-y-10">
+                                <div class="luxury-glass-card p-10">
+                                    <h2 class="text-xl font-bold mb-10 flex items-center gap-4 text-[var(--sec-text)]"><i data-lucide="bell" class="w-6 h-6 text-[var(--sec-accent)]"></i>Security Alerts</h2>
+                                    <div class="space-y-6">
+                                        <div class="flex items-center justify-between p-6 bg-white/40 dark:bg-black/30 rounded-[28px] hover:bg-white/60 dark:hover:bg-black/50 transition-all cursor-pointer shadow-sm">
+                                            <div class="text-base font-bold text-[var(--sec-text)]">New login alerts</div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" class="sr-only toggle-checkbox" checked>
+                                                <!-- SOFT BROWN LIGHT TOGGLE COLOR -->
+                                                <div class="w-12 h-6 rounded-full toggle-slot bg-[#E5D3C2] dark:bg-slate-700">
+                                                    <div class="toggle-dot absolute left-1 top-1 w-4 h-4 rounded-full"></div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div class="flex items-center justify-between p-6 bg-white/40 dark:bg-black/30 rounded-[28px] hover:bg-white/60 dark:hover:bg-black/50 transition-all cursor-pointer shadow-sm">
+                                            <div class="text-base font-bold text-[var(--sec-text)]">Critical notifications</div>
+                                            <label class="relative inline-flex items-center cursor-pointer">
+                                                <input type="checkbox" class="sr-only toggle-checkbox" checked>
+                                                <!-- SOFT BROWN LIGHT TOGGLE COLOR -->
+                                                <div class="w-12 h-6 rounded-full toggle-slot bg-[#E5D3C2] dark:bg-slate-700">
+                                                    <div class="toggle-dot absolute left-1 top-1 w-4 h-4 rounded-full"></div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="luxury-glass-card p-10">
+                                    <h2 class="text-xl font-bold mb-10 flex items-center gap-4 text-[var(--sec-text)]"><i data-lucide="mail-check" class="w-6 h-6 text-[var(--sec-accent)]"></i>Recovery & Verification</h2>
+                                    <div class="space-y-6">
+                                        <div class="p-6 bg-white/40 dark:bg-black/30 rounded-[28px] border border-white/70 dark:border-white/10 flex justify-between items-center shadow-sm">
+                                            <div><p class="text-[10px] uppercase tracking-[0.2em] text-[var(--sec-text-muted)] font-black mb-2">Primary Email</p><p class="text-lg font-bold text-[var(--sec-text)]">founder@vanguard.io</p></div>
+                                            <i data-lucide="badge-check" class="w-6 h-6 text-[var(--sec-accent)]"></i>
+                                        </div>
+                                        <div class="p-6 bg-white/40 dark:bg-black/30 rounded-[28px] border border-white/70 dark:border-white/10 flex justify-between items-center shadow-sm">
+                                            <div><p class="text-[10px] uppercase tracking-[0.2em] text-[var(--sec-text-muted)] font-black mb-2">Verified Phone</p><p class="text-lg font-bold text-[var(--sec-text)]">+1 (555) 012-9844</p></div>
+                                            <i data-lucide="badge-check" class="w-6 h-6 text-[var(--sec-accent)]"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="luxury-glass-card p-10">
+                                    <div class="flex justify-between items-start mb-10">
+                                        <h2 class="text-xl font-bold flex items-center gap-4 text-[var(--sec-text)]"><i data-lucide="user-cog" class="w-6 h-6 text-[var(--sec-accent)]"></i>Role & Permissions</h2>
+                                        <div class="flex items-center gap-2 px-4 py-2 bg-[var(--sec-accent)]/20 text-[var(--sec-accent)] rounded-full border border-[var(--sec-accent)]/20 shadow-sm">
+                                            <i data-lucide="crown" class="w-4 h-4"></i>
+                                            <span id="role-badge-overview" class="text-[11px] font-black uppercase tracking-widest text-[var(--sec-text)]">Founder</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-6 text-sm border-t border-white/50 dark:border-white/5 pt-8">
+                                        <div class="flex items-center justify-between"><span class="font-medium text-[var(--sec-text-muted)] uppercase tracking-widest text-[10px]">Access Level</span><span class="font-bold text-[var(--sec-text)] text-lg">Unrestricted</span></div>
+                                        <div class="flex items-center justify-between"><span class="font-medium text-[var(--sec-text-muted)] uppercase tracking-widest text-[10px]">Scope</span><span class="font-bold text-[var(--sec-accent)] text-lg">Enterprise-Wide</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="luxury-glass-card p-10 bg-rose-50/20 dark:bg-rose-950/10 border-rose-200/50 dark:border-rose-500/20">
+                                    <h2 class="text-[11px] font-black text-rose-500 dark:text-rose-400 mb-10 uppercase tracking-[0.3em] flex items-center gap-3"><i data-lucide="shield-alert" class="w-4 h-4"></i>Advanced Account Controls</h2>
+                                    <div class="space-y-6">
+                                        <button class="w-full py-6 rounded-[28px] border border-rose-300/50 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 text-[11px] font-black uppercase tracking-[0.2em] hover:bg-rose-500/10 transition-all shadow-sm">Invalidate All Sessions</button>
+                                        <button class="w-full py-6 rounded-[28px] bg-rose-500 text-white text-[11px] font-black uppercase tracking-[0.2em] hover:bg-rose-600 shadow-xl active:scale-[0.98]">Deactivate Account</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-notifications" class="hidden page-transition space-y-8 max-w-4xl mx-auto p-10"><h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">Preferences</h2></section>
+                
+                <!-- Page: History & Logs (RESTORED) -->
+                <section id="page-history" class="hidden page-transition min-h-full cyber-history-bg p-8 lg:p-12 overflow-x-hidden">
+                    <div class="max-w-[1600px] mx-auto space-y-10">
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-4">
+                            <div>
+                                <h2 class="text-4xl font-extrabold tracking-tighter text-slate-900 dark:text-white flex items-center gap-4">
+                                    <span class="w-3 h-12 bg-[#D1B399] neon-brown-glow rounded-full"></span>
+                                    History & System Logs
+                                </h2>
+                                <p class="text-slate-600 dark:text-slate-400 font-medium ml-7 mt-2">Professional audit trail with light-brown accented system monitoring.</p>
+                            </div>
+                            <div class="flex items-center gap-3 ml-7 lg:ml-0">
+                                <button class="px-6 py-3 history-card-glow rounded-xl text-xs font-black uppercase tracking-widest text-[#8C715E] border-[#D1B399]/20 hover:border-[#D1B399] transition-all">
+                                    <i class="fas fa-file-export mr-2"></i> Export Logs
+                                </button>
+                                <button class="px-6 py-3 bg-[#D1B399] text-white rounded-xl text-xs font-black uppercase tracking-widest neon-brown-glow hover:scale-105 transition-all">
+                                    <i class="fas fa-download mr-2"></i> System Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="history-card-glow p-6 rounded-3xl relative overflow-hidden group">
+                                <div class="absolute -right-4 -top-4 w-24 h-24 bg-[#D1B399]/5 rounded-full blur-3xl group-hover:bg-[#D1B399]/10 transition-all"></div>
+                                <div class="flex items-start justify-between">
+                                    <div class="w-12 h-12 rounded-2xl bg-[#D1B399]/10 border border-[#D1B399]/20 flex items-center justify-center text-[#8C715E] neon-brown-glow">
+                                        <i data-lucide="activity" class="w-6 h-6"></i>
+                                    </div>
+                                    <span class="text-[10px] font-black text-[#8C715E] bg-[#D1B399]/10 px-2 py-1 rounded-full uppercase">Live</span>
+                                </div>
+                                <div class="mt-6">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Activities</p>
+                                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">48,291</h3>
+                                </div>
+                            </div>
+                            <div class="history-card-glow p-6 rounded-3xl relative overflow-hidden group border-indigo-500/10">
+                                <div class="flex items-start justify-between">
+                                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.4)]">
+                                        <i data-lucide="log-in" class="w-6 h-6"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-6">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Login Attempts</p>
+                                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">1,402</h3>
+                                </div>
+                            </div>
+                            <div class="history-card-glow p-6 rounded-3xl relative overflow-hidden group border-red-500/10">
+                                <div class="flex items-start justify-between">
+                                    <div class="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
+                                        <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-6">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">System Errors</p>
+                                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">24</h3>
+                                </div>
+                            </div>
+                            <div class="history-card-glow p-6 rounded-3xl relative overflow-hidden group border-[#A68B75]/10">
+                                <div class="flex items-start justify-between">
+                                    <div class="w-12 h-12 rounded-2xl bg-[#A68B75]/10 border border-[#A68B75]/20 flex items-center justify-center text-[#8C715E] shadow-[0_0_15px_rgba(166,139,117,0.4)]">
+                                        <i data-lucide="shield-alert" class="w-6 h-6"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-6">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500">Security Threats</p>
+                                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white mt-1">03</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-card-glow rounded-[32px] overflow-hidden">
+                            <div class="p-8 border-b border-black/5 dark:border-white/5 bg-white/[0.05] dark:bg-white/[0.02] flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Live System Audit</h3>
+                                <input type="text" placeholder="Search logs..." class="cyber-filter-input px-4 py-2 rounded-xl text-xs outline-none focus:ring-2 focus:ring-[#D1B399]/50">
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead><tr class="bg-black/5 dark:bg-black/20"><th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Timestamp</th><th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Identity</th><th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Action</th><th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Status</th></tr></thead>
+                                    <tbody class="divide-y divide-black/5 dark:divide-white/5">
+                                        <tr class="log-table-row transition-all hover:bg-[#D1B399]/5"><td class="px-8 py-6 text-xs text-slate-500 dark:text-slate-400 font-mono">2023-11-24 14:02:11</td><td class="px-8 py-6 text-sm font-bold text-slate-800 dark:text-white">A. Wright</td><td class="px-8 py-6 text-sm text-slate-600 dark:text-slate-300">Updated Global API Secret</td><td class="px-8 py-6"><span class="status-success-neon text-[10px] font-black uppercase tracking-widest">Success</span></td></tr>
+                                        <tr class="log-table-row transition-all hover:bg-[#D1B399]/5"><td class="px-8 py-6 text-xs text-slate-500 dark:text-slate-400 font-mono">2023-11-24 13:45:00</td><td class="px-8 py-6 text-sm font-bold text-slate-800 dark:text-white">System</td><td class="px-8 py-6 text-sm text-slate-600 dark:text-slate-300">Automated DB Backup</td><td class="px-8 py-6"><span class="status-success-neon text-[10px] font-black uppercase tracking-widest">Success</span></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Page: Admin Panel (RESTORED) -->
+                <section id="page-admin" class="hidden page-transition min-h-full frosted-app-bg p-10 space-y-10">
+                    <div class="max-w-7xl mx-auto space-y-10">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Enterprise Overview</h1>
+                                <p class="text-slate-500 mt-1 font-medium">Real-time governance and growth metrics.</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="frosted-glass-card p-6 rounded-[20px]"><p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Total Projects</p><h3 class="text-3xl font-extrabold">1,284</h3></div>
+                            <div class="frosted-glass-card p-6 rounded-[20px]"><p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Ongoing</p><h3 class="text-3xl font-extrabold">412</h3></div>
+                            <div class="frosted-glass-card p-6 rounded-[20px]"><p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Completed</p><h3 class="text-3xl font-extrabold">842</h3></div>
+                            <div class="frosted-glass-card p-6 rounded-[20px]"><p class="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">Not Started</p><h3 class="text-3xl font-extrabold">30</h3></div>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="frosted-glass-card p-6 rounded-[20px] flex items-center gap-5"><div class="w-14 h-14 bg-indigo-100/20 text-indigo-600 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-users-gear"></i></div><div><p class="text-xs font-black text-slate-400 uppercase tracking-widest">Employees</p><h4 class="text-2xl font-extrabold">254</h4></div></div>
+                            <div class="frosted-glass-card p-6 rounded-[20px] flex items-center gap-5"><div class="w-14 h-14 bg-purple-100/20 text-purple-600 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-user-tag"></i></div><div><p class="text-xs font-black text-slate-400 uppercase tracking-widest">Contractors</p><h4 class="text-2xl font-extrabold">82</h4></div></div>
+                            <div class="frosted-glass-card p-6 rounded-[20px] flex items-center gap-5"><div class="w-14 h-14 bg-pink-100/20 text-pink-600 rounded-2xl flex items-center justify-center text-xl shadow-inner"><i class="fas fa-handshake"></i></div><div><p class="text-xs font-black text-slate-400 uppercase tracking-widest">Clients</p><h4 class="text-2xl font-extrabold">124</h4></div></div>
+                        </div>
+                        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                            <div class="xl:col-span-8 frosted-glass-card p-8 rounded-[32px]">
+                                <h3 class="font-bold text-lg mb-8">Growth Analytics</h3>
+                                <div class="h-64 w-full"><svg viewBox="0 0 800 200" class="w-full h-full stroke-primary fill-none stroke-[3]"><path d="M0,180 C100,160 150,40 200,80 C250,120 300,20 400,100 C500,180 600,60 800,40" stroke-linecap="round" /></svg></div>
+                            </div>
+                            <div class="xl:col-span-4 frosted-glass-card p-8 rounded-[32px] flex flex-col items-center justify-center">
+                                <h3 class="font-bold text-lg w-full mb-6">Project Efficiency</h3>
+                                <div class="relative w-48 h-48"><svg class="w-full h-full -rotate-90" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="none" class="stroke-slate-100 dark:stroke-slate-800" stroke-width="3"></circle><circle cx="18" cy="18" r="16" fill="none" class="stroke-emerald-500" stroke-width="3" stroke-dasharray="92, 100"></circle></svg><div class="absolute inset-0 flex items-center justify-center"><span class="text-3xl font-extrabold">92%</span></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-placeholder" class="hidden page-transition py-40 text-center p-10"><h2 class="text-3xl font-extrabold text-slate-300">Section Under Construction</h2></section>
+            </div>
+        </main>
+    </div>
+
+    <div id="logout-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
+        <div class="bg-white dark:bg-darkCard w-full max-w-md rounded-[2.5rem] p-10 shadow-2xl scale-95 opacity-0 transition-all transform" id="logout-modal-content">
+            <h3 class="text-2xl font-extrabold text-center mb-10 text-slate-900 dark:text-white">Sign Out?</h3>
+            <div class="flex gap-4">
+                <button onclick="hideLogoutModal()" class="flex-1 py-4 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-black rounded-2xl">Return</button>
+                <button onclick="location.reload()" class="flex-1 py-4 bg-red-500 text-white font-black rounded-2xl shadow-xl">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-10 right-10 z-[200] translate-y-24 opacity-0 transition-all duration-500">
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl rounded-2xl py-5 px-8 flex items-center gap-5">
+            <div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-circle-check"></i></div>
+            <div><p class="text-sm font-extrabold" id="toast-title">Success</p><p class="text-xs text-slate-500" id="toast-msg">Operation successful.</p></div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let sidebarCollapsed = false;
+
+        function navigate(pageId) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) { target.classList.remove('hidden'); } else { document.getElementById('page-placeholder').classList.remove('hidden'); }
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('bg-indigo-50', 'text-indigo-600', 'dark:bg-indigo-900/20', 'dark:text-indigo-400');
+                if (link.dataset.page === pageId) { link.classList.add('bg-indigo-50', 'text-indigo-600', 'dark:bg-indigo-900/20', 'dark:text-indigo-400'); }
+            });
+            const scrollArea = document.getElementById('main-scroll');
+            scrollArea.scrollTop = 0;
+            lucide.createIcons();
+        }
+
+        function switchRole(role) {
+            document.getElementById('nav-role-badge').textContent = role;
+            const secRoleText = document.getElementById('security-role-text');
+            if (secRoleText) secRoleText.textContent = role + " Access";
+            const badgeOverview = document.getElementById('role-badge-overview');
+            if (badgeOverview) badgeOverview.textContent = role;
+            
+            document.getElementById('admin-nav-item').classList.toggle('hidden', role !== 'Founder');
+            document.getElementById('docs-nav-item').classList.toggle('hidden', !(role === 'Contractor' || role === 'Employee'));
+            showToast("Role Switched", `Identity updated to ${role}.`);
+        }
+
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3500);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const icon = document.getElementById('sidebar-icon');
+            const texts = document.querySelectorAll('.sidebar-text');
+            sidebarCollapsed = !sidebarCollapsed;
+            if (sidebarCollapsed) {
+                sidebar.classList.replace('w-72', 'w-24');
+                icon.classList.replace('fa-outdent', 'fa-indent');
+                texts.forEach(t => t.classList.add('hidden'));
+            } else {
+                sidebar.classList.replace('w-24', 'w-72');
+                icon.classList.replace('fa-indent', 'fa-outdent');
+                setTimeout(() => texts.forEach(t => t.classList.remove('hidden')), 150);
+            }
+        }
+
+        function toggleTheme() {
+            const toggleInput = document.getElementById('theme-toggle');
+            const isDarkMode = toggleInput.checked;
+            document.documentElement.classList.toggle('dark', isDarkMode);
+            document.documentElement.classList.toggle('light', !isDarkMode);
+        }
+
+        window.addEventListener('load', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.checked = document.documentElement.classList.contains('dark');
+            }
+        });
+
+        function showLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => content.classList.remove('scale-95', 'opacity-0'), 10);
+        }
+
+        function hideLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            const content = document.getElementById('logout-modal-content');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 400);
+        }
+
+        const passwordInput = document.getElementById('new-password');
+        const strengthBar = document.getElementById('strength-bar');
+        const strengthText = document.getElementById('strength-text');
+        if (passwordInput && strengthBar) {
+            passwordInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                let strength = 0;
+                if (val.length > 6) strength += 25;
+                if (val.match(/[A-Z]/)) strength += 25;
+                if (val.match(/[0-9]/)) strength += 25;
+                if (val.match(/[^a-zA-Z0-9]/)) strength += 25;
+                strengthBar.style.width = strength + '%';
+                if (strengthText) strengthText.innerText = strength < 50 ? 'Weak' : strength < 100 ? 'Moderate' : 'Exceptional';
+            });
+        }
+
+        window.onload = () => { navigate('profile'); switchRole('Founder'); };
+    </script>
+</body>
+</html>

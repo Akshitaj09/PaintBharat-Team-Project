@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpaper Pairings | Luxury Interior Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #F4F3F0;
+            --card-bg: #FFFFFF;
+            --text-primary: #1C1C1C;
+            --accent-gold: #C5A059;
+            --luxury-brown: #8E7D6F;
+            --card-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.12);
+            --border-radius: 24px;
+            --btn-bg: #1C1C1C;
+            --btn-text: #FFFFFF;
+        }
+
+        .dark-mode {
+            --bg-primary: #0F0F0F;
+            --card-bg: #1A1A1A;
+            --text-primary: #F8F7F4;
+            --accent-gold: #D4AF37;
+            --luxury-brown: #A19184;
+            --card-shadow: 0 15px 35px -10px rgba(255, 255, 255, 0.08);
+            --btn-bg: #FFFFFF;
+            --btn-text: #000000;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+        .letter-spacing-wide { letter-spacing: 0.12em; }
+
+        /* Card Styling */
+        .luxury-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.6s ease;
+        }
+
+        .luxury-card:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.25), var(--card-shadow);
+            transform: translateY(-4px);
+        }
+
+        .mode-toggle-group {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 6px;
+            border-radius: 100px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .toggle-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: #EDEAE4;
+        }
+        .dark-mode .toggle-btn.active {
+            background: #333;
+        }
+
+        .order-btn {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            padding: 12px 32px;
+            border-radius: 100px;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            transition: all 0.3s ease;
+        }
+
+        .swatch {
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .swatch:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .page-transition {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .hidden-view { display: none; opacity: 0; transform: scale(0.98); }
+        .visible-view { display: block; opacity: 1; transform: scale(1); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Color Code Badge - Always Visible and Bold */
+        #hex-badge {
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            background: #E5E7EB; 
+            color: #000000 !important;
+            font-weight: 700;
+            font-family: monospace;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .dark-mode #hex-badge {
+            background: #D1D5DB; 
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="fixed top-0 w-full z-50 px-8 py-6 flex justify-between items-center bg-transparent pointer-events-none">
+        <div class="serif text-lg font-bold tracking-tighter pointer-events-auto">COLOR GALLERY</div>
+        <div class="flex gap-8 text-[9px] uppercase letter-spacing-wide font-bold opacity-60 pointer-events-auto">
+            <a href="#" class="hover:opacity-100 transition-opacity">Design Studio v11.2</a>
+        </div>
+    </nav>
+
+    <!-- Homepage Grid: 4 Cols x 2 Rows -->
+    <main id="homepage" class="pt-32 pb-24 px-6 md:px-12 visible-view page-transition">
+        <header class="text-center mb-16 max-w-2xl mx-auto">
+            <h1 class="serif text-5xl mb-4">Wallpaper Pairings</h1>
+            <p class="text-xs opacity-50 font-medium letter-spacing-wide uppercase">
+                Curated combinations for high-end sanctuaries
+            </p>
+        </header>
+
+        <section id="wallpaper-pairings" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-[1400px] mx-auto">
+            <!-- 8 Cards injected by JS -->
+        </section>
+    </main>
+
+    <!-- Detail View: Compact single-screen layout -->
+    <main id="detail-page" class="pt-24 pb-12 px-6 md:px-12 hidden-view page-transition">
+        <div class="max-w-[1400px] mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="goBack()" class="flex items-center gap-2 opacity-40 hover:opacity-100 transition-opacity uppercase text-[9px] letter-spacing-wide font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path></svg>
+                    Master Archive
+                </button>
+                <div class="luxury-card px-4 py-1 text-[9px] font-bold letter-spacing-wide opacity-50">
+                    CONCEPT RENDER
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Column -->
+                <div class="lg:col-span-7 flex flex-col gap-6">
+                    <div class="luxury-card p-3">
+                        <div id="detail-main-img" class="w-full aspect-video rounded-[18px] overflow-hidden bg-zinc-100 transition-all duration-500">
+                            <!-- Image injected -->
+                        </div>
+                    </div>
+
+                    <div class="luxury-card p-6">
+                        <p class="text-[8px] uppercase font-bold opacity-40 mb-4 letter-spacing-wide">Curated Selection</p>
+                        <div id="curated-selection-grid" class="grid grid-cols-4 gap-3">
+                            <!-- Thumbnails -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Stacked Cards) -->
+                <div class="lg:col-span-5 flex flex-col gap-5">
+                    
+                    <!-- 1. Identity Card -->
+                    <div class="luxury-card p-6 text-center relative overflow-hidden">
+                        <button onclick="toggleFavorite()" id="favorite-btn" class="absolute top-4 right-6 transition-all duration-300 hover:scale-110">
+                            <svg id="heart-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256" class="opacity-30">
+                                <path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40Z"></path>
+                            </svg>
+                        </button>
+                        <p class="text-[8px] uppercase font-bold opacity-40 mb-2 letter-spacing-wide">Authentic ID</p>
+                        
+                        <div id="hex-badge" class="mb-3 opacity-100">#SELECT</div>
+
+                        <h2 id="detail-name" class="serif text-3xl mb-6 leading-tight">Selection Name</h2>
+                        <button class="order-btn">Order Sample</button>
+                    </div>
+
+                    <!-- 2. Smaller Curated Pairs Card -->
+                    <div class="luxury-card p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-[9px] font-bold uppercase letter-spacing-wide opacity-50">Curated Pairs</h4>
+                        </div>
+                        <div id="color-swatches" class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                            <!-- swatches -->
+                        </div>
+                    </div>
+
+                    <!-- 3. Virtual View Card -->
+                    <div class="luxury-card p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-[9px] font-bold uppercase letter-spacing-wide opacity-50">Virtual View</h4>
+                        </div>
+                        <div class="aspect-[16/7] rounded-xl overflow-hidden relative mb-4">
+                            <img id="visualize-mock" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="mode-toggle-group">
+                                <button onclick="setTheme('light')" id="lightBtn" class="toggle-btn active">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M128,56a72,72,0,1,0,72,72A72.08,72.08,0,0,0,128,56Zm0,128a56,56,0,1,1,56-56A56.06,56.06,0,0,1,128,184ZM128,40a8,8,0,0,1,8-8V16a8,8,0,0,1-16,0V32a8,8,0,0,1-8,8Zm0,176a8,8,0,0,1,8,8v16a8,8,0,0,1-16,0V224a8,8,0,0,1-8-8ZM64,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H56a8,8,0,0,1,8,8Zm152,0a8,8,0,0,1-8,8H192a8,8,0,0,1,0-16h16a8,8,0,0,1,8,8Z"></path></svg>
+                                </button>
+                                <button onclick="setTheme('dark')" id="darkBtn" class="toggle-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256"><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.11,104.11,0,1,0,129.8,129.8A8,8,0,0,0,233.54,142.23Z"></path></svg>
+                                </button>
+                            </div>
+
+                            <button class="bg-[#8E7D6F] text-white px-5 py-2 rounded-full text-[9px] uppercase font-bold letter-spacing-wide flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 256 256"><path d="M224,144v40a24,24,0,0,1-24,24H56a24,24,0,0,1-24-24V144a8,8,0,0,1,16,0v40a8,8,0,0,0,8,8H200a8,8,0,0,0,8-8V144a8,8,0,0,1,16,0Zm-88,0V48a8,8,0,0,0-16,0V144a8,8,0,0,0,16,0ZM93.66,125.66,122.34,154.34a8,8,0,0,0,11.32,0l28.68-28.68a8,8,0,0,0-11.32-11.32L136,129.35V48a8,8,0,0,0-16,0V129.35L105,114.34a8,8,0,0,0-11.32,11.32Z"></path></svg>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mt-8 border-t border-black/5 py-8 px-12 text-center text-[8px] uppercase letter-spacing-wide opacity-30">
+        &copy; 2024 L'Atelier Interior Design Studio • Analysis v11.2
+    </footer>
+
+    <script>
+        const wallpapers = [
+            { id: 1, name: "Oatmeal Bouclé", palette: "Nordic Warmth", img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Raw Linen", hex: "#EAE3D9", type: "Fiber" }, { name: "Burnt Clay", hex: "#8E4632", type: "Earth" }, { name: "Sand", hex: "#D6CFC1", type: "Neutral" }, { name: "Taupe", hex: "#483C32", type: "Grit" }, { name: "Wheat", hex: "#F5DEB3", type: "Grain" }, { name: "Stone", hex: "#A9A9A9", type: "Base" }] },
+            { id: 2, name: "Midnight Botanical", palette: "Deep Nature", img: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Forest", hex: "#1A2E26", type: "Base" }, { name: "Gold Leaf", hex: "#C5A059", type: "Trim" }, { name: "Oxblood", hex: "#4E1A1A", type: "Deep" }, { name: "Moss", hex: "#4F6348", type: "Muted" }, { name: "Inky Blue", hex: "#15202B", type: "Dark" }, { name: "Bronze", hex: "#8E7D6F", type: "Accent" }] },
+            { id: 3, name: "Cloud Silk", palette: "Airy Minimal", img: "https://images.unsplash.com/photo-1616137422495-1e9e46e2aa77?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Mist", hex: "#F0F4F5", type: "Sky" }, { name: "Powder", hex: "#D9E4E8", type: "Silk" }, { name: "Sterling", hex: "#BFC5C7", type: "Metal" }, { name: "Sky Blue", hex: "#A9C6D9", type: "Core" }, { name: "Cotton", hex: "#F8F9FA", type: "Light" }, { name: "Slate", hex: "#708090", type: "Text" }] },
+            { id: 4, name: "Peony Petal", palette: "Floral Tone", img: "https://images.unsplash.com/photo-1615876234886-fd9a39faa97f?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Rose Quartz", hex: "#F7D7DF", type: "Tone" }, { name: "Slate Gray", hex: "#4A5A6A", type: "Accent" }, { name: "Soft Blush", hex: "#FDEBED", type: "Highlight" }, { name: "Mauve", hex: "#9D748D", type: "Shadow" }, { name: "White Lily", hex: "#FFFFFF", type: "Base" }, { name: "Deep Rose", hex: "#D48B9E", type: "Depth" }] },
+            { id: 5, name: "Saffron Velvet", palette: "Rich Harvest", img: "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Saffron", hex: "#E9B824", type: "Main" }, { name: "Deep Walnut", hex: "#4A3728", type: "Wood" }, { name: "Cream", hex: "#FFF8E7", type: "Balance" }, { name: "Ochre", hex: "#CC7722", type: "Depth" }, { name: "Mustard", hex: "#FFDB58", type: "Vivid" }, { name: "Espresso", hex: "#3B2F2F", type: "Stark" }] },
+            { id: 6, name: "Slate Marble", palette: "Modern Monolith", img: "https://images.unsplash.com/photo-1600210491892-03d94c0abe81?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Anthracite", hex: "#292929", type: "Core" }, { name: "Vein Gray", hex: "#A6A6A6", type: "Detail" }, { name: "Cool White", hex: "#F2F2F2", type: "Field" }, { name: "Charcoal", hex: "#36454F", type: "Solid" }, { name: "Granite", hex: "#676767", type: "Texture" }, { name: "Glass", hex: "#E3E3E3", type: "Clean" }] },
+            { id: 7, name: "Aegean Linen", palette: "Coastal Heritage", img: "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Greek Blue", hex: "#2A4B7C", type: "Depth" }, { name: "Pumice", hex: "#D3D3D3", type: "Stone" }, { name: "Cloud", hex: "#F5F5F5", type: "Highlight" }, { name: "Indigo", hex: "#4B0082", type: "Accent" }, { name: "Driftwood", hex: "#8B8682", type: "Organic" }, { name: "Salt", hex: "#FFFFFF", type: "Base" }] },
+            { id: 8, name: "Sage Herringbone", palette: "Countryside Calm", img: "https://images.unsplash.com/photo-1616486788371-62d930495c44?auto=format&fit=crop&q=80&w=1200", colors: [{ name: "Earthy Sage", hex: "#8A9A5B", type: "Primary" }, { name: "Warm Oak", hex: "#8B4513", type: "Texture" }, { name: "Olive Drab", hex: "#6B8E23", type: "Shadow" }, { name: "Pale Leaf", hex: "#98FB98", type: "Highlight" }, { name: "Bark", hex: "#5D4037", type: "Depth" }, { name: "Stone Wash", hex: "#E0E0E0", type: "Base" }] }
+        ];
+
+        let activeWallpaperId = null;
+        const favorites = new Set();
+
+        function init() { renderGallery(); }
+
+        function renderGallery() {
+            const grid = document.getElementById('wallpaper-pairings');
+            grid.innerHTML = wallpapers.map(w => `
+                <div class="luxury-card p-4 group cursor-pointer" onclick="openDetail(${w.id})">
+                    <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
+                        <img src="${w.img}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="${w.name}">
+                    </div>
+                    <div class="text-left">
+                        <h3 class="serif text-lg mb-1">${w.name}</h3>
+                        <p class="text-[8px] uppercase letter-spacing-wide opacity-40 font-bold">${w.palette}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFavorite() {
+            if (!activeWallpaperId) return;
+            const heart = document.getElementById('heart-icon');
+            if (favorites.has(activeWallpaperId)) {
+                favorites.delete(activeWallpaperId);
+                heart.classList.remove('fav-active');
+                heart.style.opacity = "0.3";
+            } else {
+                favorites.add(activeWallpaperId);
+                heart.classList.add('fav-active');
+                heart.style.opacity = "1";
+            }
+        }
+
+        function selectColor(colorName, hex) {
+            const title = document.getElementById('detail-name');
+            const badge = document.getElementById('hex-badge');
+            title.style.opacity = '0';
+            badge.style.opacity = '0';
+            setTimeout(() => {
+                title.innerText = colorName;
+                badge.innerText = hex.toUpperCase();
+                title.style.opacity = '1';
+                badge.style.opacity = '1';
+            }, 200);
+        }
+
+        function updateDetailView(id) {
+            const w = wallpapers.find(item => item.id === id);
+            activeWallpaperId = id;
+            const badge = document.getElementById('hex-badge');
+            badge.innerText = "#SELECT";
+            badge.style.opacity = '1';
+
+            const heart = document.getElementById('heart-icon');
+            heart.style.opacity = favorites.has(id) ? "1" : "0.3";
+
+            document.getElementById('detail-main-img').innerHTML = `<img src="${w.img}" class="w-full h-full object-cover" alt="${w.name}">`;
+            document.getElementById('detail-name').innerText = w.name;
+
+            const swatches = document.getElementById('color-swatches');
+            swatches.innerHTML = w.colors.map(c => `
+                <div class="flex-shrink-0 flex flex-col items-center gap-1 group cursor-pointer" onclick="selectColor('${c.name}', '${c.hex}')">
+                    <div class="swatch w-11 h-11" style="background-color: ${c.hex}"></div>
+                    <div class="text-center">
+                        <p class="text-[8px] font-bold uppercase whitespace-nowrap">${c.name}</p>
+                        <p class="text-[7px] opacity-40 uppercase font-bold">${c.type}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            const selectionGrid = document.getElementById('curated-selection-grid');
+            const others = wallpapers.filter(item => item.id !== id).slice(0, 4);
+            selectionGrid.innerHTML = others.map(other => `
+                <div onclick="updateDetailView(${other.id})" class="selection-thumbnail aspect-square rounded-lg overflow-hidden shadow-sm">
+                    <img src="${other.img}" class="w-full h-full object-cover">
+                </div>
+            `).join('');
+        }
+
+        function openDetail(id) {
+            updateDetailView(id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('homepage').classList.replace('visible-view', 'hidden-view');
+            setTimeout(() => {
+                document.getElementById('homepage').style.display = 'none';
+                document.getElementById('detail-page').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('detail-page').classList.replace('hidden-view', 'visible-view');
+                }, 50);
+            }, 400);
+        }
+
+        function goBack() {
+            document.getElementById('detail-page').classList.replace('visible-view', 'hidden-view');
+            setTimeout(() => {
+                document.getElementById('detail-page').style.display = 'none';
+                document.getElementById('homepage').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('homepage').classList.replace('hidden-view', 'visible-view');
+                }, 50);
+            }, 400);
+        }
+
+        function setTheme(theme) {
+            const body = document.body;
+            document.getElementById('lightBtn').classList.toggle('active', theme === 'light');
+            document.getElementById('darkBtn').classList.toggle('active', theme === 'dark');
+            body.classList.toggle('dark-mode', theme === 'dark');
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

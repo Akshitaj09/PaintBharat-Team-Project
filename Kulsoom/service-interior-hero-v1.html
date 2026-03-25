@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Luxury Slider</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; margin: 0; overflow: hidden; }
+        
+        .bucket-transition {
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .content-fade {
+            transition: all 0.7s ease-out;
+        }
+
+        @keyframes timer-progress {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        
+        .animate-timer-progress {
+            animation: timer-progress 5s linear forwards;
+        }
+
+        .paper-texture {
+            background-image: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+        }
+
+        .bucket-shadow {
+            filter: drop-shadow(0 35px 35px rgba(0,0,0,0.4));
+        }
+    </style>
+</head>
+<body class="select-none">
+
+    <div id="slider-root" class="relative w-full h-screen overflow-hidden">
+        <!-- Background Panels -->
+        <div class="absolute inset-0 flex">
+            <!-- Left Panel (Text) -->
+            <div id="left-panel" class="relative w-full lg:w-1/2 h-full transition-colors duration-1000 ease-in-out z-10">
+                <div class="absolute inset-0 opacity-[0.05] pointer-events-none paper-texture"></div>
+                
+                <div class="relative h-full flex flex-col justify-center px-8 md:px-16 lg:px-24 max-w-2xl">
+                    <!-- Brand -->
+                    <div class="mb-12 flex items-center gap-3">
+                        <div id="brand-logo" class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold transition-colors duration-1000">PB</div>
+                        <div>
+                            <span id="brand-name" class="block text-sm tracking-[0.3em] font-black transition-colors duration-1000">PAINTBHARAT CO.</span>
+                            <span class="block text-[10px] opacity-50 tracking-widest uppercase text-gray-900">The Art of Interior Excellence</span>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div id="text-content" class="content-fade opacity-100 translate-x-0">
+                        <div class="flex items-center gap-4 mb-3">
+                            <span id="color-code" class="text-xs font-black tracking-widest px-3 py-1 text-white rounded-sm shadow-sm transition-colors duration-1000">
+                                NEW ARRIVAL
+                            </span>
+                            <div class="h-[1px] flex-1 bg-black/5"></div>
+                        </div>
+                        
+                        <h1 id="color-title" class="text-6xl lg:text-8xl font-black mb-6 leading-[0.85] tracking-tighter uppercase transition-colors duration-1000">
+                            NAME
+                        </h1>
+
+                        <p id="color-desc" class="text-xl text-gray-700/80 mb-10 max-w-md font-medium leading-relaxed">
+                            Description goes here.
+                        </p>
+
+                        <div id="feature-list" class="flex flex-wrap gap-3 mb-12">
+                            <!-- Features injected by JS -->
+                        </div>
+
+                        <button id="cta-button" class="group relative overflow-hidden px-12 py-5 text-white font-black tracking-[0.3em] transition-all hover:scale-105 active:scale-95 shadow-2xl rounded-sm">
+                            <span class="relative z-10 flex items-center gap-4">
+                                VIEW IN MY ROOM
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                            </span>
+                            <div class="absolute inset-0 bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel (Lifestyle Image) -->
+            <div class="hidden lg:block relative w-1/2 h-full overflow-hidden bg-black">
+                <div id="bg-image" class="absolute inset-0 bg-cover bg-center transition-all duration-1000 scale-100 blur-0">
+                    <div id="bg-overlay" class="absolute inset-0 mix-blend-multiply opacity-30 transition-colors duration-1000"></div>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-black/10"></div>
+            </div>
+        </div>
+
+        <!-- Floating Paint Bucket -->
+        <div id="bucket-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none bucket-shadow">
+            <div id="bucket-wrapper" class="bucket-transition relative w-64 lg:w-80 h-[26rem] scale-105">
+                <!-- Handle -->
+                <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-[110%] h-12 border-t-4 border-x-4 border-gray-400 rounded-t-[100px] opacity-30"></div>
+                
+                <!-- Main Body -->
+                <div class="relative h-full w-full bg-white rounded-b-xl overflow-hidden shadow-2xl flex flex-col">
+                    <div class="h-10 w-full bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400 shadow-sm border-b border-gray-400"></div>
+                    <div class="h-4 w-[105%] -ml-[2.5%] bg-white border-y border-gray-200 shadow-sm"></div>
+                    
+                    <div class="flex-1 flex flex-col">
+                        <div class="flex h-full">
+                            <div class="w-12 bg-[#3D2C5E] flex items-center justify-center">
+                                <div class="rotate-90 text-[10px] text-white font-bold tracking-[0.2em] whitespace-nowrap opacity-90 uppercase">
+                                    PAINTBHARAT
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1 relative overflow-hidden p-6 flex flex-col justify-center">
+                                <div id="label-bg" class="absolute inset-0 opacity-15 transition-colors duration-500"></div>
+                                <div class="absolute inset-0 bg-gradient-to-br from-white via-white/95 to-transparent"></div>
+                                
+                                <div class="relative z-10 flex flex-col items-center text-center">
+                                    <div id="label-tag" class="mb-1 text-[10px] tracking-[0.3em] font-bold">royale</div>
+                                    <div id="label-name" class="mb-4 text-2xl font-black italic tracking-tight">DUSTY</div>
+                                    <div class="h-[1px] w-12 bg-gray-300 mb-4"></div>
+                                    <div class="text-[7px] uppercase tracking-widest font-bold opacity-60 mb-6">LUXURY EMULSION</div>
+                                    
+                                    <!-- Icons -->
+                                    <div class="flex justify-around w-full opacity-70" id="label-icons">
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                            <span class="text-[5px] font-bold">STAIN GUARD</span>
+                                        </div>
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M5.75 5.75l12.5 12.5M18.25 5.75L5.75 18.25"/></svg>
+                                            <span class="text-[5px] font-bold">TEFLON TECH</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="bucket-bottom-accent" class="h-2 w-full transition-colors duration-700"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress/Counter -->
+        <div class="absolute bottom-12 left-8 md:left-24 z-30 flex items-center gap-6">
+            <div id="counter" class="text-2xl font-black italic transition-colors duration-1000">01</div>
+            <div id="dots-container" class="flex gap-1.5"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="absolute bottom-12 right-12 flex items-center gap-8 z-30">
+            <div class="flex gap-4">
+                <button id="prev-btn" class="p-5 bg-white/90 hover:bg-white text-gray-900 rounded-full transition-all shadow-xl active:scale-90">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <button id="next-btn" class="p-5 bg-white/90 hover:bg-white text-gray-900 rounded-full transition-all shadow-xl active:scale-90">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Timer Progress Bar -->
+        <div class="absolute bottom-0 left-0 w-full h-1 bg-white/10 z-50">
+            <div id="timer-bar" class="h-full origin-left bg-white"></div>
+        </div>
+
+        <!-- Large Background Text -->
+        <div class="absolute top-12 left-1/2 -translate-x-1/2 z-0 opacity-[0.03] text-[15vw] font-black pointer-events-none uppercase">
+            PAINTBHARAT
+        </div>
+    </div>
+
+    <script>
+        const COLORS = [
+            {
+                name: 'DUSTY TERRACOTTA',
+                code: 'PB-902',
+                description: 'A sophisticated blend of clay and rose tones. Dusty Terracotta brings a grounded, artisanal feel to living rooms and entryways.',
+                color: '#B2675E',
+                lightColor: '#F8F1F0',
+                bgImage: 'https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=1000',
+                features: ['Matte Finish', 'Teflon Surface', '10 Year Warranty']
+            },
+            {
+                name: 'MIDNIGHT TEAL',
+                code: 'PB-550',
+                description: 'A deep, jewel-toned teal that exudes luxury. Perfect for accent walls or studies, this high-pigment formula shifts beautifully.',
+                color: '#244D4D',
+                lightColor: '#EEF2F2',
+                bgImage: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&q=80&w=1000',
+                features: ['High Coverage', 'Washable', 'Anti-Fungal']
+            },
+            {
+                name: 'GOLDEN HARVEST',
+                code: 'PB-212',
+                description: 'More than just yellow, Golden Harvest is a rich, honeyed ochre that adds energy and warmth to kitchens and dining areas.',
+                color: '#D4A373',
+                lightColor: '#FEFAF6',
+                bgImage: 'https://images.unsplash.com/photo-1556912177-c54030639a6d?auto=format&fit=crop&q=80&w=1000',
+                features: ['Stain Guard', 'Easy Clean', 'Eco-Friendly']
+            },
+            {
+                name: 'NORDIC MIST',
+                code: 'PB-104',
+                description: 'A pale, ethereal sage-grey that captures the soft light of a misty morning. It creates an expansive feel in smaller rooms.',
+                color: '#8D99AE',
+                lightColor: '#F4F5F7',
+                bgImage: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&q=80&w=1000',
+                features: ['Low VOC', 'Breathable Coat', 'Soft Sheen']
+            },
+            {
+                name: 'SLATE SHADOW',
+                code: 'PB-888',
+                description: 'A deep charcoal with subtle blue undertones. This color provides a sleek, architectural backdrop for modern furniture.',
+                color: '#2B2D42',
+                lightColor: '#F0F0F2',
+                bgImage: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1000',
+                features: ['Ultra-Matte', 'Crack Bridging', 'Premium Pigment']
+            }
+        ];
+
+        let currentIndex = 0;
+        let isAnimating = false;
+        let timer;
+
+        function updateUI() {
+            const current = COLORS[currentIndex];
+            const textContent = document.getElementById('text-content');
+            const bucketWrapper = document.getElementById('bucket-wrapper');
+            const timerBar = document.getElementById('timer-bar');
+
+            // Set state to animating
+            isAnimating = true;
+            textContent.classList.remove('opacity-100', 'translate-x-0');
+            textContent.classList.add('opacity-0', 'translate-x-10');
+            bucketWrapper.classList.add('scale-90', 'rotate-3', 'opacity-0', 'translate-y-12');
+            
+            // Reset Progress Bar Animation
+            timerBar.classList.remove('animate-timer-progress');
+            void timerBar.offsetWidth; // Trigger reflow
+
+            setTimeout(() => {
+                // Update Colors
+                document.getElementById('left-panel').style.backgroundColor = current.lightColor;
+                document.getElementById('brand-logo').style.backgroundColor = current.color;
+                document.getElementById('brand-name').style.color = current.color;
+                document.getElementById('color-code').style.backgroundColor = current.color;
+                document.getElementById('color-title').style.color = current.color;
+                document.getElementById('cta-button').style.backgroundColor = current.color;
+                document.getElementById('bg-overlay').style.backgroundColor = current.color;
+                document.getElementById('label-bg').style.backgroundColor = current.color;
+                document.getElementById('label-tag').style.color = current.color;
+                document.getElementById('label-name').style.color = current.color;
+                document.getElementById('bucket-bottom-accent').style.backgroundColor = current.color;
+                document.getElementById('counter').style.color = current.color;
+                timerBar.style.backgroundColor = current.color;
+
+                // Update Text Content
+                document.getElementById('color-title').innerText = current.name;
+                document.getElementById('color-desc').innerText = current.description;
+                document.getElementById('color-code').innerText = `NEW ARRIVAL • ${current.code}`;
+                document.getElementById('counter').innerText = `0${currentIndex + 1}`;
+                document.getElementById('label-name').innerText = current.name.split(' ')[0];
+
+                // Features
+                const featureContainer = document.getElementById('feature-list');
+                featureContainer.innerHTML = '';
+                current.features.forEach(f => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center gap-2';
+                    div.innerHTML = `<div class="w-1.5 h-1.5 rounded-full" style="background-color: ${current.color}"></div><span class="text-[11px] font-bold tracking-widest uppercase text-gray-500">${f}</span>`;
+                    featureContainer.appendChild(div);
+                });
+
+                // Update Image
+                document.getElementById('bg-image').style.backgroundImage = `url(${current.bgImage})`;
+
+                // Update Dots
+                updateDots();
+
+                // Fade In
+                textContent.classList.remove('opacity-0', 'translate-x-10');
+                textContent.classList.add('opacity-100', 'translate-x-0');
+                bucketWrapper.classList.remove('scale-90', 'rotate-3', 'opacity-0', 'translate-y-12');
+                bucketWrapper.classList.add('scale-105', 'rotate-0', 'opacity-100', 'translate-y-0');
+                
+                // Restart Timer Animation
+                timerBar.classList.add('animate-timer-progress');
+                
+                isAnimating = false;
+            }, 500);
+        }
+
+        function updateDots() {
+            const container = document.getElementById('dots-container');
+            container.innerHTML = '';
+            COLORS.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = `h-1.5 transition-all duration-700 rounded-full ${i === currentIndex ? 'w-12' : 'w-3 bg-black/10'}`;
+                if (i === currentIndex) dot.style.backgroundColor = COLORS[currentIndex].color;
+                container.appendChild(dot);
+            });
+        }
+
+        function nextSlide() {
+            if (isAnimating) return;
+            currentIndex = (currentIndex + 1) % COLORS.length;
+            resetAutoPlay();
+            updateUI();
+        }
+
+        function prevSlide() {
+            if (isAnimating) return;
+            currentIndex = (currentIndex - 1 + COLORS.length) % COLORS.length;
+            resetAutoPlay();
+            updateUI();
+        }
+
+        function resetAutoPlay() {
+            clearInterval(timer);
+            timer = setInterval(nextSlide, 5000);
+        }
+
+        // Event Listeners
+        document.getElementById('next-btn').addEventListener('click', nextSlide);
+        document.getElementById('prev-btn').addEventListener('click', prevSlide);
+
+        // Init
+        window.onload = () => {
+            updateUI();
+            resetAutoPlay();
+        };
+    </script>
+</body>
+</html>

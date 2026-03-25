@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paintsmith 3D - FAQ Landing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 4s ease-in-out infinite;
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        .faq-item.active .faq-content {
+            max-height: 200px; /* Adjust based on content */
+            padding-bottom: 1.25rem;
+        }
+        .faq-item.active {
+            border-color: #fbcfe8; /* pink-200 */
+            background-color: rgba(253, 242, 248, 0.3); /* pink-50/30 */
+        }
+        .faq-item.active .faq-question-text {
+            color: #db2777; /* pink-600 */
+        }
+        .faq-item.active .chevron-icon {
+            transform: rotate(180deg);
+            color: #ec4899; /* pink-500 */
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
+
+    <div class="min-h-screen flex flex-col md:flex-row">
+        <!-- Left Side: Content & FAQ -->
+        <div class="w-full md:w-1/2 p-8 md:p-16 lg:p-24 flex flex-col justify-center z-10 bg-white shadow-xl relative">
+            <div class="max-w-xl mx-auto md:mx-0">
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="p-2 bg-pink-100 rounded-lg">
+                        <i data-lucide="paintbrush" class="text-pink-500 w-6 h-6"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">Paintsmith 3D</span>
+                </div>
+
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600">
+                    Precision Painting <br />
+                    <span class="text-pink-500">Styled for You.</span>
+                </h1>
+                
+                <p class="text-slate-500 text-lg mb-12">
+                    Transform your digital spaces with our high-quality 3D renders. 
+                    Below are the most common questions regarding our process.
+                </p>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2 mb-4 text-sm font-semibold text-slate-400 uppercase tracking-widest">
+                        <i data-lucide="help-circle" class="w-4 h-4"></i>
+                        Frequently Asked Questions
+                    </div>
+                    
+                    <div id="faq-container" class="space-y-4">
+                        <!-- FAQ Items will be injected here -->
+                    </div>
+                </div>
+
+                <div class="mt-12 flex flex-wrap gap-4">
+                    <button class="bg-slate-900 text-white px-8 py-4 rounded-full font-bold hover:bg-slate-800 transition-colors shadow-lg">
+                        Get Started
+                    </button>
+                    <button class="bg-white border border-slate-200 text-slate-600 px-8 py-4 rounded-full font-bold hover:bg-slate-50 transition-colors">
+                        Our Process
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Visual Asset Container -->
+        <div class="w-full md:w-1/2 h-96 md:h-screen relative bg-[#fcfcfc] flex items-center justify-center overflow-hidden">
+            <!-- Loading State -->
+            <div id="loading-state" class="flex flex-col items-center gap-4">
+                <div class="relative">
+                    <i data-lucide="loader-2" class="w-12 h-12 text-pink-400 animate-spin"></i>
+                    <div class="absolute inset-0 bg-pink-200 blur-xl opacity-20 rounded-full animate-pulse"></div>
+                </div>
+                <p class="text-slate-400 font-medium animate-pulse">Generating 3D Scene...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="hidden p-8 text-center max-w-sm">
+                <div id="error-message" class="bg-red-50 text-red-500 p-4 rounded-2xl mb-4">
+                    Could not load the 3D render.
+                </div>
+                <button onclick="generateImage()" class="text-pink-500 font-semibold hover:underline">
+                    Try again
+                </button>
+            </div>
+
+            <!-- Success State -->
+            <div id="success-state" class="hidden w-full h-full relative group">
+                <img id="generated-image" src="" alt="3D Painting Worker Render" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-transparent pointer-events-none"></div>
+                
+                <!-- Floating Decorative Element -->
+                <div class="absolute bottom-8 right-8 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/20 hidden lg:block animate-bounce-slow">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-pink-400 rounded-full shadow-inner border-2 border-white"></div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800 uppercase tracking-tighter">Color Selection</p>
+                            <p class="text-sm text-slate-500">Bright Pastel Pink</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const faqData = [
+            {
+                question: "How long does the painting process take?",
+                answer: "Our automated 3D rendering and painting systems are designed for speed. Most standard rooms are completed within 4-6 hours with high-precision finish."
+            },
+            {
+                question: "Are the pastel pink shades customizable?",
+                answer: "Absolutely. We use a digital color-matching system that allows you to select any hex code or pastel palette to match your studio environment perfectly."
+            },
+            {
+                question: "What equipment do the 3D workers use?",
+                answer: "Our stylized workers come equipped with high-reach rollers, anti-drip trays, and neutral-toned safety gear for a clean, professional appearance in any mockup."
+            },
+            {
+                question: "Is there a limit to the wall height?",
+                answer: "The long-reach rollers shown in the render are suitable for walls up to 12 feet. For higher ceilings, we deploy specialized telescopic equipment."
+            }
+        ];
+
+        function initFaqs() {
+            const container = document.getElementById('faq-container');
+            faqData.forEach((item, index) => {
+                const faqItem = document.createElement('div');
+                faqItem.className = `faq-item border border-slate-100 bg-white rounded-2xl transition-all duration-300 ${index === 0 ? 'active' : ''}`;
+                faqItem.innerHTML = `
+                    <button onclick="toggleFaq(this)" class="w-full p-5 text-left flex justify-between items-center group">
+                        <span class="faq-question-text font-semibold text-slate-700 transition-colors">
+                            ${item.question}
+                        </span>
+                        <i data-lucide="chevron-down" class="chevron-icon text-slate-400 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content px-5 text-slate-500 leading-relaxed">
+                        ${item.answer}
+                    </div>
+                `;
+                container.appendChild(faqItem);
+            });
+            lucide.createIcons();
+        }
+
+        function toggleFaq(button) {
+            const item = button.parentElement;
+            const isActive = item.classList.contains('active');
+            
+            // Close all items
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            
+            // Toggle clicked item
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+
+        async function generateImage() {
+            const apiKey = ""; // Provided at runtime
+            const prompt = "A stylized 3D worker standing on the right side of the frame, actively painting a vertical wall with a long paint roller dipped in bright pastel pink paint. The roller is touching the wall and spreading fresh pink paint in a wide stripe. Visible wet paint texture, drips running slightly downward, paint tray on the floor. The worker wears overalls, gloves, and sneakers, neutral colors. Clean studio environment, white floor, soft shadows. Camera at waist height, wide composition suitable for a website section. On the left side of the frame, empty negative space reserved for FAQ text and UI panels. Web design mockup, landing page layout, modern minimal background. High quality 3D render, soft lighting, global illumination, smooth materials, stylized but realistic proportions.";
+
+            const loadingEl = document.getElementById('loading-state');
+            const errorEl = document.getElementById('error-state');
+            const successEl = document.getElementById('success-state');
+            const imgEl = document.getElementById('generated-image');
+            const errorMsgEl = document.getElementById('error-message');
+
+            loadingEl.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+
+            const generateWithBackoff = async (retries = 0) => {
+                try {
+                    const response = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`,
+                        {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                instances: [{ prompt }],
+                                parameters: { sampleCount: 1 }
+                            })
+                        }
+                    );
+
+                    if (!response.ok) {
+                        if (response.status === 429 && retries < 5) {
+                            const delay = Math.pow(2, retries) * 1000;
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            return generateWithBackoff(retries + 1);
+                        }
+                        throw new Error('Failed to generate image');
+                    }
+
+                    const data = await response.json();
+                    const base64Data = data.predictions[0].bytesBase64Encoded;
+                    
+                    imgEl.src = `data:image/png;base64,${base64Data}`;
+                    loadingEl.classList.add('hidden');
+                    successEl.classList.remove('hidden');
+                } catch (err) {
+                    if (retries < 5) {
+                        const delay = Math.pow(2, retries) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        return generateWithBackoff(retries + 1);
+                    }
+                    errorMsgEl.textContent = "Could not load the 3D render. Please try again.";
+                    loadingEl.classList.add('hidden');
+                    errorEl.classList.remove('hidden');
+                }
+            };
+
+            generateWithBackoff();
+        }
+
+        window.onload = () => {
+            initFaqs();
+            generateImage();
+        };
+    </script>
+</body>
+</html>

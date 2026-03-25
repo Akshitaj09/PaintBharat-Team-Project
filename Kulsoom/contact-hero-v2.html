@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | PAINTBHARAT CO.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --aesthetic-brown: #2D241E;
+            --warm-clay: #4A3C34;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(rgba(45, 36, 30, 0.85), rgba(45, 36, 30, 0.95)), 
+                        url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 0.9; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            70% { transform: scale(1.1) rotate(0deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Classes for staggered delays */
+        .reveal-1 { animation: fadeInUp 0.8s ease forwards; opacity: 0; }
+        .reveal-2 { animation: fadeInUp 0.8s ease forwards 0.2s; opacity: 0; }
+        .reveal-3 { animation: fadeInUp 0.8s ease forwards 0.4s; opacity: 0; }
+        .reveal-4 { animation: fadeInUp 0.8s ease forwards 0.6s; opacity: 0; }
+        .reveal-btn { animation: scaleIn 0.6s ease forwards 0.9s; opacity: 0; }
+        .reveal-brand { animation: fadeIn 1.2s ease forwards; opacity: 0; }
+        .reveal-icon { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
+
+        .contact-trigger {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .contact-trigger:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--aesthetic-brown); }
+    </style>
+</head>
+<body class="text-stone-900">
+
+    <!-- Hero Banner Section -->
+    <section class="relative h-[650px] md:h-[700px] flex items-center justify-center hero-gradient text-white px-6 overflow-hidden">
+        
+        <!-- Branding -->
+        <div class="absolute top-12 text-center w-full reveal-brand">
+            <div class="text-white font-bold tracking-[0.3em] text-sm md:text-2xl serif">
+                PAINTBHARAT <span class="text-[#D4AF37]">CO.</span>
+            </div>
+        </div>
+
+        <div class="max-w-4xl text-center space-y-6 mt-12">
+            <h2 class="text-[#D4AF37] uppercase tracking-[0.4em] text-[10px] md:text-xs font-medium reveal-1">
+                Concierge & Inquiries
+            </h2>
+            <h1 class="text-4xl md:text-7xl serif italic font-light leading-tight reveal-2">
+                Transforming Spaces <br>
+                <span class="not-italic text-white">With Precision.</span>
+            </h1>
+            <p class="text-stone-300 max-w-lg mx-auto font-light leading-relaxed text-xs md:text-sm reveal-3">
+                Whether it's a heritage restoration or a modern masterpiece, our artisans bring the vision of PAINTBHARAT CO. to your doorstep.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 reveal-4">
+                <a href="#form" class="reveal-btn bg-white text-stone-950 px-8 py-3.5 text-[10px] uppercase tracking-widest font-semibold hover:bg-[#D4AF37] hover:text-white transition-all duration-300 shadow-lg">
+                    Send Inquiries
+                </a>
+                <a href="tel:+1234567890" class="reveal-btn border border-white/30 text-white px-8 py-3.5 text-[10px] uppercase tracking-widest font-semibold hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all duration-300" style="animation-delay: 1.1s;">
+                    Speak With Us
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-50">
+            <div class="w-[1px] h-12 bg-gradient-to-b from-[#D4AF37] to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section id="form" class="py-20 bg-white px-6">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
+            <div class="space-y-6">
+                <h3 class="serif text-4xl text-stone-900">Let’s begin the <br>conversation.</h3>
+                <p class="text-stone-500 leading-relaxed text-sm">
+                    Our studio is open for consultations from Monday to Saturday. Reach out to discuss your project requirements, color palettes, or to request a quote.
+                </p>
+                <div class="space-y-4 pt-4">
+                    <div class="flex items-center gap-4 group cursor-pointer">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-full border border-stone-200 group-hover:border-[#D4AF37] transition-colors">
+                            <svg class="w-4 h-4 text-stone-600 group-hover:text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-[9px] uppercase tracking-widest text-stone-400">Headquarters</p>
+                            <p class="text-xs font-medium">123 Artisan Lane, New Delhi, India</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-stone-50 p-8 md:p-10 border border-stone-100">
+                <form class="space-y-5">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" placeholder="First Name" class="bg-transparent border-b border-stone-300 py-2.5 text-xs focus:border-[#D4AF37] outline-none transition-colors w-full">
+                        <input type="text" placeholder="Last Name" class="bg-transparent border-b border-stone-300 py-2.5 text-xs focus:border-[#D4AF37] outline-none transition-colors w-full">
+                    </div>
+                    <input type="email" placeholder="Email Address" class="bg-transparent border-b border-stone-300 py-2.5 text-xs focus:border-[#D4AF37] outline-none transition-colors w-full">
+                    <textarea placeholder="Tell us about your project..." rows="3" class="bg-transparent border-b border-stone-300 py-2.5 text-xs focus:border-[#D4AF37] outline-none transition-colors w-full resize-none"></textarea>
+                    <button class="w-full bg-stone-950 text-white py-3.5 text-[10px] uppercase tracking-widest hover:bg-[#D4AF37] transition-all duration-500 font-bold">
+                        Submit Inquiry
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLOATING INTERACTIVE CONTACT ICONS -->
+    <div class="fixed bottom-8 right-8 flex flex-col gap-4 z-[100]">
+        <!-- Email Icon -->
+        <a href="mailto:hello@paintbharat.co" 
+           class="reveal-icon contact-trigger w-12 h-12 bg-white shadow-xl rounded-full flex items-center justify-center text-stone-800 border border-stone-100 hover:text-[#D4AF37] group"
+           style="animation-delay: 1.4s;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span class="absolute right-14 bg-stone-900 text-white text-[9px] py-1 px-3 rounded uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Email Us</span>
+        </a>
+
+        <!-- Phone Icon -->
+        <a href="tel:+1234567890" 
+           class="reveal-icon contact-trigger w-12 h-12 bg-stone-900 shadow-xl rounded-full flex items-center justify-center text-white hover:bg-[#D4AF37] transition-colors group"
+           style="animation-delay: 1.6s;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+             <span class="absolute right-14 bg-stone-900 text-white text-[9px] py-1 px-3 rounded uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Call Us</span>
+        </a>
+    </div>
+
+</body>
+</html>

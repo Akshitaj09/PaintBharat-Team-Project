@@ -1,0 +1,178 @@
+import React, { useState, useEffect } from 'react';
+import { Sparkles, Package, Heart, Truck, Palette } from 'lucide-react';
+
+const HowWeWork = () => {
+  const [activeCard, setActiveCard] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  const services = [
+    {
+      id: 1,
+      title: "Personal Design Session",
+      subtitle: "Discover Your Essence",
+      description: "A tailored session experience where we translate your unique journey into color, pattern and texture.",
+      icon: Sparkles,
+      color: "from-pink-200 to-pink-300",
+      position: "left"
+    },
+    {
+      id: 2,
+      title: "Curate Your Style",
+      subtitle: "Tailored Style Curation",
+      description: "Browse our vault of handmade works and custom designs, hand-picked for your aesthetic.",
+      icon: Palette,
+      color: "from-pink-300 to-rose-300",
+      position: "right"
+    },
+    {
+      id: 3,
+      title: "Seamless Logistics",
+      subtitle: "Effortless Delivery",
+      description: "One-click starts the movement. We handle the sourcing, shipping, and flawless installation.",
+      icon: Heart,
+      color: "from-rose-200 to-pink-200",
+      position: "left"
+    },
+    {
+      id: 4,
+      title: "Expert Execution",
+      subtitle: "Meticulous Install",
+      description: "Our certified installers transform your space with meticulous attention to detail.",
+      icon: Package,
+      color: "from-pink-100 to-rose-100",
+      position: "right"
+    },
+    {
+      id: 5,
+      title: "Live in Artistry",
+      subtitle: "Experience Beauty",
+      description: "Step into your new world. A place that wasn't real, that became the place you came home.",
+      icon: Truck,
+      color: "from-rose-200 to-pink-300",
+      position: "left"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100 py-20 px-4 overflow-hidden">
+      {/* Header */}
+      <div className={`text-center mb-20 transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'}`}>
+        <p className="text-pink-400 text-sm tracking-widest uppercase mb-4">Our Refined Process</p>
+        <h1 className="text-6xl font-serif mb-6">
+          How We <span className="text-pink-400">Work</span>
+        </h1>
+        <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          We've refined every moment in the journey from first idea to perfect place
+          <br />
+          <span className="text-pink-400">so your modern lifestyle.</span>
+        </p>
+      </div>
+
+      {/* Cards Container */}
+      <div className="max-w-6xl mx-auto space-y-8">
+        {services.map((service, index) => {
+          const Icon = service.icon;
+          const isLeft = service.position === "left";
+          
+          return (
+            <div
+              key={service.id}
+              className={`transition-all duration-700 transform ${
+                isVisible 
+                  ? 'translate-x-0 opacity-100' 
+                  : isLeft 
+                    ? '-translate-x-20 opacity-0' 
+                    : 'translate-x-20 opacity-0'
+              }`}
+              style={{ transitionDelay: `${index * 150}ms` }}
+            >
+              <div
+                className={`flex items-center gap-8 ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}
+                onMouseEnter={() => setActiveCard(service.id)}
+                onMouseLeave={() => setActiveCard(null)}
+              >
+                {/* Icon Card */}
+                <div className={`relative group transition-all duration-500 ${
+                  activeCard === service.id ? 'scale-110' : 'scale-100'
+                }`}>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${service.color} rounded-3xl blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-500`}></div>
+                  <div className="relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <div className={`w-20 h-20 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-500`}>
+                      <Icon className="w-10 h-10 text-white" strokeWidth={1.5} />
+                    </div>
+                    {/* Floating decorative elements */}
+                    <div className="absolute -top-3 -right-3 w-8 h-8 bg-pink-400 rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+                    <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-rose-300 rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+                  </div>
+                </div>
+
+                {/* Content Card */}
+                <div className={`flex-1 bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 transform ${
+                  activeCard === service.id ? 'scale-105' : 'scale-100'
+                }`}>
+                  <p className="text-pink-400 text-xs tracking-widest uppercase mb-2">
+                    {service.subtitle}
+                  </p>
+                  <h3 className="text-3xl font-serif text-gray-900 mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {service.description}
+                  </p>
+                  
+                  {/* Progress indicator */}
+                  <div className="mt-6 flex items-center gap-2">
+                    {services.map((_, i) => (
+                      <div
+                        key={i}
+                        className={`h-1 rounded-full transition-all duration-500 ${
+                          i === index 
+                            ? 'w-12 bg-gradient-to-r from-pink-400 to-rose-400' 
+                            : 'w-1 bg-gray-200'
+                        }`}
+                      ></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Call to Action */}
+      <div className={`text-center mt-24 transition-all duration-1000 transform ${
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+      }`} style={{ transitionDelay: '1000ms' }}>
+        <div className="bg-gray-900 rounded-3xl p-16 max-w-4xl mx-auto shadow-2xl">
+          <h2 className="text-5xl font-serif text-white mb-6">
+            Your story starts<br />
+            <span className="text-pink-400">on your walls.</span>
+          </h2>
+          <p className="text-gray-400 mb-8 max-w-2xl mx-auto">
+            Experience the beauty of premium wallart designed for the<br />
+            taste of today.
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <button className="px-8 py-4 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all duration-300">
+              Explore Collections
+            </button>
+            <button className="px-8 py-4 bg-white text-gray-900 rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all duration-300">
+              About
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Floating background elements */}
+      <div className="fixed top-20 left-10 w-32 h-32 bg-pink-200 rounded-full opacity-20 blur-3xl animate-pulse"></div>
+      <div className="fixed bottom-20 right-10 w-40 h-40 bg-rose-200 rounded-full opacity-20 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+    </div>
+  );
+};
+
+export default HowWeWork;

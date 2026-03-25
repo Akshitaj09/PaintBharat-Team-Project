@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Co. | Ultimate Shield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .transition-opacity-custom { transition: opacity 1.5s ease-in-out, transform 8s ease-out; }
+        .ken-burns { transform: scale(1.1); }
+        .progress-bar-fill {
+            transition: width 5s linear;
+            width: 0%;
+        }
+        .active-progress .progress-bar-fill {
+            width: 100%;
+        }
+        .content-fade {
+            transition: all 0.8s ease-in-out;
+        }
+        .content-hidden {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white overflow-hidden">
+
+    <div id="app" class="relative w-full h-screen overflow-hidden">
+        <!-- Background Layers -->
+        <div id="bg-container" class="absolute inset-0">
+            <!-- Backgrounds will be injected here by JS -->
+        </div>
+
+        <!-- Global Vignette -->
+        <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/30 z-10"></div>
+
+        <!-- Header / Brand -->
+        <nav class="absolute top-0 left-0 w-full p-6 md:p-8 z-30 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg overflow-hidden shadow-2xl ring-1 ring-white/20">
+                    <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="100" rx="0" fill="#f41b43" />
+                        <path d="M50 20C30 20 20 40 20 55C20 75 40 85 55 85C75 85 85 65 85 50C85 30 70 20 50 20ZM40 65C35 65 30 60 30 52C30 40 45 35 50 35C55 35 60 40 60 50C60 60 55 65 40 65Z" fill="white" transform="translate(2, 2) scale(0.95)" />
+                        <circle cx="65" cy="50" r="18" fill="white" />
+                        <path d="M43 65 Q 35 65 33 50 Q 35 35 50 35 Q 65 35 65 50 Q 65 65 43 65" fill="white" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-black tracking-tighter leading-none uppercase">
+                        PAINTBHARAT <span class="text-[#f41b43] font-light">CO.</span>
+                    </h1>
+                    <p class="text-[8px] tracking-[0.4em] font-bold opacity-70 uppercase">Shield of India</p>
+                </div>
+            </div>
+            <div class="hidden sm:block">
+                <span class="text-[9px] tracking-[0.2em] font-bold py-1.5 px-4 border border-[#f41b43]/30 rounded-full bg-black/40 backdrop-blur-md text-[#f41b43]">
+                    ULTIMATE WATERPROOFING
+                </span>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="relative z-20 flex flex-col items-center justify-center h-full px-6 text-center max-w-5xl mx-auto">
+            
+            <div id="season-content" class="content-fade">
+                <!-- Icon -->
+                <div class="flex justify-center mb-4">
+                    <div id="icon-container" class="p-3 bg-[#f41b43] rounded-full shadow-[0_0_30px_rgba(244,27,67,0.3)] animate-pulse">
+                        <!-- SVG Icon injected here -->
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <h1 id="main-title" class="text-[8vw] md:text-[7vw] font-black tracking-tighter leading-none select-none drop-shadow-[0_15px_15px_rgba(0,0,0,0.6)] uppercase mb-4">
+                    MONSOON
+                </h1>
+
+                <!-- Tagline Container -->
+                <div class="inline-block px-4 py-1.5 bg-[#f41b43]/10 backdrop-blur-md rounded-lg mb-4 border border-[#f41b43]/20">
+                    <h2 id="tagline" class="text-base md:text-xl font-bold tracking-[0.2em] uppercase text-white">
+                        Defy the Downpour
+                    </h2>
+                </div>
+                
+                <!-- Description -->
+                <p id="description" class="text-sm md:text-lg text-zinc-200 leading-relaxed mb-8 font-normal max-w-xl mx-auto drop-shadow-md">
+                    Torrential rains are no match for PaintBharat. Our advanced Shield-Tech nanotechnology creates an impenetrable barrier.
+                </p>
+
+                <!-- Button -->
+                <div class="group relative px-8 py-3.5 rounded-xl font-bold tracking-widest bg-[#f41b43] text-white shadow-[0_10px_25px_rgba(244,27,67,0.25)] flex items-center gap-3 mx-auto w-fit cursor-default">
+                    <span id="button-text" class="text-xs md:text-sm">SHIELD YOUR HOME</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Indicators -->
+        <div id="progress-container" class="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 flex gap-4">
+            <!-- Progress bars injected here -->
+        </div>
+
+        <!-- Footer -->
+        <div class="absolute bottom-6 left-8 flex items-center gap-3 z-30 opacity-50">
+            <span class="text-[8px] tracking-[0.4em] font-light uppercase">
+                Technology by PaintBharat Co. © 2026
+            </span>
+        </div>
+    </div>
+
+    <script>
+        const SEASONS = [
+            {
+                id: 'monsoon',
+                title: 'MONSOON',
+                tagline: 'Defy the Downpour',
+                description: 'Torrential rains are no match for PaintBharat. Our advanced Shield-Tech nanotechnology creates an impenetrable barrier, keeping your walls bone-dry while others dampen.',
+                buttonText: 'SHIELD YOUR HOME',
+                bgImage: 'https://images.unsplash.com/photo-1534274988757-a28bf1f539cc?auto=format&fit=crop&q=80&w=2070',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4Z"/><path d="M17 16.3c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4Z"/><path d="M12 21c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4Z"/></svg>`
+            },
+            {
+                id: 'summer',
+                title: 'SUMMER',
+                tagline: 'Reflect the Heat',
+                description: 'When the sun beats down, PaintBharat stays cool. UV-resistant polymers prevent cracking and fading, ensuring your exterior remains vibrant and structurally sound.',
+                buttonText: 'COOL YOUR WALLS',
+                bgImage: 'https://images.unsplash.com/photo-1504386106331-3e4e71712b38?auto=format&fit=crop&q=80&w=2070',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`
+            },
+            {
+                id: 'winter',
+                title: 'WINTER',
+                tagline: 'Resist the Frost',
+                description: 'Cold nights and morning dew can cause hairline fractures. PaintBharat’s elastic finish expands and contracts with the temperature, preventing winter damage.',
+                buttonText: 'PREVENT CRACKS',
+                bgImage: 'https://images.unsplash.com/photo-1478265409131-1f65c88f965c?auto=format&fit=crop&q=80&w=2070',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 20 20-20"/><path d="m22 20-20-20"/><path d="M12 2v20"/><path d="M2 12h20"/><path d="m17 7-3-3"/><path d="m17 17-3 3"/><path d="m7 17 3 3"/><path d="m7 7 3-3"/></svg>`
+            },
+            {
+                id: 'storm',
+                title: 'STORM',
+                tagline: 'Weather the Wind',
+                description: 'High winds and dust can erode standard paints. Our heavy-duty bonding agents ensure that your home stands tall and clean against the harshest elements.',
+                buttonText: 'DURABILITY FIRST',
+                bgImage: 'https://images.unsplash.com/photo-1527482797697-8795b05a13fe?auto=format&fit=crop&q=80&w=2070',
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>`
+            }
+        ];
+
+        let currentIndex = 0;
+        const bgContainer = document.getElementById('bg-container');
+        const progressContainer = document.getElementById('progress-container');
+        const contentArea = document.getElementById('season-content');
+        
+        const titleEl = document.getElementById('main-title');
+        const taglineEl = document.getElementById('tagline');
+        const descriptionEl = document.getElementById('description');
+        const buttonTextEl = document.getElementById('button-text');
+        const iconContainer = document.getElementById('icon-container');
+
+        // Initialize backgrounds
+        SEASONS.forEach((season, index) => {
+            const div = document.createElement('div');
+            div.id = `bg-${index}`;
+            div.className = `absolute inset-0 transition-opacity-custom opacity-0`;
+            div.style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.85)), url(${season.bgImage})`;
+            div.style.backgroundSize = 'cover';
+            div.style.backgroundPosition = 'center';
+            bgContainer.appendChild(div);
+
+            // Initialize progress indicators
+            const prog = document.createElement('div');
+            prog.className = 'flex flex-col items-center gap-2';
+            prog.innerHTML = `
+                <div id="prog-track-${index}" class="w-12 h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div class="progress-bar-fill h-full bg-[#f41b43]"></div>
+                </div>
+                <span id="prog-label-${index}" class="text-[8px] font-bold tracking-widest transition-opacity duration-500 opacity-30">0${index + 1}</span>
+            `;
+            progressContainer.appendChild(prog);
+        });
+
+        function updateSeason() {
+            // Start Content Exit Animation
+            contentArea.classList.add('content-hidden');
+
+            setTimeout(() => {
+                const season = SEASONS[currentIndex];
+
+                // Update Backgrounds
+                SEASONS.forEach((_, index) => {
+                    const bg = document.getElementById(`bg-${index}`);
+                    const track = document.getElementById(`prog-track-${index}`);
+                    const label = document.getElementById(`prog-label-${index}`);
+                    
+                    if (index === currentIndex) {
+                        bg.classList.add('opacity-100', 'ken-burns');
+                        bg.classList.remove('opacity-0');
+                        track.classList.add('active-progress');
+                        label.classList.add('opacity-100', 'text-[#f41b43]');
+                        label.classList.remove('opacity-30');
+                    } else {
+                        bg.classList.remove('opacity-100', 'ken-burns');
+                        bg.classList.add('opacity-0');
+                        track.classList.remove('active-progress');
+                        label.classList.remove('opacity-100', 'text-[#f41b43]');
+                        label.classList.add('opacity-30');
+                    }
+                });
+
+                // Update Text Content
+                titleEl.textContent = season.title;
+                taglineEl.textContent = season.tagline;
+                descriptionEl.textContent = season.description;
+                buttonTextEl.textContent = season.buttonText;
+                iconContainer.innerHTML = season.icon;
+
+                // End Content Exit Animation
+                contentArea.classList.remove('content-hidden');
+                
+            }, 800);
+        }
+
+        function cycle() {
+            updateSeason();
+            currentIndex = (currentIndex + 1) % SEASONS.length;
+        }
+
+        // Run immediately then every 5 seconds
+        window.onload = () => {
+            cycle();
+            setInterval(cycle, 5000);
+        };
+    </script>
+</body>
+</html>

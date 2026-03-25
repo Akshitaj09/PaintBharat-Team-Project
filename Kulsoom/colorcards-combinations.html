@@ -1,0 +1,377 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { Palette, Droplets, Info, Share2, Layers, Sun, Moon, ArrowRight, CheckCircle2, Heart, Copy, X, ShieldCheck, Sparkles } from 'lucide-react';
+
+const PAINT_COLLECTION = [
+  {
+    id: 'peony-petal',
+    name: 'Peony Petal',
+    hex: '#fce7f3',
+    description: 'A delicate, airy pink that captures the softness of morning blossoms and early light.',
+    stats: { coverage: '88%', dryingTime: '1.5h', durability: 'Medium', gloss: '12%', density: '1.1g/cm³' },
+    complements: [
+      { name: 'Rose Quartz', hex: '#fbcfe8', type: 'Tone' },
+      { name: 'Slate Gray', hex: '#475569', type: 'Structure' },
+      { name: 'Sage Leaf', hex: '#d1fae5', type: 'Complement' },
+      { name: 'Pure White', hex: '#ffffff', type: 'Base' }
+    ]
+  },
+  {
+    id: 'matcha-mist',
+    name: 'Matcha Mist',
+    hex: '#dcfce7',
+    description: 'A soothing, pale green with a milky undertone, perfect for creating a zen-like sanctuary.',
+    stats: { coverage: '90%', dryingTime: '1.5h', durability: 'High', gloss: '8%', density: '1.15g/cm³' },
+    complements: [
+      { name: 'Forest Deep', hex: '#064e3b', type: 'Contrast' },
+      { name: 'Ivory Lace', hex: '#fffbeb', type: 'Warmth' },
+      { name: 'Soft Charcoal', hex: '#3f3f46', type: 'Modern' },
+      { name: 'Ocean Air', hex: '#e0f2fe', type: 'Cool' }
+    ]
+  },
+  {
+    id: 'vanilla-cream',
+    name: 'Vanilla Cream',
+    hex: '#fffbeb',
+    description: 'A rich, buttery neutral that provides a sophisticated and warm foundation for any luxury space.',
+    stats: { coverage: '89%', dryingTime: '2h', durability: 'High', gloss: '10%', density: '1.2g/cm³' },
+    complements: [
+      { name: 'Gold Leaf', hex: '#fbbf24', type: 'Metallic' },
+      { name: 'Earthy Clay', hex: '#9a3412', type: 'Organic' },
+      { name: 'Champagne', hex: '#fef3c7', type: 'Tone' },
+      { name: 'Deep Onyx', hex: '#0a0a0a', type: 'Frame' }
+    ]
+  },
+  {
+    id: 'royal-azure',
+    name: 'Royal Azure',
+    hex: '#1e40af',
+    description: 'A majestic and powerful blue that commands attention and inspires confidence in grand interiors.',
+    stats: { coverage: '96%', dryingTime: '3h', durability: 'High', gloss: '20%', density: '1.5g/cm³' },
+    complements: [
+      { name: 'Sandstone', hex: '#fef3c7', type: 'Classic' },
+      { name: 'Slate', hex: '#475569', type: 'Muted' },
+      { name: 'Gold Leaf', hex: '#fbbf24', type: 'Highlight' },
+      { name: 'Pure White', hex: '#ffffff', type: 'Clean' }
+    ]
+  },
+  {
+    id: 'emerald-jewel',
+    name: 'Emerald Jewel',
+    hex: '#064e3b',
+    description: 'Deep woodland green that evokes ancient forests, natural tranquility, and regal elegance.',
+    stats: { coverage: '91%', dryingTime: '2.5h', durability: 'Max', gloss: 'Velvet', density: '1.4g/cm³' },
+    complements: [
+      { name: 'Burnished Copper', hex: '#b45309', type: 'Metallic' },
+      { name: 'Cloud', hex: '#f1f5f9', type: 'Sky' },
+      { name: 'Sage Leaf', hex: '#d1fae5', type: 'Soft' },
+      { name: 'Pure White', hex: '#ffffff', type: 'Clean' }
+    ]
+  }
+];
+
+const getVibrantVariation = (hex, weight, mixType = 'light') => {
+  const cleanHex = hex.replace('#', '');
+  let r = parseInt(cleanHex.substring(0, 2), 16);
+  let g = parseInt(cleanHex.substring(2, 4), 16);
+  let b = parseInt(cleanHex.substring(4, 6), 16);
+
+  if (mixType === 'light') {
+    r = Math.round(r * (1 - weight) + 255 * weight);
+    g = Math.round(g * (1 - weight) + 255 * weight);
+    b = Math.round(b * (1 - weight) + 255 * weight);
+  } else {
+    const biasR = r > g ? 1.2 : 0.8;
+    const biasB = b > g ? 1.2 : 0.8;
+    r = Math.max(0, Math.round(r * (1 - weight) * biasR));
+    g = Math.max(0, Math.round(g * (1 - weight) * 0.7));
+    b = Math.max(0, Math.round(b * (1 - weight) * biasB));
+  }
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+};
+
+const App = () => {
+  const [selectedPaint, setSelectedPaint] = useState(PAINT_COLLECTION[0]);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [favorites, setFavorites] = useState([]);
+  
+  const [activeHex, setActiveHex] = useState(selectedPaint.hex);
+  const [hoveredHex, setHoveredHex] = useState(null);
+
+  useEffect(() => {
+    setActiveHex(selectedPaint.hex);
+  }, [selectedPaint]);
+
+  const colorVariations = useMemo(() => {
+    return [
+      getVibrantVariation(selectedPaint.hex, 0.85, 'light'), 
+      getVibrantVariation(selectedPaint.hex, 0.6, 'light'), 
+      getVibrantVariation(selectedPaint.hex, 0.3, 'light'), 
+      selectedPaint.hex,
+      getVibrantVariation(selectedPaint.hex, 0.25, 'dark'), 
+      getVibrantVariation(selectedPaint.hex, 0.5, 'dark'), 
+      getVibrantVariation(selectedPaint.hex, 0.75, 'dark'),
+    ];
+  }, [selectedPaint.hex]);
+
+  const isColorLight = useMemo(() => {
+    const hex = selectedPaint.hex.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return ((r * 299 + g * 587 + b * 114) / 1000) > 165; 
+  }, [selectedPaint.hex]);
+
+  const themeClass = isDarkMode ? "bg-[#050505] text-zinc-100" : "bg-zinc-50 text-zinc-900";
+  // Lightened card border weights from black/10 or zinc-200 to lower opacities
+  const cardClass = isDarkMode 
+    ? "bg-[#121214]/95 backdrop-blur-2xl border-white/5 shadow-[0_0_40px_rgba(255,255,255,0.02)]" 
+    : "bg-white/95 backdrop-blur-xl border-zinc-100 shadow-xl shadow-zinc-200/40";
+  
+  const subTextClass = isDarkMode ? "text-zinc-500" : "text-zinc-400";
+  const accentColor = isDarkMode ? "bg-white text-zinc-900" : "bg-[#B68D68] text-white"; 
+  const headingFont = "font-['Playfair_Display']";
+
+  const CardShimmer = () => isDarkMode ? (
+    <div className="absolute inset-0 shimmer-effect pointer-events-none opacity-40 mix-blend-overlay z-[1]" />
+  ) : null;
+
+  return (
+    <div className={`min-h-screen transition-all duration-700 p-8 lg:px-12 lg:py-8 font-sans selection:bg-blue-500/30 flex flex-col ${themeClass}`}>
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+      
+      <style>{`
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.01); } }
+        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .animate-fade-up { animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-float-center { animation: float 6s ease-in-out infinite; }
+        .animate-orbit { animation: orbit 30s linear infinite; }
+        
+        .shimmer-effect {
+          background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+          background-size: 200% 100%;
+          animation: shimmer 5s infinite linear;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(155, 155, 155, 0.2); border-radius: 10px; }
+      `}</style>
+
+      <div className="fixed inset-0 pointer-events-none z-0 opacity-10 transition-all duration-1000"
+           style={{ background: `radial-gradient(circle at 50% 50%, ${selectedPaint.hex} 0%, transparent 70%)` }} />
+
+      <div className="max-w-[1800px] mx-auto grid grid-cols-1 lg:grid-cols-4 gap-12 relative z-10 w-full flex-grow items-start pb-12">
+        
+        {/* LEFT COLUMN */}
+        <div className="space-y-6 flex flex-col pt-4">
+          <div className="flex items-center gap-4 animate-fade-up">
+            <div className={`w-12 h-12 rounded-full border flex items-center justify-center bg-transparent backdrop-blur-sm transition-all duration-700 ${isDarkMode ? 'border-white/10' : 'border-zinc-200'}`}>
+              <Palette size={24} className={isDarkMode ? "opacity-80" : "text-[#B68D68]"} />
+            </div>
+            <div className="flex flex-col">
+              <h2 className={`text-2xl font-bold uppercase tracking-tight leading-none ${headingFont}`}>Color Gallery</h2>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-30 mt-1">Design Studio v11.4</span>
+            </div>
+          </div>
+
+          {/* PIGMENT DENSITY */}
+          <div onClick={() => setShowReport(true)} className={`animate-fade-up p-8 lg:p-10 rounded-[3.5rem] group border ${cardClass} cursor-pointer hover:scale-[1.02] hover:border-[#D4AF37] transition-all`}>
+            <div className="relative z-[2]">
+              <div className="flex justify-between items-start mb-4">
+                <span className={`text-[11px] uppercase tracking-[0.3em] font-black ${subTextClass}`}>Pigment Density</span>
+                <Droplets size={24} className={isDarkMode ? "text-blue-500" : "text-[#B68D68]"} />
+              </div>
+              <div className="text-8xl font-thin tracking-tighter leading-none">{selectedPaint.stats.coverage}</div>
+              <div className={`text-[10px] uppercase tracking-widest font-black flex items-center gap-2 mt-4 ${subTextClass}`}>
+                Full Material Analysis <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </div>
+
+          {/* MASTER ARCHIVE */}
+          <div className={`animate-fade-up p-8 lg:p-10 rounded-[3.5rem] border relative flex flex-col max-h-[260px] ${cardClass} hover:border-[#D4AF37] transition-colors`}>
+            <h3 className={`text-[11px] uppercase tracking-[0.3em] font-black mb-6 opacity-60 flex items-center gap-2`}><Layers size={16} /> Master Archive</h3>
+            <div className="space-y-4 overflow-y-auto pr-3 custom-scrollbar">
+              {PAINT_COLLECTION.map((paint) => (
+                <button 
+                  key={paint.id} 
+                  onClick={() => setSelectedPaint(paint)} 
+                  className={`flex items-center gap-5 w-full p-4 rounded-[2rem] transition-all duration-500 group border ${selectedPaint.id === paint.id ? (isDarkMode ? 'bg-white/10 border-white/10' : 'bg-zinc-100 border-zinc-200 shadow-md') : 'hover:bg-zinc-500/5 border-transparent'}`}
+                >
+                  <div className={`w-12 h-12 rounded-[1.2rem] transition-all duration-700 ${selectedPaint.id === paint.id ? 'scale-110 shadow-lg' : 'group-hover:scale-105'}`} style={{ backgroundColor: paint.hex }} />
+                  <div className="text-left flex-1 truncate">
+                    <div className="text-[16px] font-black uppercase tracking-tight truncate">{paint.name}</div>
+                    <div className={`text-[11px] font-bold uppercase ${subTextClass}`}>{paint.stats.durability}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SPECIFICATIONS */}
+          <div className={`animate-fade-up p-8 lg:p-10 rounded-[3rem] border relative ${cardClass} hover:border-[#D4AF37] transition-colors`}>
+            <div className="flex justify-between items-center mb-6">
+              <span className={`text-[13px] uppercase tracking-[0.3em] font-black ${subTextClass}`}>Specifications</span>
+              <Info size={18} className="opacity-40" />
+            </div>
+            <div className="space-y-4">
+                <div className="flex justify-between text-[15px] uppercase font-bold tracking-wider"><span className="opacity-40">Drying</span> <span>{selectedPaint.stats.dryingTime}</span></div>
+                <div className="flex justify-between text-[15px] uppercase font-bold tracking-wider"><span className="opacity-40">Finish</span> <span>{selectedPaint.stats.gloss}</span></div>
+            </div>
+          </div>
+        </div>
+
+        {/* CENTER COLUMN: Flexed for global scrolling */}
+        <div className="lg:col-span-2 flex flex-col items-center justify-start gap-y-12 py-4 h-full relative px-4 overflow-visible">
+            
+            {/* HERO CIRCLE - Thinner border weight */}
+            <div className="relative w-full max-w-[580px] lg:max-w-[650px] aspect-square animate-float-center z-[20] flex-shrink-0 mt-4 group">
+                <div className="absolute inset-0 rounded-full border border-dashed border-zinc-400/10 scale-110 animate-orbit pointer-events-none" />
+                <div 
+                    className={`w-full h-full rounded-full shadow-[0_80px_160px_-40px_rgba(0,0,0,0.4)] transition-all duration-1000 ease-in-out relative overflow-hidden flex flex-col items-center justify-center p-12 lg:p-20 border-[6px] border-white/10`} 
+                    style={{ 
+                        backgroundColor: selectedPaint.hex,
+                        boxShadow: `0 60px 180px -40px ${selectedPaint.hex}aa` 
+                    }}
+                >
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/30 to-transparent pointer-events-none opacity-30" />
+                    <div className="relative z-10 text-center flex flex-col items-center px-4 transition-transform duration-700 group-hover:scale-[1.02]">
+                        <div className="h-1 w-24 bg-white/30 mb-10 rounded-full" />
+                        <h1 className={`text-6xl lg:text-[6rem] font-medium tracking-tighter uppercase select-none leading-none mb-6 ${headingFont} ${isColorLight ? 'text-black' : 'text-white'}`}>
+                            {selectedPaint.name}
+                        </h1>
+                        <p className={`text-base lg:text-xl max-w-[380px] leading-relaxed italic transition-all duration-500 opacity-0 group-hover:opacity-100 ${isColorLight ? 'text-black/60' : 'text-white/60'}`}>
+                            {selectedPaint.description}
+                        </p>
+                        <div className="mt-8 lg:mt-10">
+                            <button className="px-10 py-3.5 rounded-full bg-white text-black font-bold text-[11px] lg:text-[12px] uppercase tracking-[0.4em] shadow-2xl active:scale-95 transition-all hover:bg-black hover:text-white border border-transparent hover:border-white/20">Order Sample</button>
+                        </div>
+                    </div>
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); setFavorites(f => f.includes(selectedPaint.id) ? f.filter(id => id !== selectedPaint.id) : [...f, selectedPaint.id]); }}
+                        className={`absolute top-1/2 -translate-y-1/2 right-6 lg:right-12 w-16 h-16 lg:w-20 lg:h-20 rounded-full shadow-2xl flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-90 z-50 bg-white text-zinc-900 border border-zinc-100 shadow-white/10`}
+                    >
+                        <Heart size={36} fill={favorites.includes(selectedPaint.id) ? '#ef4444' : 'none'} stroke={favorites.includes(selectedPaint.id) ? '#ef4444' : 'currentColor'} strokeWidth={2.5} />
+                    </button>
+                </div>
+            </div>
+
+            {/* AUTHENTIC ID CARD */}
+            <div className={`w-full max-w-[640px] animate-fade-up py-4 px-8 lg:py-5 lg:px-10 rounded-[4rem] border transition-all duration-500 z-[15] ${cardClass} flex-shrink-0 mb-6 shadow-2xl overflow-hidden hover:border-[#D4AF37]`}>
+                <div className="relative z-[2]">
+                    <div className="flex justify-between items-center mb-5 px-1">
+                        <span className={`text-[11px] uppercase tracking-[0.5em] font-black ${subTextClass}`}>Authentic ID</span>
+                        <div className={`px-5 py-2 rounded-2xl font-mono text-[14px] font-bold tracking-widest ${isDarkMode ? 'bg-white/10 text-white' : 'bg-zinc-100 text-zinc-900 shadow-inner'}`}>
+                            {(hoveredHex || activeHex).toUpperCase()}
+                        </div>
+                    </div>
+
+                    <div className="flex justify-between gap-4 px-1">
+                        {colorVariations.map((color, idx) => (
+                            <button 
+                                key={idx} 
+                                onMouseEnter={() => setHoveredHex(color)}
+                                onMouseLeave={() => setHoveredHex(null)}
+                                onClick={() => { setActiveHex(color); }}
+                                className={`flex-1 h-16 lg:h-20 rounded-[1.2rem] shadow-xl transition-all duration-500 hover:scale-115 active:scale-90 border-2 ${isDarkMode ? 'border-white/10' : 'border-black/5'} ${activeHex === color ? (isDarkMode ? 'ring-2 ring-white border-white scale-110' : 'ring-2 ring-black/20 border-black shadow-lg scale-110') : ''}`} 
+                                style={{ backgroundColor: color }} 
+                            />
+                        ))}
+                    </div>
+
+                    <div className={`h-2.5 w-full mt-8 rounded-full transition-colors overflow-hidden ${isDarkMode ? 'bg-white/5 shadow-inner' : 'bg-zinc-200 shadow-inner'}`}>
+                        <div className="h-full bg-current opacity-10" style={{ width: '45%' }}></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div className="space-y-6 flex flex-col pt-4 h-full">
+          <div className="flex justify-end animate-fade-up">
+            <button className={`px-12 py-5 rounded-full border font-black text-[13px] uppercase tracking-[0.5em] transition-all flex items-center gap-3 group ${isDarkMode ? 'border-white/10 hover:border-white/40 text-white/70' : 'border-zinc-200 hover:border-zinc-900 text-[#B68D68]'}`}>
+                <Share2 size={20} className="group-hover:rotate-45 transition-transform" /> Share
+            </button>
+          </div>
+
+          <div className={`animate-fade-up p-8 lg:p-10 rounded-[3.5rem] border relative flex flex-col max-h-[260px] ${cardClass} hover:border-[#D4AF37] transition-colors`}>
+            <h3 className={`text-[11px] uppercase tracking-[0.3em] font-black mb-6 opacity-60 flex items-center gap-2`}><Layers size={16} /> Curated Pairs</h3>
+            <div className="space-y-4 overflow-y-auto pr-3 custom-scrollbar">
+              {selectedPaint.complements.map((comp) => (
+                <button 
+                  key={comp.name} 
+                  onClick={() => setSelectedPaint({ ...selectedPaint, hex: comp.hex, name: comp.name, stats: selectedPaint.stats, description: `A curated ${comp.type} tone.` })} 
+                  className="flex items-center gap-5 w-full p-3.5 rounded-[2rem] hover:bg-white/5 transition-all duration-300 active:scale-95 border border-transparent"
+                >
+                  <div className="w-12 h-12 rounded-[1.2rem] shadow-md group-hover:scale-110 transition-transform" style={{ backgroundColor: comp.hex }} />
+                  <div className="text-left flex-1 truncate">
+                    <div className="text-[19px] font-black uppercase tracking-tight truncate">{comp.name}</div>
+                    <div className={`text-[12px] font-bold ${subTextClass}`}>{comp.type}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className={`animate-fade-up p-4 lg:p-5 rounded-[4rem] group overflow-hidden h-64 lg:h-72 relative transition-all active:scale-95 cursor-pointer border ${cardClass} hover:border-[#D4AF37] transition-colors`}>
+            <div className="w-full h-full rounded-[3rem] overflow-hidden flex relative z-[2]">
+              <div className="h-full flex-[1.5] transition-all duration-1000 group-hover:flex-[1]" style={{ backgroundColor: selectedPaint.hex }} />
+              <div className="h-full flex-[2] transition-all duration-1000 group-hover:flex-[4]" style={{ backgroundColor: colorVariations[0] }} />
+              <div className="h-full flex-[1.5] transition-all duration-1000 group-hover:flex-[1]" style={{ backgroundColor: selectedPaint.complements[0].hex }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent flex flex-col justify-end p-10">
+                <div className="text-[12px] uppercase tracking-[0.5em] text-white font-black animate-pulse mb-1">Concept Render</div>
+                <div className="text-[16px] text-white font-bold italic font-['Plus_Jakarta_Sans']">Virtual View <ArrowRight size={18} className="inline group-hover:translate-x-2 transition-transform" /></div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`animate-fade-up p-8 rounded-[3.5rem] flex justify-between items-center border relative ${cardClass}`}>
+             <div className="flex gap-4">
+               <button onClick={() => setIsDarkMode(false)} className={`p-5 rounded-[1.8rem] transition-all active:scale-75 ${!isDarkMode ? 'bg-[#B68D68] text-white shadow-lg shadow-[#B68D68]/40' : 'bg-white/10 text-zinc-500 hover:bg-white/20'}`}><Sun size={24} /></button>
+               <button onClick={() => setIsDarkMode(true)} className={`p-5 rounded-[1.8rem] transition-all active:scale-75 ${isDarkMode ? 'bg-white text-zinc-900 shadow-lg' : 'bg-white/10 text-zinc-500 hover:bg-white/20'}`}><Moon size={24} /></button>
+             </div>
+             <button className={`flex items-center gap-3 px-12 py-6 rounded-[2.5rem] transition-all duration-500 font-black text-[12px] uppercase tracking-[0.5em] active:scale-90 hover:scale-[1.05] ${accentColor}`}>
+                <Sparkles size={16} className="animate-spin" style={{ animationDuration: '3s' }} /> Export
+             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* MATERIAL REPORT MODAL */}
+      {showReport && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={() => setShowReport(false)} />
+          <div className={`relative w-full max-w-md rounded-[3rem] p-10 animate-fade-up border shadow-2xl ${isDarkMode ? 'bg-[#18181b] border-white/5' : 'bg-white border-zinc-100'}`}>
+            <button onClick={() => setShowReport(false)} className="absolute top-8 right-8 p-2 hover:bg-zinc-500/10 rounded-full transition-transform hover:rotate-90">
+              <X size={24} className={isDarkMode ? "text-white" : "text-zinc-900"} />
+            </button>
+            
+            <h2 className={`text-4xl font-medium tracking-tight mb-1 ${headingFont}`}>Material Report</h2>
+            <p className={`text-[12px] font-black uppercase tracking-[0.2em] mb-10 ${subTextClass}`}>{selectedPaint.name}</p>
+            
+            <div className="grid grid-cols-2 gap-4 mb-10">
+              {Object.entries(selectedPaint.stats).map(([key, val]) => (
+                <div key={key} className={`p-5 rounded-3xl ${isDarkMode ? 'bg-white/5 border border-white/5' : 'bg-zinc-100'}`}>
+                  <div className={`text-[9px] uppercase tracking-[0.2em] font-black mb-1 opacity-40`}>{key}</div>
+                  <div className="text-2xl font-light">{val}</div>
+                </div>
+              ))}
+            </div>
+
+            <button 
+              onClick={() => setShowReport(false)} 
+              className={`w-full py-6 rounded-3xl font-black uppercase tracking-[0.3em] text-[13px] transition-all active:scale-95 shadow-xl bg-[#B68D68] text-white`}
+            >
+              Dismiss Analysis
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Co. | The Golden Standard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #121212;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        
+        /* Smooth transitions for slide background and elements */
+        .slide {
+            transition: background-color 0.7s ease-in-out;
+            will-change: transform, opacity;
+        }
+
+        .scroll-track {
+            height: 400vh;
+        }
+
+        /* Hide scrollbar but allow scrolling */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* Custom Hover for Slide 2 Cards */
+        .earth-card {
+            background-color: #6F4E37;
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .earth-card:hover {
+            background-color: #E6B325;
+            color: #121212;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(230, 179, 37, 0.2);
+        }
+        .earth-card:hover .chevron { color: #121212; transform: translateX(8px); }
+
+        .dot {
+            transition: all 0.4s ease;
+            background-color: rgba(197, 160, 33, 0.2);
+        }
+        .dot.active {
+            background-color: #C5A021;
+            transform: scale(1.8);
+        }
+    </style>
+</head>
+<body class="selection:bg-[#C5A021] selection:text-black">
+
+    <div class="scroll-track" id="scrollTrack">
+        <!-- Navigation Dots -->
+        <div class="fixed right-8 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-4">
+            <div class="dot w-2 h-2 rounded-full border border-[#C5A021]/50 active" data-index="0"></div>
+            <div class="dot w-2 h-2 rounded-full border border-[#C5A021]/50" data-index="1"></div>
+            <div class="dot w-2 h-2 rounded-full border border-[#C5A021]/50" data-index="2"></div>
+            <div class="dot w-2 h-2 rounded-full border border-[#C5A021]/50" data-index="3"></div>
+        </div>
+
+        <!-- Sticky Container for Slides -->
+        <div id="slideContainer" class="fixed inset-0 h-screen w-full slide bg-[#121212] overflow-hidden">
+            
+            <!-- SECTION 1: THE GENESIS -->
+            <div id="section-0" class="absolute inset-0 flex items-center justify-center p-6 transition-all duration-300">
+                <div class="text-center">
+                    <h1 class="text-7xl md:text-[11rem] font-serif font-black tracking-tighter leading-none mb-6">
+                        <span class="text-[#C5A021] block">PAINT</span>
+                        <span class="text-white">BHARAT</span>
+                    </h1>
+                    <p class="text-[#C5A021] font-light text-lg md:text-2xl tracking-[0.6em] uppercase">
+                        The Golden Standard of Coating
+                    </p>
+                    <div class="mt-20 flex flex-col items-center gap-2 text-white/40 animate-bounce">
+                        <span class="text-[10px] uppercase tracking-widest">Explore Heritage</span>
+                        <i data-lucide="arrow-down" size="20"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: THE PIGMENTS (Vanilla Cream) -->
+            <div id="section-1" class="absolute inset-0 flex items-center justify-center p-6 opacity-0 scale-90 pointer-events-none transition-all duration-300">
+                <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <p class="text-[#C5A021] font-bold uppercase tracking-[0.4em] mb-4">Artisan Textures</p>
+                        <h2 class="text-6xl md:text-9xl font-serif text-[#121212] mb-8 italic">Earth & Clay</h2>
+                        <p class="text-[#121212]/80 text-xl max-w-md leading-relaxed font-medium">
+                            Our pigments are harvested from raw earth minerals, providing a depth of color that defines luxury architecture.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="earth-card p-8 rounded-2xl border border-black/5 flex justify-between items-center group cursor-pointer">
+                            <span class="text-3xl font-serif">Terra Sienna</span>
+                            <i data-lucide="chevron-right" class="chevron text-white/50 transition-all"></i>
+                        </div>
+                        <div class="earth-card p-8 rounded-2xl border border-black/5 flex justify-between items-center group cursor-pointer">
+                            <span class="text-3xl font-serif">Raw Umber</span>
+                            <i data-lucide="chevron-right" class="chevron text-white/50 transition-all"></i>
+                        </div>
+                        <div class="earth-card p-8 rounded-2xl border border-black/5 flex justify-between items-center group cursor-pointer">
+                            <span class="text-3xl font-serif">Burnt Ochre</span>
+                            <i data-lucide="chevron-right" class="chevron text-white/50 transition-all"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: THE PURITY (White) -->
+            <div id="section-2" class="absolute inset-0 flex items-center justify-center p-6 opacity-0 scale-90 pointer-events-none transition-all duration-300">
+                <div class="max-w-7xl mx-auto w-full flex flex-col items-center text-center">
+                    <h2 class="text-6xl md:text-9xl font-serif text-[#121212] mb-8">
+                        Purity in <span class="text-[#C5A021]">Every Stroke</span>
+                    </h2>
+                    <div class="w-24 h-1 bg-[#C5A021] mb-8"></div>
+                    <p class="text-[#121212]/60 text-2xl max-w-3xl leading-relaxed font-light">
+                        Defining spaces with luminous whites and architectural clarity. Zero-VOC formulas engineered for the modern legacy.
+                    </p>
+                    <div class="mt-16 flex gap-12">
+                         <div class="text-center">
+                            <p class="text-5xl font-serif text-[#C5A021]">0.0%</p>
+                            <p class="text-[10px] uppercase tracking-widest text-black/40 mt-2 font-bold">Emissions</p>
+                         </div>
+                         <div class="w-px h-16 bg-black/10"></div>
+                         <div class="text-center">
+                            <p class="text-5xl font-serif text-[#C5A021]">Legacy</p>
+                            <p class="text-[10px] uppercase tracking-widest text-black/40 mt-2 font-bold">Standard</p>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: THE CONNECTION (Black) -->
+            <div id="section-3" class="absolute inset-0 flex items-center justify-center p-6 opacity-0 scale-90 pointer-events-none transition-all duration-300">
+                <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div class="space-y-12">
+                        <h2 class="text-6xl md:text-8xl font-serif text-white">Let's craft your <br /><span class="text-[#C5A021]">legacy.</span></h2>
+                        <div class="space-y-8">
+                            <div class="flex items-center gap-6 group cursor-pointer">
+                                <div class="w-16 h-16 rounded-full border border-[#C5A021]/30 flex items-center justify-center text-[#C5A021] group-hover:bg-[#C5A021] group-hover:text-black transition-all">
+                                    <i data-lucide="phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold">Concierge</p>
+                                    <p class="text-2xl text-white font-light">+91 1800-GOLD-PB</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6 group cursor-pointer">
+                                <div class="w-16 h-16 rounded-full border border-[#C5A021]/30 flex items-center justify-center text-[#C5A021] group-hover:bg-[#C5A021] group-hover:text-black transition-all">
+                                    <i data-lucide="mail"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-white/40 font-bold">General Info</p>
+                                    <p class="text-2xl text-white font-light">studio@paintbharat.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-3xl p-8 md:p-12 rounded-[40px] border border-white/10 shadow-2xl relative overflow-hidden">
+                        <form class="space-y-8 relative z-10" onsubmit="event.preventDefault()">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="space-y-2">
+                                    <label class="text-[10px] uppercase tracking-widest text-[#C5A021] font-bold">Full Name</label>
+                                    <input type="text" placeholder="John Doe" class="w-full bg-transparent border-b border-white/20 py-2 focus:border-[#C5A021] outline-none transition-colors text-white">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] uppercase tracking-widest text-[#C5A021] font-bold">Email Address</label>
+                                    <input type="email" placeholder="john@legacy.com" class="w-full bg-transparent border-b border-white/20 py-2 focus:border-[#C5A021] outline-none transition-colors text-white">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] uppercase tracking-widest text-[#C5A021] font-bold">Message</label>
+                                <textarea placeholder="Describe your vision..." rows="3" class="w-full bg-transparent border-b border-white/20 py-2 focus:border-[#C5A021] outline-none transition-colors text-white resize-none"></textarea>
+                            </div>
+                            <button class="w-full py-6 bg-[#C5A021] text-black font-black uppercase tracking-[0.3em] hover:bg-white transition-all flex items-center justify-center gap-4">
+                                SEND SPLASH <i data-lucide="send" size="20"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        const slideContainer = document.getElementById('slideContainer');
+        const sections = [
+            document.getElementById('section-0'),
+            document.getElementById('section-1'),
+            document.getElementById('section-2'),
+            document.getElementById('section-3')
+        ];
+        const dots = document.querySelectorAll('.dot');
+        
+        // Define ranges and background colors
+        const config = [
+            { start: 0, end: 0.25, bg: '#121212' },
+            { start: 0.25, end: 0.5, bg: '#F7F1E5' },
+            { start: 0.5, end: 0.75, bg: '#FFFFFF' },
+            { start: 0.75, end: 1, bg: '#121212' }
+        ];
+
+        function updateScroll() {
+            const scrollPercent = window.scrollY / (document.body.offsetHeight - window.innerHeight);
+            
+            config.forEach((c, i) => {
+                const section = sections[i];
+                let opacity = 0;
+                let scale = 0.9;
+                let translateY = 100;
+
+                // Entry phase
+                if (scrollPercent >= c.start && scrollPercent <= c.end) {
+                    const relativePos = (scrollPercent - c.start) / (c.end - c.start);
+                    
+                    // Simple easing for transitions
+                    if (relativePos < 0.2) {
+                        // Fade in
+                        opacity = relativePos / 0.2;
+                        scale = 0.9 + (relativePos / 0.2) * 0.1;
+                        translateY = 100 - (relativePos / 0.2) * 100;
+                    } else if (relativePos > 0.8 && i !== config.length - 1) {
+                        // Fade out
+                        const fadeOutPos = (relativePos - 0.8) / 0.2;
+                        opacity = 1 - fadeOutPos;
+                        scale = 1 - fadeOutPos * 0.05;
+                        translateY = fadeOutPos * -100;
+                    } else {
+                        // Solid phase
+                        opacity = 1;
+                        scale = 1;
+                        translateY = 0;
+                    }
+
+                    // Update background color based on active slide
+                    slideContainer.style.backgroundColor = c.bg;
+                    
+                    // Update navigation dots
+                    dots.forEach(d => d.classList.remove('active'));
+                    dots[i].classList.add('active');
+
+                    // Set pointer events
+                    section.style.pointerEvents = 'auto';
+                } else {
+                    opacity = 0;
+                    section.style.pointerEvents = 'none';
+                }
+
+                section.style.opacity = opacity;
+                section.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+            });
+
+            requestAnimationFrame(updateScroll);
+        }
+
+        // Start scroll tracking
+        window.addEventListener('scroll', () => {}); // Just to trigger if needed
+        updateScroll();
+
+        // Handle Dot Clicks (Smooth Scroll)
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                const targetScroll = config[i].start * (document.body.offsetHeight - window.innerHeight);
+                window.scrollTo({ top: targetScroll + 10, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

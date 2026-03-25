@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bespoke Design Support | The Artisan Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,900;1,600&family=Poppins:wght@100;300;400;600;800&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #002366; 
+      --pink: #f472b6;
+      --white: #ffffff;
+      --slate: #64748b;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--white);
+      color: var(--navy);
+      overflow-x: hidden;
+    }
+
+    .serif-heading { font-family: 'Playfair Display', serif; }
+    .signature { font-family: 'Mrs Saint Delafield', cursive; }
+
+    /* --- BACKGROUND: THE LIVING CANVAS --- */
+    .canvas-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, #fff 0%, #f8fafc 100%);
+    }
+
+    .paint-cloud {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.2;
+      animation: floatCloud 25s infinite alternate ease-in-out;
+    }
+
+    .cloud-navy { width: 800px; height: 800px; background: var(--navy); top: -20%; left: -10%; }
+    .cloud-pink { width: 600px; height: 600px; background: var(--pink); bottom: -10%; right: -5%; animation-delay: -5s; }
+
+    @keyframes floatCloud {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      100% { transform: translate(100px, 100px) scale(1.1) rotate(10deg); }
+    }
+
+    /* --- BRUSH STROKE MASKING --- */
+    .brush-mask-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      padding: 40px;
+    }
+
+    .brush-mask {
+      -webkit-mask-image: url('https://raw.githubusercontent.com/Anand-Chowdhary/brush-stroke-mask/main/brush-stroke.png');
+      mask-image: url('https://raw.githubusercontent.com/Anand-Chowdhary/brush-stroke-mask/main/brush-stroke.png');
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center;
+      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    /* Fallback mask if external asset fails */
+    .brush-mask {
+        mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23000' d='M47.7,-64.3C61.4,-57.1,71.8,-42.6,76.5,-26.8C81.2,-11,80.1,6.1,74.5,21.5C68.9,36.9,58.7,50.7,45.4,60.2C32,69.7,15.5,74.9,-1.1,76.4C-17.7,77.9,-35.4,75.7,-49.2,66.3C-63,56.8,-72.9,40.1,-77.3,22.4C-81.8,4.7,-80.7,-13.9,-73.4,-29.3C-66.2,-44.7,-52.7,-56.9,-38.3,-63.9C-23.9,-70.8,-8.5,-72.6,6.3,-81.2C21.1,-89.9,34,-83.1,47.7,-64.3Z' transform='translate(100 100)' /%3E%3C/svg%3E");
+    }
+
+    .image-hover-trigger:hover .brush-mask {
+      transform: scale(1.08) rotate(-2deg);
+      filter: contrast(1.1) saturate(1.1);
+    }
+
+    /* --- DYNAMIC TYPOGRAPHY --- */
+    .text-reveal {
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .text-reveal::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--navy);
+      transform: translateX(-101%);
+      animation: revealAnim 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+    }
+
+    @keyframes revealAnim {
+      0% { transform: translateX(-101%); }
+      50% { transform: translateX(0); }
+      100% { transform: translateX(101%); }
+    }
+
+    /* --- GLASS INTERACTIVE ELEMENTS --- */
+    .magnetic-search {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(30px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 30px 60px rgba(0, 35, 102, 0.08);
+      transform: perspective(1000px) rotateX(0deg);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .magnetic-search:focus-within {
+      transform: perspective(1000px) rotateX(2deg) translateY(-10px);
+      background: rgba(255, 255, 255, 0.9);
+      border-color: var(--pink);
+    }
+
+    /* --- ARTISTIC SPLATTERS --- */
+    .splatter {
+      position: absolute;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.6;
+    }
+
+    /* --- BUTTON SHIMMER --- */
+    .btn-extraordinary {
+      background: var(--navy);
+      transition: all 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-extraordinary:hover {
+      background: var(--pink);
+      letter-spacing: 0.6em;
+      box-shadow: 0 20px 40px rgba(244, 114, 182, 0.4);
+    }
+
+    .btn-extraordinary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .float-card {
+      animation: float 4s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+  </style>
+</head>
+<body class="relative">
+
+  <div class="canvas-bg">
+    <div class="paint-cloud cloud-navy"></div>
+    <div class="paint-cloud cloud-pink"></div>
+  </div>
+
+  <main class="relative z-10 min-h-screen flex flex-col lg:flex-row items-center px-8 sm:px-16 lg:px-24 py-12">
+    
+    <!-- LEFT SIDE: Bold Statement -->
+    <div class="w-full lg:w-1/2 flex flex-col justify-center">
+      <div class="max-w-3xl">
+        <!-- Branding Header -->
+        <div class="flex items-center gap-6 mb-8">
+          <span class="text-[14px] font-black uppercase tracking-[0.5em] text-pink-400">PAINTBHARAT CO.</span>
+          <div class="h-[1px] flex-1 bg-gradient-to-r from-navy to-transparent opacity-20"></div>
+        </div>
+        
+        <h1 class="serif-heading text-7xl sm:text-9xl font-black leading-[0.85] tracking-tighter mb-10 text-reveal">
+          NEED our <br>
+          <span class="italic font-light text-pink-400 relative">
+            Support.
+            <svg class="absolute -bottom-4 left-0 w-full h-4 text-navy opacity-10" viewBox="0 0 100 10" preserveAspectRatio="none">
+              <path d="M0 5 Q 25 0, 50 5 T 100 5" stroke="currentColor" fill="transparent" stroke-width="2"/>
+            </svg>
+          </span>
+        </h1>
+        
+        <p class="text-lg sm:text-xl text-slate-500 font-light tracking-wide max-w-lg mb-12 leading-relaxed">
+          The convergence of high-performance <span class="text-navy font-bold">architectural coatings</span> and artisanal curation. Your vision, professionally defined.
+        </p>
+
+        <!-- The Interactive Search -->
+        <div class="magnetic-search rounded-full flex items-center p-3 h-20 sm:h-24 w-full max-w-xl group">
+          <div class="w-16 h-16 flex items-center justify-center shrink-0 ml-2 rounded-full bg-navy text-white group-hover:bg-pink-500 transition-all duration-500 shadow-xl">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <input 
+            type="text" 
+            placeholder="Tell us about your space..."
+            class="flex-1 bg-transparent outline-none px-6 text-lg sm:text-xl font-light text-navy placeholder-slate-300"
+          >
+          <button class="btn-extraordinary h-14 sm:h-18 px-10 sm:px-16 rounded-full text-[11px] font-black uppercase tracking-[0.4em] text-white ml-2 shadow-2xl">
+            Inquire
+          </button>
+        </div>
+        
+        <div class="mt-12 flex gap-12 items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+            <span class="text-[10px] font-bold tracking-widest uppercase">Vogue Interiors</span>
+            <span class="text-[10px] font-bold tracking-widest uppercase">Architectural Digest</span>
+            <span class="text-[10px] font-bold tracking-widest uppercase">Design Week</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: The Isolated Portrait (Extraordinary Mask) -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center mt-20 lg:mt-0 relative image-hover-trigger">
+      
+      <!-- Artistic Splatter Elements -->
+      <svg class="splatter top-10 left-20 w-32 h-32 text-pink-400" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="currentColor" opacity="0.3"/><circle cx="70" cy="30" r="10" fill="currentColor" opacity="0.2"/></svg>
+      <svg class="splatter bottom-0 right-10 w-48 h-48 text-navy" viewBox="0 0 100 100"><circle cx="30" cy="70" r="25" fill="currentColor" opacity="0.1"/><circle cx="60" cy="80" r="15" fill="currentColor" opacity="0.05"/></svg>
+
+      <div class="brush-mask-container">
+        <div class="brush-mask w-full aspect-square overflow-hidden bg-slate-100 shadow-2xl">
+          <!-- Isolated picture of consultants -->
+          <img 
+            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80&w=1000" 
+            alt="Design Consultation" 
+            class="w-full h-full object-cover grayscale-[20%]"
+          />
+        </div>
+
+        <!-- Floating Abstract Cards -->
+        <div class="absolute -top-12 -right-12 float-card">
+          <div class="bg-white/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl border border-white/50 text-center">
+            <div class="text-4xl font-black text-navy leading-none mb-2">Art.</div>
+            <div class="text-[10px] uppercase tracking-[0.4em] text-pink-400 font-black">Meets Tech</div>
+          </div>
+        </div>
+
+        <div class="absolute -bottom-10 left-10 float-card" style="animation-delay: -2s;">
+          <div class="bg-navy p-6 rounded-2xl shadow-2xl flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-pink-400 flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+            </div>
+            <div>
+              <div class="text-[10px] text-white/50 uppercase tracking-widest font-bold">Priority Line</div>
+              <div class="text-white font-bold text-xs">+44 20 7946 0958</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Sidebar Nav -->
+  <div class="fixed left-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-16 items-center mix-blend-difference">
+    <div class="flex flex-col gap-6 items-center">
+      <div class="w-[2px] h-20 bg-pink-400"></div>
+      <span class="[writing-mode:vertical-lr] text-[10px] font-black uppercase tracking-[1em] text-white/50">Experience Excellence</span>
+    </div>
+  </div>
+
+  <!-- Bottom Visual Line -->
+  <div class="fixed bottom-0 left-0 w-full h-[6px] bg-gradient-to-r from-navy via-pink-400 to-navy opacity-30"></div>
+
+</body>
+</html>
