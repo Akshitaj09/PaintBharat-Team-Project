@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Home Interior Design</title>
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* CARD BASE */
+  .card {
+    position: absolute;
+    top: 50%;
+    width: 240px;
+    height: 380px;
+    opacity: 0;
+    cursor: pointer;
+    transition:
+      transform 1s ease,
+      left 1s ease,
+      opacity 1s ease,
+      box-shadow 0.6s ease;
+  }
+
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  /* POSITIONS */
+  .center {
+    left: 58%;
+    opacity: 1;
+    z-index: 3;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .left {
+    left: 38%;
+    opacity: 0.55;
+    z-index: 1;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+
+  .right {
+    left: 78%;
+    opacity: 0.55;
+    z-index: 1;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+
+  /* GOLD BORDER (CENTER ONLY) */
+  .gold-border {
+    outline: 2px solid #d4af37;
+    outline-offset: 6px;
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
+  }
+
+  /* ========================= */
+  /* ✨ HOVER EFFECT ✨ */
+  /* ========================= */
+
+  .center:hover {
+    transform: translate(-50%, -50%) scale(1.06);
+    box-shadow:
+      0 25px 60px rgba(0, 0, 0, 0.55),
+      0 0 30px rgba(212, 175, 55, 0.45);
+  }
+
+  .center:hover img {
+    transform: scale(1.08);
+  }
+
+  /* subtle hover for side cards */
+  .left:hover,
+  .right:hover {
+    opacity: 0.75;
+  }
+</style>
+</head>
+
+<body class="bg-black">
+
+<section class="min-h-screen flex items-center justify-center px-6">
+  <div class="relative w-full max-w-7xl h-[520px] overflow-hidden">
+
+    <!-- Background -->
+    <img src="images/spacejoy-YqFz7UMm8qE-unsplash.jpg"
+         class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-black/70"></div>
+
+    <div class="relative z-10 h-full px-14 py-12 flex">
+
+      <!-- LEFT TEXT -->
+      <div class="w-1/2 flex flex-col justify-center">
+        <h1 class="text-6xl text-[#f5f0ea] leading-tight">
+          Home <br> Interior <br> Design
+        </h1>
+
+        <button class="mt-10 w-fit bg-[#b07a32] text-white px-7 py-3">
+          Design Blog
+        </button>
+      </div>
+
+      <!-- RIGHT SLIDER -->
+      <div class="w-1/2 relative">
+
+        <div class="card center gold-border">
+          <img src="images/jewel tones.png">
+        </div>
+
+        <div class="card right">
+          <img src="images/serene family.png">
+        </div>
+
+        <div class="card left">
+          <img src="images/vision&mission-bg.jpg">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const cards = document.querySelectorAll('.card');
+  let order = ['center', 'right', 'left'];
+
+  setInterval(() => {
+    order.unshift(order.pop());
+
+    cards.forEach((card, i) => {
+      card.className = `card ${order[i]}`;
+      if (order[i] === 'center') {
+        card.classList.add('gold-border');
+      }
+    });
+  }, 3500);
+</script>
+
+</body>
+</html>

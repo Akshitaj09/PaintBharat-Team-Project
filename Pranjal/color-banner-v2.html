@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Luxury Color Collection</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+/* Background mirror reflection */
+.bg-mirror {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/structural_bg.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.08;
+}
+
+.bg-mirror::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-size: cover;
+    background-position: center;
+    transform: scaleY(-1);
+    opacity: 0.05;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+}
+
+/* Golden separator animation */
+@keyframes goldFlow {
+    0% { background-position: 0% }
+    100% { background-position: 200% }
+}
+
+.gold-line {
+    background: linear-gradient(
+        90deg,
+        #C6A769,
+        #FFD700,
+        #C6A769
+    );
+    background-size: 200%;
+    animation: goldFlow 3s linear infinite;
+}
+
+/* Image hover zoom */
+.img-hover {
+    transition: transform 0.6s ease;
+}
+
+.img-hover:hover {
+    transform: scale(1.08);
+}
+
+/* CTA click animation */
+.cta-btn {
+    transition: all 0.3s ease;
+}
+
+.cta-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 25px rgba(139,106,78,0.4);
+}
+
+</style>
+
+</head>
+
+<body class="bg-[#FAF8F5] relative overflow-hidden">
+
+
+<!-- Mirror Background -->
+<div class="bg-mirror"></div>
+
+
+<!-- Main Content -->
+<section class="relative min-h-screen flex items-center justify-center px-6">
+
+<div class="max-w-7xl w-full grid lg:grid-cols-2 gap-16 items-center">
+
+
+<!-- LEFT CONTENT -->
+<div>
+
+<p class="uppercase tracking-widest text-sm text-[#8B6A4E]/70 mb-4">
+Luxury Color Experience
+</p>
+
+<h1 class="text-6xl font-light text-[#8B6A4E] leading-tight">
+Discover Your<br>
+Perfect Palette
+</h1>
+
+<p class="mt-6 text-lg text-[#8B6A4E]/80 max-w-md">
+Explore curated shades designed to elevate every interior with elegance, warmth, and timeless sophistication.
+</p>
+
+<button
+class="cta-btn mt-8 px-10 py-4 border border-[#8B6A4E]
+text-[#8B6A4E] rounded-full font-medium
+hover:bg-[#8B6A4E] hover:text-white">
+
+View Colors
+
+</button>
+
+</div>
+
+
+<!-- RIGHT IMAGES -->
+<div class="flex items-center justify-center gap-6">
+
+
+<div class="w-44 h-64 rounded-[100px] overflow-hidden shadow-xl">
+<img src="images/home_interior4.jpg"
+class="img-hover w-full h-full object-cover">
+</div>
+
+<div class="gold-line w-[2px] h-52"></div>
+
+<div class="w-44 h-80 rounded-[100px] overflow-hidden shadow-xl">
+<img src="images/home_interior5.jpg"
+class="img-hover w-full h-full object-cover">
+</div>
+
+<div class="gold-line w-[2px] h-52"></div>
+
+<div class="w-44 h-64 rounded-[100px] overflow-hidden shadow-xl">
+<img src="images/home_interior6.jpg"
+class="img-hover w-full h-full object-cover">
+</div>
+
+
+</div>
+
+
+</div>
+</section>
+
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat - Professional Hiring Process</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #ffffff; /* White background */
+        }
+
+        /* Custom animation for entering images */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-out;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scale-in {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 1s ease-out;
+        }
+
+        .scale-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="text-[#001f3f]"> <!-- Navy Blue Text -->
+
+    <div class="min-h-screen py-20 px-6 md:px-12 lg:px-24">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Section Header -->
+            <div id="header" class="mb-16 fade-in-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-black mb-4">
+                    Get Hired in <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#FF69B4] to-[#001f3f]">3 Simple Steps</span>
+                </h2>
+                <p class="text-lg text-[#001f3f]/70">
+                    Join PaintBharat with a smooth and transparent hiring process.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Left Side: Overlapping Image Cards -->
+                <div id="image-container" class="relative h-[400px] md:h-[500px] scale-in">
+                    
+                    <!-- Decorative Sparkles (Hot Pink) -->
+                    <div class="absolute -top-6 left-10 text-[#FF69B4] animate-pulse">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>
+                    </div>
+                    <div class="absolute bottom-10 -left-4 text-[#001f3f]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    </div>
+
+                    <!-- Back Image -->
+                    <div class="absolute top-0 right-0 w-[70%] h-[70%] rounded-[30px] overflow-hidden border-4 border-white shadow-xl transform rotate-3 z-10 transition-transform hover:rotate-0 duration-500">
+                        <img 
+                            src="images/hiring_process1.jpg" 
+                            alt="Painting Tools" 
+                            class="w-full h-full object-cover"
+                            onerror="this.src='https://via.placeholder.com/800x600?text=Painting+Tools'"
+                        >
+                        <div class="absolute inset-0 border-2 border-[#001f3f]/20 rounded-[30px]"></div>
+                    </div>
+
+                    <!-- Front Image -->
+                    <div class="absolute bottom-0 left-0 w-[75%] h-[75%] rounded-[30px] overflow-hidden border-4 border-white shadow-2xl z-20 transition-transform hover:-translate-y-2 duration-500">
+                        <img 
+                            src="images/hiring_process.jpg" 
+                            alt="Professional Painter" 
+                            class="w-full h-full object-cover"
+                            onerror="this.src='https://via.placeholder.com/800x600?text=Painter'"
+                        >
+                        <div class="absolute inset-0 border-2 border-[#FF69B4]/20 rounded-[30px]"></div>
+                    </div>
+
+                    <!-- Decorative Dots (Navy Blue) -->
+                    <div class="absolute -bottom-4 right-12 grid grid-cols-4 gap-2 opacity-20">
+                        <div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div>
+                        <div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div>
+                        <div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div><div class="w-2 h-2 rounded-full bg-[#001f3f]"></div>
+                    </div>
+                </div>
+
+                <!-- Right Side: Vertical Step Timeline -->
+                <div id="timeline" class="relative fade-in-up" style="transition-delay: 500ms;">
+                    
+                    <!-- Dotted Connection Line -->
+                    <div class="absolute left-[27px] top-6 bottom-6 w-[2px] border-l-2 border-dotted border-[#001f3f]/20 z-0"></div>
+
+                    <div class="space-y-12 relative z-10">
+                        <!-- Step 01 -->
+                        <div class="group flex gap-8 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-[#FF69B4] to-[#001f3f] flex items-center justify-center text-white font-bold text-xl shadow-lg transition-transform group-hover:scale-110 duration-300">
+                                01
+                            </div>
+                            <div class="pt-2">
+                                <h3 class="text-xl font-bold text-black mb-2 group-hover:text-[#FF69B4] transition-colors">
+                                    Submit Your Resume
+                                </h3>
+                                <p class="text-[#001f3f]/70 leading-relaxed max-w-md">
+                                    Provide your details and upload your resume to begin your journey with PaintBharat.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 02 -->
+                        <div class="group flex gap-8 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-[#FF69B4] to-[#001f3f] flex items-center justify-center text-white font-bold text-xl shadow-lg transition-transform group-hover:scale-110 duration-300">
+                                02
+                            </div>
+                            <div class="pt-2">
+                                <h3 class="text-xl font-bold text-black mb-2 group-hover:text-[#FF69B4] transition-colors">
+                                    Interview Process
+                                </h3>
+                                <p class="text-[#001f3f]/70 leading-relaxed max-w-md">
+                                    Attend a quick and simple interview to showcase your skills and experience.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 03 -->
+                        <div class="group flex gap-8 items-start">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-[#FF69B4] to-[#001f3f] flex items-center justify-center text-white font-bold text-xl shadow-lg transition-transform group-hover:scale-110 duration-300">
+                                03
+                            </div>
+                            <div class="pt-2">
+                                <h3 class="text-xl font-bold text-black mb-2 group-hover:text-[#FF69B4] transition-colors">
+                                    Onboarding
+                                </h3>
+                                <p class="text-[#001f3f]/70 leading-relaxed max-w-md">
+                                    Get selected and start working with our team through a smooth onboarding process.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Button (Black with Pink Hover) -->
+                    <div class="mt-16 pl-[86px]">
+                        <button class="flex items-center gap-3 px-8 py-4 bg-black text-white rounded-full font-semibold shadow-lg hover:bg-[#FF69B4] hover:-translate-y-1 transition-all active:scale-95">
+                            Apply Now 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                        </button>
+                        
+                        <div class="mt-6 flex items-center gap-2 text-sm text-[#001f3f]/50">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#FF69B4]"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            <span>Join 500+ professionals</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const elementsToAnimate = [
+                document.getElementById('header'),
+                document.getElementById('image-container'),
+                document.getElementById('timeline')
+            ];
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            elementsToAnimate.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PaintBharat Hero Section</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Cross Hover Animation – No Hiding */
+    .front-card,
+    .back-card {
+      transition: transform 0.7s ease, opacity 0.7s ease;
+    }
+
+    .cross-wrap:hover .front-card {
+      transform: translate(-30px, 30px) scale(0.97);
+      opacity: 0.85;
+    }
+
+    .cross-wrap:hover .back-card {
+      transform: translate(30px, -30px) scale(0.97);
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body class="bg-[#f6f1ea]">
+
+  <!-- Hero Section -->
+  <section class="max-w-7xl mx-auto px-6 py-14">
+    <div class="relative bg-gradient-to-r from-[#e7dbc9] to-[#efe6da] rounded-3xl p-10 flex flex-col lg:flex-row items-center gap-10 overflow-hidden">
+
+      <!-- Left Content -->
+      <div class="flex-1">
+        <div class="inline-flex items-center gap-2 bg-white/60 px-4 py-2 rounded-full text-sm mb-6">
+          <span class="w-2 h-2 bg-[#8b6b3f] rounded-full"></span>
+          <span class="w-2 h-2 bg-[#caa56a] rounded-full"></span>
+          <span class="w-2 h-2 bg-[#e5d3b3] rounded-full"></span>
+          <span class="ml-2 font-medium tracking-wide">PAINTBHARAT</span>
+        </div>
+
+        <h1 class="text-5xl lg:text-6xl font-bold text-[#0f172a] leading-tight">
+          Transform <br />
+          Your <span class="text-[#8b6b3f] italic font-medium">Space</span>
+        </h1>
+
+        <p class="mt-5 max-w-md text-[#334155]">
+          Expert interior design solutions that bring elegance and harmony to your home.
+        </p>
+
+        <div class="mt-8 flex gap-4">
+          <button class="bg-[#8b6b3f] text-white px-6 py-3 rounded-xl transition hover:shadow-lg">
+            Get Started →
+          </button>
+          <button class="bg-white text-[#0f172a] px-6 py-3 rounded-xl border transition hover:shadow-md">
+            View Gallery
+          </button>
+        </div>
+
+        <p class="mt-10 text-sm text-[#475569]">www.paintbharat.com</p>
+      </div>
+
+      <!-- Right Images -->
+      <div class="flex-1 relative flex justify-center items-center cross-wrap">
+
+        <!-- Back Card -->
+        <div class="back-card absolute right-0 top-0 w-64 h-80 rounded-3xl overflow-hidden shadow-lg rotate-6">
+          <img src="images/turqoise family.png"
+               class="w-full h-full object-cover" alt="Interior" />
+        </div>
+
+        <!-- Front Card -->
+        <div class="front-card relative w-72 h-96 rounded-3xl overflow-hidden shadow-xl z-10">
+          <img src="images/spacejoy-YqFz7UMm8qE-unsplash.jpg"
+               class="w-full h-full object-cover" alt="Luxury Interior" />
+          <span class="absolute bottom-4 left-4 text-white text-sm bg-black/40 px-3 py-1 rounded-full">
+            Luxury Interior
+          </span>
+        </div>
+
+        <!-- Experience Badge -->
+        <div class="absolute bottom-6 right-0 bg-[#8b6b3f] text-white px-6 py-5 rounded-2xl shadow-lg text-center">
+          <p class="text-3xl font-bold">15+</p>
+          <p class="text-sm">Years</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

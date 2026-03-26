@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Job Board India - Light Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f8fafc; 
+        }
+        
+        h1, h2, .serif-font { font-family: 'Playfair Display', serif; }
+
+        .job-card {
+            background: #0f172a;
+            border-radius: 0.75rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent; 
+        }
+
+        .job-card:hover {
+            transform: translateY(-4px);
+            background: #1e293b;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #ec4899; 
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: #0f172a;
+            border-color: #0f172a;
+            color: white;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .search-container {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid #f1f5f9;
+        }
+
+        .input-minimal {
+            border-bottom: 2px solid #e2e8f0;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-minimal:focus {
+            border-color: #0f172a;
+            outline: none;
+        }
+
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden min-h-screen">
+
+    <div class="fixed inset-0 z-0 bg-[#f8fafc]">
+        <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-slate-100 to-transparent"></div>
+    </div>
+
+    <main id="app-root" class="relative z-10 min-h-screen">
+        <!-- JS injects views here -->
+    </main>
+
+    <script>
+        const jobListings = [
+            { id: 1, title: "Senior Product Designer", company: "ZOMATO", category: "Design", accent: "#ef4444", location: "Gurgaon, HR", salary: "₹25L - ₹45L", tags: ["PRODUCT", "UI/UX"], description: "Lead the design language for millions of users. You'll work on high-impact features for food delivery and dining experiences." },
+            { id: 2, title: "Frontend Engineer (React)", company: "RAZORPAY", category: "Engineering", accent: "#3b82f6", location: "Bengaluru, KA", salary: "₹20L - ₹35L", tags: ["FINTECH", "REACT"], description: "Build the future of payments in India. We're looking for engineers who care about performance, accessibility, and clean code." },
+            { id: 3, title: "Marketing Lead", company: "CRED", category: "Marketing", accent: "#334155", location: "Bengaluru, KA", salary: "₹30L - ₹50L", tags: ["GROWTH", "BRAND"], description: "Shape the brand narrative for India's most exclusive community. Drive high-end marketing campaigns." },
+            { id: 4, title: "Data Scientist", company: "OLA ELECTRIC", category: "Engineering", accent: "#84cc16", location: "Bengaluru, KA", salary: "₹22L - ₹40L", tags: ["EV", "PYTHON"], description: "Optimize battery performance and range prediction using machine learning. Help us build the world's best EV ecosystem." },
+            { id: 5, title: "Backend Developer", company: "POSTMAN", category: "Engineering", accent: "#f97316", location: "Remote", salary: "₹25L - ₹42L", tags: ["API", "NODE.JS"], description: "Work on the global standard for API development. Scale our infrastructure to handle billions of requests." },
+            { id: 6, title: "Brand Designer", company: "SWIGGY", category: "Design", accent: "#fb923c", location: "Bengaluru, KA", salary: "₹18L - ₹30L", tags: ["VISUAL", "ILLUSTRATIONS"], description: "Create compelling visual stories for one of India's biggest consumer brands." },
+            { id: 7, title: "DevOps Architect", company: "GROWW", category: "Engineering", accent: "#00d09c", location: "Bengaluru, KA", salary: "₹35L - ₹60L", tags: ["AWS", "K8S"], description: "Help us build highly available infrastructure for India's fastest growing investment platform." },
+            { id: 8, title: "Head of Content", company: "COINSWITCH", category: "Marketing", accent: "#5d3fd3", location: "Bengaluru, KA", salary: "₹25L - ₹40L", tags: ["CRYPTO", "STRATEGY"], description: "Define how India learns about Web3 and Crypto through world-class content." },
+            { id: 9, title: "Fullstack Engineer", company: "ZEPTO", category: "Engineering", accent: "#7b1fa2", location: "Mumbai, MH", salary: "₹28L - ₹50L", tags: ["LOGISTICS", "NODE"], description: "Work on the ultra-fast delivery algorithms that power 10-minute commerce." }
+        ];
+
+        let state = {
+            view: 'list',
+            searchQuery: '',
+            activeFilter: 'All',
+            selectedJob: null,
+            visibleCount: 6 
+        };
+
+        function render() {
+            const root = document.getElementById('app-root');
+            if (state.view === 'list') {
+                root.innerHTML = renderListView();
+            } else if (state.view === 'apply') {
+                root.innerHTML = renderApplyView();
+            } else if (state.view === 'success') {
+                root.innerHTML = renderSuccessPage();
+            }
+            attachListeners();
+        }
+
+        function renderListView() {
+            const filtered = jobListings.filter(job => {
+                const matchSearch = job.title.toLowerCase().includes(state.searchQuery.toLowerCase()) || 
+                                   job.company.toLowerCase().includes(state.searchQuery.toLowerCase());
+                const matchFilter = state.activeFilter === 'All' || job.category === state.activeFilter;
+                return matchSearch && matchFilter;
+            });
+
+            const visibleJobs = filtered.slice(0, state.visibleCount);
+            const hasMore = filtered.length > state.visibleCount;
+
+            return `
+                <div class="max-w-7xl mx-auto px-6 py-12 lg:py-20">
+                    <header class="mb-12 animate-slide-up">
+                        <div class="inline-block px-3 py-1 bg-slate-900 text-white text-[10px] font-bold tracking-widest uppercase rounded-full mb-6">Curated Roles</div>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl text-slate-950 mb-6 max-w-2xl">Find your next defining role.</h1>
+                        <p class="text-base text-slate-500 max-w-lg">A minimalist board for high-impact talent seeking the best startups in India.</p>
+                    </header>
+
+                    <div class="mb-12 space-y-6 animate-slide-up" style="animation-delay: 0.1s">
+                        <div class="search-container flex items-center p-1.5 rounded-xl max-w-2xl">
+                            <input 
+                                type="text" id="search-input" value="${state.searchQuery}"
+                                placeholder="Search by role, company or keyword..."
+                                class="w-full px-5 py-3.5 bg-transparent outline-none text-slate-900 placeholder-slate-400 font-medium"
+                            />
+                            <div class="pr-4 text-slate-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2.5">
+                            ${['All', 'Design', 'Engineering', 'Marketing'].map(f => `
+                                <button onclick="setFilter('${f}')" 
+                                    class="filter-btn px-6 py-2.5 rounded-full text-xs font-bold ${state.activeFilter === f ? 'active' : ''}">
+                                    ${f}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 animate-slide-up" style="animation-delay: 0.2s">
+                        ${visibleJobs.length ? visibleJobs.map(job => renderJobCard(job)).join('') : `
+                            <div class="col-span-full py-20 text-center border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 font-medium">No opportunities match your search</div>
+                        `}
+                    </div>
+
+                    ${hasMore ? `
+                        <div class="mt-12 text-center animate-slide-up">
+                            <button onclick="loadMore()" class="group inline-flex items-center gap-3 text-xs font-bold text-slate-900 border-2 border-slate-900 px-8 py-3.5 rounded-full hover:bg-slate-900 hover:text-white transition-all uppercase tracking-widest">
+                                Load More Positions
+                                <svg class="w-4 h-4 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderJobCard(job) {
+            return `
+                <div class="job-card p-7 flex flex-col justify-between text-white min-h-[280px]">
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-[8px] font-bold tracking-[0.2em] text-slate-500 uppercase">${job.category}</span>
+                            <div class="w-2 h-2 rounded-full" style="background-color: ${job.accent}"></div>
+                        </div>
+                        
+                        <h3 class="text-lg font-bold mb-1.5 leading-tight group-hover:text-pink-400 transition-colors">${job.title}</h3>
+                        <p class="text-slate-400 font-medium text-[11px] mb-5 uppercase tracking-wide">${job.company} &bull; ${job.location}</p>
+                        
+                        <div class="flex flex-wrap gap-1.5 mb-6">
+                            ${job.tags.map(t => `
+                                <span class="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[8px] font-bold text-slate-300 uppercase tracking-tighter">${t}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-5 border-t border-white/10">
+                        <span class="text-sm font-black tracking-tight">${job.salary}</span>
+                        <button onclick="goToApply(${job.id})" class="text-[10px] font-black uppercase tracking-widest border-b-2 border-white pb-0.5 hover:text-pink-400 hover:border-pink-400 transition-all">Details</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderApplyView() {
+            const job = state.selectedJob;
+            return `
+                <div class="min-h-screen bg-white">
+                    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto">
+                        <button onclick="setView('list')" class="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">
+                            <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+                            Back to Board
+                        </button>
+                        <div class="h-8 w-8 bg-slate-900 rounded-lg"></div>
+                    </nav>
+
+                    <div class="max-w-6xl mx-auto px-6 py-10 lg:py-16">
+                        <div class="lg:flex gap-16">
+                            <div class="lg:w-3/5 animate-slide-up">
+                                <h1 class="text-4xl md:text-5xl text-slate-950 mb-4 serif-font">Apply for this role.</h1>
+                                <p class="text-slate-400 font-medium text-base mb-12">Please share your details and portfolio links below.</p>
+
+                                <form onsubmit="handleFormSubmit(event)" class="space-y-10">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                        <div class="space-y-3">
+                                            <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Full Name</label>
+                                            <input type="text" required class="w-full bg-transparent py-2.5 input-minimal text-base font-medium text-slate-900" placeholder="John Doe">
+                                        </div>
+                                        <div class="space-y-3">
+                                            <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Email Address</label>
+                                            <input type="email" required class="w-full bg-transparent py-2.5 input-minimal text-base font-medium text-slate-900" placeholder="john@example.com">
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-3">
+                                        <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Professional Links</label>
+                                        <input type="url" required class="w-full bg-transparent py-2.5 input-minimal text-base font-medium text-slate-900" placeholder="https://">
+                                    </div>
+
+                                    <div class="space-y-3">
+                                        <label class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Short Note</label>
+                                        <textarea class="w-full bg-transparent py-2.5 input-minimal text-base font-medium text-slate-900 h-28 resize-none" placeholder="Tell us why you're a good fit..."></textarea>
+                                    </div>
+
+                                    <div class="pt-6">
+                                        <button type="submit" class="group relative inline-flex items-center gap-5 bg-slate-900 text-white px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest overflow-hidden hover:bg-slate-800 transition-all">
+                                            Submit Application
+                                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="lg:w-2/5 mt-16 lg:mt-0 animate-slide-up" style="animation-delay: 0.1s">
+                                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100">
+                                    <div class="flex items-center gap-4 mb-8">
+                                        <div class="w-10 h-10 rounded-lg bg-slate-900 flex items-center justify-center text-white font-black text-lg">
+                                            ${job.company[0]}
+                                        </div>
+                                        <div>
+                                            <h4 class="text-xs font-black text-slate-900 uppercase tracking-widest leading-none">${job.company}</h4>
+                                            <p class="text-[10px] text-slate-500 font-medium mt-1">${job.location}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-8">
+                                        <div>
+                                            <h5 class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">Position</h5>
+                                            <p class="text-lg font-bold text-slate-900 leading-tight">${job.title}</p>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">Salary Bracket</h5>
+                                            <p class="text-lg font-bold text-slate-900 leading-tight">${job.salary}</p>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">About the role</h5>
+                                            <p class="text-xs text-slate-600 font-medium leading-relaxed">${job.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSuccessPage() {
+            return `
+                <div class="min-h-screen flex items-center justify-center p-6 animate-slide-up">
+                    <div class="bg-[#0f172a] p-12 rounded-[2rem] shadow-2xl max-w-sm w-full text-center text-white">
+                        <h2 class="text-3xl font-serif mb-4">Success.</h2>
+                        <p class="text-slate-400 text-sm font-medium mb-10">Your application for ${state.selectedJob.title} has been submitted.</p>
+                        <button onclick="setView('list')" class="w-full py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-all uppercase tracking-widest text-[10px]">Return to Board</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.setFilter = (f) => {
+            state.activeFilter = f;
+            state.visibleCount = 6; 
+            render();
+        };
+
+        window.loadMore = () => {
+            state.visibleCount += 3;
+            render();
+        };
+
+        window.goToApply = (id) => {
+            state.selectedJob = jobListings.find(j => j.id === id);
+            state.view = 'apply';
+            window.scrollTo({ top: 0, behavior: 'auto' });
+            render();
+        };
+
+        window.setView = (v) => {
+            state.view = v;
+            window.scrollTo({ top: 0, behavior: 'auto' });
+            render();
+        };
+
+        window.handleFormSubmit = (e) => {
+            e.preventDefault();
+            state.view = 'success';
+            window.scrollTo({ top: 0, behavior: 'auto' });
+            render();
+        };
+
+        function attachListeners() {
+            const input = document.getElementById('search-input');
+            if (input) {
+                input.addEventListener('input', (e) => {
+                    state.searchQuery = e.target.value;
+                    state.visibleCount = 6; 
+                    render();
+                    const newInput = document.getElementById('search-input');
+                    newInput.focus();
+                    newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+                });
+            }
+        }
+
+        window.onload = render;
+    </script>
+</body>
+</html>

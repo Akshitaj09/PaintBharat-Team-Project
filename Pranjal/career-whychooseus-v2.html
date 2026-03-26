@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Choose Paint Bharat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000;
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .bg-slider-container {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .bg-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out, transform 6s linear;
+            transform: scale(1.1);
+        }
+
+        .bg-slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%);
+            z-index: 1;
+        }
+
+        .overlay-darken {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .glass-card {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(225, 29, 72, 0.08);
+            border-color: rgba(225, 29, 72, 0.4);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .bubble-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(225, 29, 72, 0.1);
+            filter: blur(60px);
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(150px, 80px) scale(1.2); }
+        }
+
+        .text-accent {
+            color: #e11d48;
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <!-- FULL BG WHY CHOOSE US SECTION -->
+    <section class="relative min-h-screen flex items-center justify-center py-20 px-6 overflow-hidden">
+        
+        <!-- Background Slider with Luxury House Interiors -->
+        <div class="bg-slider-container">
+            <div class="bg-slide active" style="background-image: url('images/amber family.png');"></div>
+            <div class="bg-slide" style="background-image: url('images/home_exterior.jpg');"></div>
+            <div class="bg-slide" style="background-image: url('images/brown family.png');"></div>
+            <div class="bg-slide" style="background-image: url('images/home_exterior1.jpg');"></div>
+            <div class="bg-slide" style="background-image: url('images/jewel tones.png');"></div>
+        </div>
+
+        <!-- Visual Overlays -->
+        <div class="overlay-darken"></div>
+        <div class="overlay"></div>
+
+        <!-- Floating Bubbles (Abstract Paint Glows) -->
+        <div class="bubble-container">
+            <div class="bubble w-[500px] h-[500px] top-[-10%] left-[-5%]" style="animation-delay: 0s;"></div>
+            <div class="bubble w-[400px] h-[400px] bottom-[-10%] right-[-5%] bg-blue-500/5" style="animation-delay: -5s;"></div>
+            <div class="bubble w-[300px] h-[300px] top-[40%] right-[5%] bg-rose-500/15" style="animation-delay: -10s;"></div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="max-w-7xl mx-auto relative z-10 w-full">
+            
+            <div class="text-center mb-16">
+                <span class="text-rose-500 font-bold tracking-[0.4em] uppercase text-xs mb-4 block animate-pulse">Unmatched Excellence</span>
+                <h2 class="serif text-5xl md:text-8xl mb-6 drop-shadow-2xl">Why <span class="italic text-rose-500">Choose</span> Us</h2>
+                <div class="h-1 w-24 bg-rose-600 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Card 01 -->
+                <div class="glass-card p-12 rounded-[2.5rem] flex flex-col items-center text-center group">
+                    <span class="text-rose-500/30 text-4xl serif italic mb-4 group-hover:text-rose-500 transition-colors duration-500">01</span>
+                    <h3 class="text-2xl font-bold mb-4 tracking-tight">Luxury Finish</h3>
+                    <p class="text-slate-300 leading-relaxed font-light">
+                        Experience flawless coatings that transform ordinary walls into masterpieces of architectural elegance.
+                    </p>
+                </div>
+
+                <!-- Card 02 -->
+                <div class="glass-card p-12 rounded-[2.5rem] flex flex-col items-center text-center group">
+                    <span class="text-rose-500/30 text-4xl serif italic mb-4 group-hover:text-rose-500 transition-colors duration-500">02</span>
+                    <h3 class="text-2xl font-bold mb-4 tracking-tight">Ultimate Protection</h3>
+                    <p class="text-slate-300 leading-relaxed font-light">
+                        Our advanced WeatherShield technology ensures your home remains vibrant and crack-free through every season.
+                    </p>
+                </div>
+
+                <!-- Card 03 -->
+                <div class="glass-card p-12 rounded-[2.5rem] flex flex-col items-center text-center group">
+                    <span class="text-rose-500/30 text-4xl serif italic mb-4 group-hover:text-rose-500 transition-colors duration-500">03</span>
+                    <h3 class="text-2xl font-bold mb-4 tracking-tight">Quick Turnaround</h3>
+                    <p class="text-slate-300 leading-relaxed font-light">
+                        Proprietary quick-dry chemistry means your project is completed faster with zero compromise on quality.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Bottom Brand Note -->
+            <div class="mt-20 text-center opacity-30">
+                <p class="text-xs tracking-[0.5em] uppercase font-bold">The Paint Bharat Standard &copy; 2024</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.bg-slide');
+            let current = 0;
+
+            function nextSlide() {
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }
+
+            setInterval(nextSlide, 5000); 
+        });
+    </script>
+</body>
+</html>

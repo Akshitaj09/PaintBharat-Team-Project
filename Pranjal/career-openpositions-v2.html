@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Job Board India</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #020617;
+            --accent: #e3246e;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--primary-bg); }
+        .serif-title { font-family: 'Playfair Display', serif; }
+        
+        .bg-network {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        .job-card {
+            background: #ffffff;
+            border-radius: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-btn {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(30, 41, 59, 0.5);
+            color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px rgba(227, 36, 110, 0.3);
+        }
+
+        .form-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-bottom-color: #0f172a;
+        }
+
+        .form-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="text-slate-900 overflow-x-hidden min-h-screen">
+
+    <!-- FIXED BACKGROUND LAYER -->
+    <div id="bg-layer" class="fixed inset-0 z-0 transition-colors duration-500">
+        <div class="absolute inset-0 bg-network opacity-50"></div>
+    </div>
+
+    <!-- MAIN APP CONTENT -->
+    <main id="app-root" class="relative z-10 min-h-screen">
+        <!-- JS injects views here -->
+    </main>
+
+    <script>
+        // --- Data ---
+        const jobListings = [
+            { id: 1, title: "Senior Product Designer", company: "ZOMATO", category: "Design", logoColor: "from-red-500 to-red-600", logoInitials: "Z", location: "Gurgaon, HR", salary: "₹25L - ₹45L", tags: ["PRODUCT", "UI/UX"], description: "Lead the design language for millions of users. You'll work on high-impact features for food delivery and dining experiences." },
+            { id: 2, title: "Frontend Engineer (React)", company: "RAZORPAY", category: "Engineering", logoColor: "from-blue-600 to-blue-700", logoInitials: "R", location: "Bengaluru, KA", salary: "₹20L - ₹35L", tags: ["FINTECH", "REACT"], description: "Build the future of payments. Architect highly performant web applications used by millions of merchants." },
+            { id: 3, title: "Marketing Lead", company: "CRED", category: "Marketing", logoColor: "from-slate-800 to-black", logoInitials: "C", location: "Bengaluru, KA", salary: "₹30L - ₹50L", tags: ["GROWTH", "BRAND"], description: "Drive brand growth and engagement through creative storytelling and data-driven marketing strategies." },
+            { id: 4, title: "Data Scientist", company: "OLA ELECTRIC", category: "Engineering", logoColor: "from-lime-500 to-green-600", logoInitials: "O", location: "Bengaluru, KA", salary: "₹22L - ₹40L", tags: ["EV", "PYTHON"], description: "Optimize EV performance and battery management systems using advanced machine learning models." },
+            { id: 5, title: "Backend Developer", company: "POSTMAN", category: "Engineering", logoColor: "from-orange-500 to-orange-600", logoInitials: "P", location: "Remote", salary: "₹25L - ₹42L", tags: ["API", "NODE.JS"], description: "Contribute to the world's leading API platform used by 20+ million developers globally." },
+            { id: 6, title: "Brand Designer", company: "SWIGGY", category: "Design", logoColor: "from-orange-400 to-orange-600", logoInitials: "S", location: "Bengaluru, KA", salary: "₹18L - ₹30L", tags: ["VISUAL", "ILLUSTRATIONS"], description: "Create compelling visual identities and illustrations that define the Swiggy experience." }
+        ];
+
+        // --- Global State ---
+        let state = {
+            view: 'list', // 'list', 'apply', 'success'
+            searchQuery: '',
+            activeFilter: 'All',
+            selectedJob: null
+        };
+
+        function render() {
+            const root = document.getElementById('app-root');
+            const bg = document.getElementById('bg-layer');
+            
+            // Adjust background based on view
+            if (state.view === 'list') {
+                bg.style.backgroundColor = '#020617';
+                bg.querySelector('.bg-network').style.opacity = '0.1';
+            } else {
+                bg.style.backgroundColor = '#ffffff';
+                bg.querySelector('.bg-network').style.opacity = '0.5';
+            }
+
+            if (state.view === 'list') {
+                root.innerHTML = renderListView();
+            } else if (state.view === 'apply') {
+                root.innerHTML = renderApplyView();
+            } else if (state.view === 'success') {
+                root.innerHTML = renderSuccessPage();
+            }
+            attachListeners();
+        }
+
+        function renderListView() {
+            const filtered = jobListings.filter(job => {
+                const matchSearch = job.title.toLowerCase().includes(state.searchQuery.toLowerCase()) || 
+                                   job.company.toLowerCase().includes(state.searchQuery.toLowerCase());
+                const matchFilter = state.activeFilter === 'All' || job.category === state.activeFilter;
+                return matchSearch && matchFilter;
+            });
+
+            return `
+                <div class="max-w-6xl mx-auto px-6 py-12 lg:py-20">
+                    <header class="text-center mb-12 animate-fade-in">
+                        <h1 class="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">Open Positions</h1>
+                        <p class="text-xs text-slate-500 font-medium">High-impact positions at top-tier Indian startups.</p>
+                    </header>
+
+                    <div class="max-w-xl mx-auto mb-16 space-y-6 animate-fade-in">
+                        <div class="relative group">
+                            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-slate-600 group-focus-within:text-white transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                            <input 
+                                type="text" id="search-input" value="${state.searchQuery}"
+                                placeholder="Search roles or companies..."
+                                class="w-full pl-11 pr-6 py-3.5 bg-slate-900/40 border border-slate-800 focus:border-slate-700 rounded-2xl outline-none transition-all text-sm text-white placeholder-slate-700"
+                            />
+                        </div>
+                        
+                        <div class="flex flex-wrap justify-center gap-2">
+                            ${['All', 'Design', 'Engineering', 'Marketing'].map(f => `
+                                <button onclick="setFilter('${f}')" 
+                                    class="filter-btn px-6 py-2 rounded-xl text-[11px] font-bold uppercase tracking-wider ${state.activeFilter === f ? 'active' : ''}">
+                                    ${f}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                        ${filtered.length ? filtered.map(job => renderJobCard(job)).join('') : `
+                            <div class="col-span-full py-20 text-center text-slate-700 text-[10px] font-black uppercase tracking-[0.2em]">No results found</div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderJobCard(job) {
+            return `
+                <div class="job-card p-6 flex flex-col min-h-[240px]">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${job.logoColor} flex items-center justify-center text-white text-lg font-black shadow-sm">
+                            ${job.logoInitials}
+                        </div>
+                        <button class="text-slate-200 hover:text-slate-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="flex-grow">
+                        <h3 class="text-[15px] font-bold text-slate-900 mb-0.5 leading-tight">${job.title}</h3>
+                        <p class="text-slate-400 font-bold text-[9px] mb-4 uppercase tracking-widest">${job.company}</p>
+                        
+                        <div class="flex flex-wrap gap-1.5 mb-6">
+                            ${job.tags.map(t => `
+                                <span class="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded text-[8px] font-bold text-slate-500 uppercase tracking-tighter">${t}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="flex items-end justify-between">
+                        <div class="space-y-0.5">
+                            <p class="text-sm font-black text-slate-900 leading-none">${job.salary}</p>
+                            <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">${job.location}</p>
+                        </div>
+                        <button onclick="goToApply(${job.id})" class="px-4 py-2 bg-slate-900 text-white rounded-lg font-bold text-[10px] hover:bg-slate-800 transition-all active:scale-95">Apply Now</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderApplyView() {
+            const job = state.selectedJob;
+            return `
+                <div class="max-w-6xl mx-auto px-6 py-8 md:py-16 min-h-screen flex flex-col animate-fade-in">
+                    <!-- Nav -->
+                    <nav class="mb-12">
+                        <button onclick="setView('list')" class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path></svg>
+                            Back to Board
+                        </button>
+                    </nav>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                        <!-- Left: Form -->
+                        <div class="lg:col-span-7">
+                            <h2 class="serif-title text-5xl md:text-6xl text-slate-900 mb-4">Apply for this role.</h2>
+                            <p class="text-slate-400 font-medium text-sm mb-12">Please share your details and portfolio links below.</p>
+
+                            <form onsubmit="event.preventDefault(); submitApplication()" class="space-y-10">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                    <div class="space-y-2">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" placeholder="John Doe" class="form-input" required>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" placeholder="john@example.com" class="form-input" required>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="form-label">Professional Links</label>
+                                    <input type="url" placeholder="https://" class="form-input">
+                                </div>
+
+                                <div class="space-y-2">
+                                    <label class="form-label">Short Note</label>
+                                    <textarea placeholder="Tell us why you're a good fit..." class="form-input min-h-[120px] resize-none"></textarea>
+                                </div>
+
+                                <button type="submit" class="group flex items-center gap-4 px-10 py-5 bg-[#0f172a] text-white rounded-full font-bold text-xs uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-95">
+                                    Submit Application
+                                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Right: Info Card -->
+                        <div class="lg:col-span-5">
+                            <div class="bg-slate-50/80 backdrop-blur-sm p-10 rounded-[2.5rem] space-y-8">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${job.logoColor} flex items-center justify-center text-white text-xl font-black">
+                                        ${job.logoInitials}
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider leading-none">${job.company}</h4>
+                                        <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">${job.location}</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <p class="form-label">Position</p>
+                                    <h3 class="text-xl font-bold text-slate-900 leading-tight">${job.title}</h3>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <p class="form-label">Salary Bracket</p>
+                                    <h3 class="text-xl font-bold text-slate-900 leading-tight">${job.salary}</h3>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <p class="form-label">About the role</p>
+                                    <p class="text-sm text-slate-500 leading-relaxed font-medium">
+                                        ${job.description || "Exciting opportunity to join a fast-growing team and make a real impact."}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSuccessPage() {
+            return `
+                <div class="min-h-screen flex items-center justify-center p-6 animate-fade-in">
+                    <div class="bg-white p-12 rounded-[3.5rem] shadow-2xl max-w-sm w-full text-center border border-slate-100">
+                        <div class="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl shadow-green-100">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-900 mb-3">Application Sent!</h2>
+                        <p class="text-sm text-slate-500 font-medium mb-10 leading-relaxed">The team at <span class="font-bold text-slate-900">${state.selectedJob.company}</span> has received your application and will review it shortly.</p>
+                        <button onclick="setView('list')" class="w-full py-5 bg-slate-900 text-white font-bold text-xs rounded-2xl hover:bg-slate-800 transition-all uppercase tracking-[0.2em]">Back to Listings</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Functions ---
+        window.setFilter = (f) => {
+            state.activeFilter = f;
+            render();
+        };
+
+        window.goToApply = (id) => {
+            state.selectedJob = jobListings.find(j => j.id === id);
+            state.view = 'apply';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            render();
+        };
+
+        window.submitApplication = () => {
+            state.view = 'success';
+            render();
+        };
+
+        window.setView = (v) => {
+            state.view = v;
+            render();
+        };
+
+        function attachListeners() {
+            const input = document.getElementById('search-input');
+            if (input) {
+                input.addEventListener('input', (e) => {
+                    state.searchQuery = e.target.value;
+                    render();
+                    const newInput = document.getElementById('search-input');
+                    newInput.focus();
+                    newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+                });
+            }
+        }
+
+        window.onload = render;
+    </script>
+</body>
+</html>

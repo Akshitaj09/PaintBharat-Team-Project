@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Choose Paint Bharat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Split Screen Layout */
+        .split-container {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        @media (min-width: 1024px) {
+            .split-container {
+                flex-direction: row;
+            }
+        }
+
+        /* Fixed Visual Side */
+        .visual-side {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            overflow: hidden;
+        }
+
+        @media (min-width: 1024px) {
+            .visual-side {
+                width: 50%;
+                height: 100vh;
+                position: sticky;
+                top: 0;
+            }
+        }
+
+        .static-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('images/jewel tones.png');
+            background-size: cover;
+            background-position: center;
+            animation: slowZoom 25s infinite alternate ease-in-out;
+        }
+
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .visual-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(10,10,10,0.9) 100%);
+        }
+
+        @media (min-width: 1024px) {
+            .visual-overlay {
+                background: linear-gradient(to right, rgba(10,10,10,0) 60%, rgba(10,10,10,1) 100%);
+            }
+        }
+
+        /* Content Side */
+        .content-side {
+            width: 100%;
+            padding: 4rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #0a0a0a;
+        }
+
+        @media (min-width: 1024px) {
+            .content-side {
+                width: 50%;
+                padding: 0 8% 0 6%;
+            }
+        }
+
+        .feature-item {
+            position: relative;
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.4s ease;
+        }
+
+        .feature-item:hover {
+            border-bottom-color: #e11d48;
+            padding-left: 1rem;
+        }
+
+        .number-outline {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 700;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .feature-item:hover .number-outline {
+            -webkit-text-stroke: 1px rgba(225,29,72,0.2);
+            right: 1.5rem;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Animated Paint Bubble Glow */
+        .glow-bubble {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(225, 29, 72, 0.05) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: -1;
+            animation: moveGlow 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes moveGlow {
+            0% { transform: translate(-30%, -20%); }
+            100% { transform: translate(30%, 40%); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glow-bubble"></div>
+
+    <div class="split-container">
+        
+        <!-- Fixed Visual Side -->
+        <div class="visual-side">
+            <div class="static-bg"></div>
+            <div class="visual-overlay"></div>
+            
+            <!-- Branding Overlay -->
+            <div class="absolute bottom-12 left-6 md:left-12 z-20">
+                <div class="h-px w-20 bg-rose-600 mb-6"></div>
+                <h1 class="serif text-4xl md:text-5xl lg:text-7xl text-white leading-tight">Refining <br><span class="italic text-rose-500">Every Detail</span></h1>
+            </div>
+        </div>
+
+        <!-- Scrolling Content Side -->
+        <div class="content-side">
+            
+            <div class="mb-16 md:mb-24">
+                <span class="text-rose-500 font-bold tracking-[0.4em] uppercase text-xs mb-4 block">Selection Guide</span>
+                <h2 class="serif text-4xl md:text-5xl lg:text-6xl leading-tight">Beyond Color, <br>It’s a <span class="italic">Commitment</span></h2>
+                <p class="mt-6 text-slate-400 max-w-md font-light leading-relaxed text-sm md:text-base">
+                    We don't just sell paint; we curate the atmosphere of your home with scientific precision and artistic soul.
+                </p>
+            </div>
+
+            <div class="space-y-2">
+                
+                <!-- Item 01 -->
+                <div class="feature-item group">
+                    <span class="number-outline">01</span>
+                    <div class="relative z-10">
+                        <h3 class="text-rose-500 font-bold text-[10px] tracking-[0.3em] uppercase mb-2">Texture</h3>
+                        <h4 class="text-2xl md:text-3xl font-bold mb-3 group-hover:text-rose-500 transition-colors">Luxury Silk Finish</h4>
+                        <p class="text-slate-400 max-w-sm font-light text-sm md:text-base">
+                            Our proprietary blend creates a surface so smooth it mimics the tactile richness of premium silk fabric.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 02 -->
+                <div class="feature-item group">
+                    <span class="number-outline">02</span>
+                    <div class="relative z-10">
+                        <h3 class="text-rose-500 font-bold text-[10px] tracking-[0.3em] uppercase mb-2">Durability</h3>
+                        <h4 class="text-2xl md:text-3xl font-bold mb-3 group-hover:text-rose-500 transition-colors">Titanium Shield</h4>
+                        <p class="text-slate-400 max-w-sm font-light text-sm md:text-base">
+                            Molecular-level protection that resists scuffs, stains, and environmental wear for over a decade.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 03 -->
+                <div class="feature-item group">
+                    <span class="number-outline">03</span>
+                    <div class="relative z-10">
+                        <h3 class="text-rose-500 font-bold text-[10px] tracking-[0.3em] uppercase mb-2">Application</h3>
+                        <h4 class="text-2xl md:text-3xl font-bold mb-3 group-hover:text-rose-500 transition-colors">Effortless Flow</h4>
+                        <p class="text-slate-400 max-w-sm font-light text-sm md:text-base">
+                            Engineered for superior leveling, ensuring a perfect, streak-free coat regardless of the tool used.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Note -->
+            <div class="mt-16 md:mt-24 flex items-center justify-between opacity-30 text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-bold">
+                <span>The Paint Bharat Standard</span>
+                <div class="h-px flex-1 mx-4 bg-white/20"></div>
+                <span>Est. 2024</span>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Choose Paint Bharat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #ffffff;
+            color: #0f172a;
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .hover-lift {
+            transition: all 0.5s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-8px);
+        }
+        
+        .accent-line {
+            width: 32px;
+            height: 2px;
+            background: #e11d48;
+            transition: width 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+
+        .hover-lift:hover .accent-line {
+            width: 64px;
+        }
+
+        .image-reveal {
+            clip-path: inset(0 0 0 0 round 2.5rem);
+            position: relative;
+            height: 650px;
+            overflow: hidden;
+        }
+
+        .slide-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out, transform 4s linear;
+        }
+
+        .slide-img.active {
+            opacity: 1;
+            transform: scale(1.08);
+        }
+
+        /* Enhanced Bubble Animation Styles */
+        .bubble-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(225, 29, 72, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: float-bubble 12s infinite ease-in-out;
+        }
+
+        @keyframes float-bubble {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-40px, 60px) scale(1.15); }
+            66% { transform: translate(30px, -50px) scale(0.9); }
+        }
+
+        /* Varied Bubbles for more depth */
+        .bubble:nth-child(1) { width: 140px; height: 140px; top: 5%; right: 10%; animation-duration: 18s; }
+        .bubble:nth-child(2) { width: 90px; height: 90px; top: 20%; right: 2%; animation-duration: 14s; animation-delay: -2s; }
+        .bubble:nth-child(3) { width: 200px; height: 200px; top: 35%; right: 15%; animation-duration: 20s; animation-delay: -5s; opacity: 0.4; }
+        .bubble:nth-child(4) { width: 70px; height: 70px; top: 12%; right: 28%; animation-duration: 12s; animation-delay: -8s; }
+        .bubble:nth-child(5) { width: 110px; height: 110px; top: 50%; right: 5%; animation-duration: 16s; animation-delay: -11s; }
+        .bubble:nth-child(6) { width: 50px; height: 50px; top: 45%; right: 25%; animation-duration: 10s; animation-delay: -3s; }
+        .bubble:nth-child(7) { width: 160px; height: 160px; top: 70%; right: 12%; animation-duration: 22s; animation-delay: -15s; opacity: 0.3; }
+        .bubble:nth-child(8) { width: 80px; height: 80px; top: 5%; right: 40%; animation-duration: 15s; animation-delay: -6s; opacity: 0.2; }
+    </style>
+</head>
+<body class="bg-white">
+
+    <!-- WHY CHOOSE US SECTION -->
+    <section class="py-24 px-6 lg:py-32 overflow-hidden relative">
+        
+        <!-- Animated Bubble Background (Increased density) -->
+        <div class="bubble-container">
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+            <div class="bubble"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            
+            <!-- Strategic Header -->
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-20 gap-8">
+                <div class="max-w-3xl">
+                    <span class="text-rose-600 font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">The Gold Standard</span>
+                    <h2 class="serif text-5xl md:text-7xl text-slate-900 leading-[1.1] tracking-tight">
+                        Elevating Spaces. <br>
+                        <span class="italic text-rose-600">Preserving Beauty.</span>
+                    </h2>
+                </div>
+                <div class="lg:w-1/3">
+                    <p class="text-slate-400 text-sm leading-relaxed border-l border-slate-100 pl-6">
+                        Paint Bharat combines high-performance chemistry with sophisticated aesthetics to deliver a finish that lasts a lifetime.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                
+                <!-- Visual Anchor (Left) - Animated Slider -->
+                <div class="lg:col-span-6 relative">
+                    <div class="image-reveal shadow-2xl group">
+                        <!-- Slide 1 -->
+                        <img src="images/brown family.png" 
+                             class="slide-img active" alt="Luxury Interior 1">
+                        <!-- Slide 2 -->
+                        <img src="images/amber family.png" 
+                             class="slide-img" alt="Luxury Interior 2">
+                        <!-- Slide 3 -->
+                        <img src="images/home_exterior.jpg" 
+                             class="slide-img" alt="Luxury Interior 3">
+                        <!-- Slide 4 -->
+                        <img src="images/jewel tones.png" 
+                             class="slide-img" alt="Luxury Exterior 1">
+                        <!-- Slide 5 -->
+                        <img src="images/home_exterior1.jpg" 
+                             class="slide-img" alt="Luxury Interior 4">
+                        <!-- Slide 6 -->
+                        <img src="images/metallic royal.png" 
+                             class="slide-img" alt="Luxury Minimalist">
+                        
+                        <!-- Floating Detail Card -->
+                        <div class="absolute top-10 right-10 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl z-20 hidden md:block border border-white/20">
+                            <div class="text-rose-600 font-bold text-2xl mb-1 italic">10+ Years</div>
+                            <div class="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Surface Longevity</div>
+                        </div>
+
+                        <!-- Slide Progress Indicator -->
+                        <div class="absolute bottom-8 left-10 flex gap-2 z-20">
+                            <div class="w-12 h-1 bg-white/30 rounded-full overflow-hidden">
+                                <div class="h-full bg-white progress-bar w-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Content (Right) -->
+                <div class="lg:col-span-6 space-y-12">
+                    
+                    <!-- Feature 01 -->
+                    <div class="hover-lift group">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="serif text-2xl italic text-slate-200 group-hover:text-rose-200 transition-colors">01</span>
+                            <div class="accent-line"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-3 text-balance">Luxury Finish Guarantee</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">
+                            Ultra-smooth, flawless coatings that elevate your space instantly. Designed to deliver a rich, <strong>high-end look</strong> that reflects elegance in every corner.
+                        </p>
+                    </div>
+
+                    <!-- Feature 02 -->
+                    <div class="hover-lift group">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="serif text-2xl italic text-slate-200 group-hover:text-rose-200 transition-colors">02</span>
+                            <div class="accent-line"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-3 text-balance">WeatherShield Protection</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">
+                            Built to withstand harsh sun, rain, and humidity. Your walls stay <strong>vibrant, crack-free</strong>, and protected for years—inside and out.
+                        </p>
+                    </div>
+
+                    <!-- Feature 03 -->
+                    <div class="hover-lift group">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="serif text-2xl italic text-slate-200 group-hover:text-rose-200 transition-colors">03</span>
+                            <div class="accent-line"></div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-3 text-balance">Quick-Dry Technology</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">
+                            Fast-drying formula that reduces downtime and mess. Get back to your routine quicker with walls <strong>ready in hours</strong>, not days.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('.slide-img');
+            let currentIndex = 0;
+
+            function nextSlide() {
+                images[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % images.length;
+                images[currentIndex].classList.add('active');
+            }
+
+            setInterval(nextSlide, 3000);
+        });
+    </script>
+</body>
+</html>

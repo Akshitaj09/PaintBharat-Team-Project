@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Hiring Roadmap</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for logic/animations -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus+Jakarta+Sans', sans-serif; }
+        [x-cloak] { display: none !important; }
+        
+        .noise-bg {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .blueprint-grid {
+            background-image: linear-gradient(#001F3F 1px, transparent 1px), linear-gradient(90deg, #001F3F 1px, transparent 1px);
+            background-size: 80px 80px;
+        }
+
+        .scroll-progress-line {
+            transform-origin: left;
+            transition: transform 0.1s linear;
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-[#001F3F] overflow-x-hidden" 
+      x-data="{ 
+        scrollY: 0, 
+        progress: 0,
+        init() {
+            window.addEventListener('scroll', () => {
+                const winScroll = document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                this.scrollY = winScroll;
+                this.progress = (winScroll / height);
+            })
+        }
+      }">
+
+    <div class="min-h-screen py-24 px-6 flex items-center justify-center relative">
+        
+        <!-- 1. ELEGANT SECTION BACKGROUND -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <!-- Fine Noise Texture -->
+            <div class="absolute inset-0 opacity-[0.015] mix-blend-multiply noise-bg"></div>
+
+            <!-- Dynamic Gradient Orbs -->
+            <div class="absolute top-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-pink-100/40 rounded-full blur-[140px]"
+                 :style="`transform: translateY(${scrollY * 0.15}px)`"></div>
+            <div class="absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-[#001F3F]/5 rounded-full blur-[140px]"
+                 :style="`transform: translateY(${-scrollY * 0.1}px)`"></div>
+
+            <!-- Geometric Technical Grid -->
+            <div class="absolute inset-0 opacity-[0.04] blueprint-grid"></div>
+
+            <!-- Elegant Architectural Accents -->
+            <svg class="absolute top-0 left-0 w-full h-full opacity-[0.1]" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#001F3F" stop-opacity="0" />
+                        <stop offset="50%" stop-color="#001F3F" stop-opacity="1" />
+                        <stop offset="100%" stop-color="#001F3F" stop-opacity="0" />
+                    </linearGradient>
+                </defs>
+                <line x1="8%" y1="0" x2="8%" y2="100%" stroke="url(#lineGrad)" stroke-width="0.5" />
+                <line x1="92%" y1="0" x2="92%" y2="100%" stroke="url(#lineGrad)" stroke-width="0.5" />
+            </svg>
+        </div>
+
+        <!-- 2. OVERALL GLASS CANVAS CONTAINER -->
+        <div class="max-w-6xl w-full mx-auto relative z-10 p-12 md:p-24 rounded-[3.5rem] border border-white/60 bg-white/40 backdrop-blur-2xl shadow-[0_32px_120px_-20px_rgba(0,31,63,0.08)]"
+             x-intersect="entry => entry.target.classList.add('animate-fade-in')">
+            
+            <!-- Heading Section -->
+            <div class="text-center mb-28">
+                <div class="inline-block mb-6">
+                    <span class="text-[11px] uppercase font-black text-[#001F3F]/30 pb-2 block tracking-[0.5em]">
+                        TALENT ACQUISITION
+                    </span>
+                </div>
+                
+                <h2 class="text-4xl md:text-6xl font-black text-[#001F3F] tracking-tight leading-none">
+                    Hiring Process
+                </h2>
+                
+                <div class="h-1 bg-gradient-to-r from-pink-400 to-pink-500 mx-auto mt-8 rounded-full shadow-[0_4px_12px_rgba(236,72,153,0.3)] w-[120px]"></div>
+            </div>
+
+            <!-- Steps Logic -->
+            <div class="relative py-10" id="roadmap-container">
+                
+                <!-- Subtle Background Track -->
+                <div class="absolute top-[102px] left-0 w-full h-[1px] bg-[#001F3F]/5 hidden md:block"></div>
+                
+                <!-- Animated Navy Progress Line -->
+                <div class="absolute top-[102px] left-0 w-full h-[2px] bg-[#001F3F]/60 scroll-progress-line hidden md:block z-0"
+                     :style="`transform: scaleX(${progress})`"></div>
+
+                <!-- Steps Horizontal Grid -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center relative gap-20 md:gap-0">
+                    <!-- Mobile Vertical Track -->
+                    <div class="absolute left-8 top-0 bottom-0 w-[1px] bg-[#001F3F]/5 md:hidden"></div>
+                    
+                    <!-- Phase 01 -->
+                    <div class="relative flex flex-col items-center flex-1 z-10 px-4 group">
+                        <span class="mb-5 text-[10px] font-bold tracking-[0.3em] text-[#001F3F]/30 uppercase">Phase 01</span>
+                        <div class="relative mb-8">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center bg-white border border-[#001F3F]/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 group-hover:shadow-[0_15px_35px_rgba(236,72,153,0.15)] group-hover:border-pink-200 relative z-20 group-hover:scale-110 group-hover:rotate-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-hover:text-pink-500 transition-colors"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                            </div>
+                            <div class="absolute inset-0 rounded-full scale-150 opacity-0 group-hover:opacity-20 animate-pulse bg-pink-300 blur-xl transition-opacity duration-500"></div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold text-[#001F3F] mb-3 tracking-tight">Submit Your Resume</h3>
+                            <p class="text-[#001F3F]/50 text-sm leading-relaxed max-w-[220px] mx-auto font-medium">Upload your details and begin your professional journey with PaintBharat.</p>
+                        </div>
+                    </div>
+
+                    <!-- Phase 02 -->
+                    <div class="relative flex flex-col items-center flex-1 z-10 px-4 group">
+                        <span class="mb-5 text-[10px] font-bold tracking-[0.3em] text-[#001F3F]/30 uppercase">Phase 02</span>
+                        <div class="relative mb-8">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center bg-white border border-[#001F3F]/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 group-hover:shadow-[0_15px_35px_rgba(236,72,153,0.15)] group-hover:border-pink-200 relative z-20 group-hover:scale-110 group-hover:rotate-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-hover:text-pink-500 transition-colors"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <div class="absolute inset-0 rounded-full scale-150 opacity-0 group-hover:opacity-20 animate-pulse bg-pink-300 blur-xl transition-opacity duration-500"></div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold text-[#001F3F] mb-3 tracking-tight">Interview Process</h3>
+                            <p class="text-[#001F3F]/50 text-sm leading-relaxed max-w-[220px] mx-auto font-medium">Engage in a collaborative dialogue to showcase your unique expertise.</p>
+                        </div>
+                    </div>
+
+                    <!-- Phase 03 -->
+                    <div class="relative flex flex-col items-center flex-1 z-10 px-4 group">
+                        <span class="mb-5 text-[10px] font-bold tracking-[0.3em] text-[#001F3F]/30 uppercase">Phase 03</span>
+                        <div class="relative mb-8">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center bg-white border border-[#001F3F]/5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 group-hover:shadow-[0_15px_35px_rgba(236,72,153,0.15)] group-hover:border-pink-200 relative z-20 group-hover:scale-110 group-hover:rotate-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-hover:text-pink-500 transition-colors"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div class="absolute inset-0 rounded-full scale-150 opacity-0 group-hover:opacity-20 animate-pulse bg-pink-300 blur-xl transition-opacity duration-500"></div>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold text-[#001F3F] mb-3 tracking-tight">Onboarding</h3>
+                            <p class="text-[#001F3F]/50 text-sm leading-relaxed max-w-[220px] mx-auto font-medium">Join the collective and start making an impact from day one.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Bottom Decorative Detail -->
+            <div class="mt-24 pt-8 border-t border-[#001F3F]/5 flex justify-center">
+                <div class="flex gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-pink-400"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-[#001F3F]/10"></div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-[#001F3F]/10"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

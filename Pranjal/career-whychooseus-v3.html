@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Co. | Premium Interiors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+        }
+
+        .custom-blur {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .active-tab {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-left: 2px solid #ff1493;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(1.05); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0px); }
+        }
+
+        /* Pulse for the indicator */
+        .pulse-dot {
+            box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 20, 147, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 20, 147, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 20, 147, 0); }
+        }
+
+        /* Smooth description transition */
+        .description {
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="text-white selection:bg-[#ff1493] selection:text-white overflow-x-hidden">
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 z-0">
+        <div class="absolute inset-0 bg-[#001f3f] opacity-[0.1]"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-black via-transparent to-[#001f3f]/15"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-900/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-gray-800/10 rounded-full blur-[100px]"></div>
+    </div>
+
+    <main class="relative z-10 container mx-auto px-6 py-12 lg:py-24">
+        <!-- Header Block -->
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div class="max-w-3xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="h-[1px] w-16 bg-gray-700"></div>
+                    <span class="text-gray-400 uppercase tracking-[0.4em] text-[10px] font-bold">Why PaintBharat Co.</span>
+                </div>
+                <h1 class="text-5xl md:text-8xl font-light leading-[1.1] tracking-tight">
+                    Crafting <span class="font-medium text-white italic underline decoration-[#ff1493]/30 decoration-4 underline-offset-8">Spaces</span> <br/>
+                    <span class="text-gray-500">Not Just Walls.</span>
+                </h1>
+            </div>
+            
+            <!-- Trust Badge -->
+            <div class="flex items-center gap-5 p-6 rounded-2xl bg-[#0a0a0a] border border-white/5 custom-blur shadow-2xl">
+                <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-[#ff1493] border border-white/10">
+                    <i class="fas fa-shield-halved text-xl"></i>
+                </div>
+                <div>
+                    <div id="homes-count" class="text-2xl font-bold tracking-tighter">0+</div>
+                    <div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Premium Projects</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Split Interactive Section -->
+        <div class="flex flex-col lg:flex-row gap-16 items-start">
+            
+            <!-- Left: Navigation -->
+            <div class="w-full lg:w-4/12 space-y-2" id="feature-nav">
+                <!-- Tabs will be injected here by JS -->
+            </div>
+
+            <!-- Right: Visual Showcase -->
+            <div class="w-full lg:w-8/12 sticky top-24">
+                <div class="relative rounded-3xl overflow-hidden aspect-[16/10] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.8)] border border-white/5 bg-[#0a0a0a]">
+                    <div id="showcase-container" class="absolute inset-0">
+                        <img id="showcase-img" src="" class="w-full h-full object-cover grayscale-[0.2] contrast-[1.05] brightness-[0.8] transition-all duration-1000 fade-in" alt="Premium Interior">
+                        
+                        <!-- Overlays -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                        <div class="absolute inset-0 bg-[#001f3f]/10 mix-blend-overlay"></div>
+                        
+                        <!-- Spotlight Indicator (As requested in image) -->
+                        <div class="absolute top-8 left-8">
+                           <div class="flex items-center gap-2 px-4 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/10 shadow-lg">
+                              <div class="w-2 h-2 rounded-full bg-[#ff1493] pulse-dot"></div>
+                              <span class="text-[10px] uppercase tracking-[0.2em] text-white font-black">PB-CO ACTIVE</span>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-8 px-2 text-gray-600 text-[9px] font-bold uppercase tracking-[0.4em]">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-mouse-pointer text-[10px] animate-bounce"></i>
+                        Explore our finish quality
+                    </div>
+                    <div class="text-white/20">
+                        High Performance Coating System
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-32 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-gray-600 text-[10px] tracking-[0.3em] uppercase">
+            <div class="font-medium">PaintBharat Co. © 2024</div>
+            <div class="flex gap-12 mt-6 md:mt-0 text-gray-500">
+                <a href="#" class="hover:text-white transition-colors">Instagram</a>
+                <a href="#" class="hover:text-white transition-colors">Pinterest</a>
+                <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const features = [
+            {
+                icon: 'fa-award',
+                title: 'Expert Professionals',
+                desc: 'Our master painters bring decades of combined experience to every residential project, ensuring surgical precision.',
+                image: 'images/amethyst family.png'
+            },
+            {
+                icon: 'fa-droplet',
+                title: 'Premium Materials',
+                desc: 'Exclusively using high-pigment, boutique paints that ensure a breathable yet durable finish for your walls.',
+                image: 'images/jewel tones.png'
+            },
+            {
+                icon: 'fa-clock',
+                title: 'On-Time Delivery',
+                desc: 'Precision scheduling and systematic project management means we finish on time, zero compromise on detail.',
+                image: 'images/minimalist neutrals.png'
+            },
+            {
+                icon: 'fa-wand-magic-sparkles',
+                title: 'Hassle-Free Process',
+                desc: 'From museum-grade furniture masking to post-paint deep cleaning, we leave your residence absolutely spotless.',
+                image: 'images/home_exterior.jpg'
+            }
+        ];
+
+        let activeTab = 0;
+
+        function init() {
+            renderTabs();
+            updateShowcase();
+            startCounter();
+        }
+
+        function renderTabs() {
+            const nav = document.getElementById('feature-nav');
+            nav.innerHTML = features.map((f, i) => `
+                <div class="feature-item group p-6 rounded-2xl cursor-pointer transition-all duration-500 border-l-2 ${i === activeTab ? 'active-tab border-[#ff1493]' : 'border-transparent hover:bg-white/[0.01]'}" 
+                     onclick="setActive(${i})"
+                     onmouseenter="setActive(${i})">
+                    <div class="flex items-center gap-5">
+                        <div class="icon-box transition-all duration-500 ${i === activeTab ? 'text-[#ff1493] scale-110' : 'text-gray-600 group-hover:text-gray-300'}">
+                            <i class="fas ${f.icon} text-lg"></i>
+                        </div>
+                        <h3 class="text-lg font-medium transition-colors tracking-wide ${i === activeTab ? 'text-white' : 'text-gray-500'}">
+                            ${f.title}
+                        </h3>
+                    </div>
+                    <div class="description overflow-hidden transition-all duration-500 ${i === activeTab ? 'max-h-40 opacity-100 mt-4' : 'max-h-0 opacity-0'}">
+                        <p class="pl-10 text-gray-400 text-sm font-light leading-relaxed">
+                            ${f.desc}
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+
+            const btnHtml = `
+                <div class="pt-10 px-2">
+                    <button class="w-full py-5 rounded-2xl border border-[#ff1493]/30 text-[#ff1493] font-bold text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all duration-500 hover:bg-[#ff1493] hover:text-white hover:shadow-[0_0_30px_rgba(255,20,147,0.3)]">
+                        Get Free Consultation
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            `;
+            nav.insertAdjacentHTML('beforeend', btnHtml);
+        }
+
+        function setActive(index) {
+            if (activeTab === index) return;
+            activeTab = index;
+            renderTabs();
+            updateShowcase();
+        }
+
+        function updateShowcase() {
+            const img = document.getElementById('showcase-img');
+            img.classList.remove('fade-in');
+            void img.offsetWidth; // Trigger reflow
+            img.src = features[activeTab].image;
+            img.classList.add('fade-in');
+        }
+
+        function startCounter() {
+            const el = document.getElementById('homes-count');
+            let count = 0;
+            const target = 500;
+            const interval = setInterval(() => {
+                if (count >= target) {
+                    clearInterval(interval);
+                    return;
+                }
+                count += 5;
+                el.innerText = count + '+';
+            }, 30);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

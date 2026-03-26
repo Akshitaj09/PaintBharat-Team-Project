@@ -1,0 +1,288 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Services</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+/* BACKGROUND */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 0.8s ease;
+  z-index: -2;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: -1;
+}
+
+/* GOLD TEXT */
+.gold-text {
+  background: linear-gradient(120deg, #c6a15b, #f5e6c8, #c6a15b);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+
+/* BUTTON */
+.gold-btn {
+  border: 1px solid rgba(198,161,91,0.6);
+  color: #e6d3a3;
+}
+
+.gold-btn:hover {
+  background: rgba(198,161,91,0.1);
+}
+
+/* CIRCLE */
+.circle-wrapper {
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.circle-img {
+  transition: all 0.5s ease;
+}
+
+.circle-wrapper:hover .circle-img {
+  transform: scale(1.08) rotate(2deg);
+}
+
+.circle-wrapper:hover {
+  box-shadow: 0 0 40px rgba(198,161,91,0.6);
+}
+
+/* CARD */
+.card-hover:hover {
+  transform: scale(1.05);
+}
+
+/* SCROLLBAR REMOVE */
+#picker::-webkit-scrollbar {
+  display: none;
+}
+
+#picker {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
+</head>
+
+<body class="text-white">
+
+<!-- BACKGROUND -->
+<div id="bg1" class="bg-layer"></div>
+<div id="bg2" class="bg-layer opacity-0"></div>
+<div class="overlay"></div>
+
+<div class="min-h-screen flex flex-col justify-between">
+
+<div class="h-16"></div>
+
+<!-- MAIN -->
+<div class="flex flex-1 items-center px-10">
+
+<div class="grid md:grid-cols-2 gap-10 w-full max-w-7xl mx-auto">
+
+<!-- LEFT -->
+<div class="flex flex-col justify-center space-y-6">
+
+<h2 id="title" class="text-6xl font-bold leading-tight gold-text"></h2>
+
+<p id="desc" class="text-gray-300 text-lg max-w-md"></p>
+
+<div class="flex gap-4">
+<button class="px-8 py-3 rounded-full bg-[#6b3e2e] hover:scale-105 transition">
+Explore
+</button>
+
+<button class="px-8 py-3 rounded-full gold-btn hover:scale-105 transition">
+View Work
+</button>
+</div>
+
+</div>
+
+<!-- RIGHT IMAGE -->
+<div class="flex justify-center items-center">
+
+<div class="circle-wrapper w-[380px] h-[380px] rounded-full overflow-hidden border border-[#c6a15b]/40 shadow-2xl">
+
+<img id="mainImg" class="circle-img w-full h-full object-cover">
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SERVICES SELECTOR -->
+<div class="bg-white/5 backdrop-blur-lg border-t border-white/10 px-10 py-6">
+
+<div id="picker" class="flex gap-6 overflow-x-auto px-2"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const services = [
+
+{
+name:"Interior Painting",
+desc:"Modern interior painting with premium finish.",
+img:"images/home_interior4.jpg",
+bg:"images/home_interior1.jpg"
+},
+
+{
+name:"Exterior Painting",
+desc:"Durable exterior protection.",
+img:"images/home_exterior1.jpg",
+bg:"images/home_exterior.jpg"
+},
+
+{
+name:"House Wallpaper",
+desc:"Stylish wallpapers for your home.",
+img:"images/emerald family.png",
+bg:"images/wallpaper.jpg"
+},
+
+{
+name:"Design Painting",
+desc:"Creative wall designs.",
+img:"images/home_interior.jpg",
+bg:"images/jewel tones.png"
+},
+
+{
+name:"Waterproofing",
+desc:"Protect your home from leakage and moisture.",
+img:"images/exterior_painting.jpg",
+bg:"images/pastel family.png"
+}
+
+];
+
+let active = 0;
+let currentBg = 1;
+
+function render(){
+
+const container = document.getElementById("picker");
+container.innerHTML="";
+
+services.forEach((s,i)=>{
+
+const div = document.createElement("div");
+
+div.className = `
+min-w-[180px] h-[100px] rounded-xl overflow-hidden cursor-pointer border card-hover transition
+${i===active ? "border-[#c6a15b]" : "border-white/20 opacity-80"}
+`;
+
+div.innerHTML = `
+<div class="w-full h-full relative">
+<img src="${s.img}" class="w-full h-full object-cover">
+<div class="absolute inset-0 bg-black/40 flex items-end p-3 text-sm">
+${s.name}
+</div>
+</div>
+`;
+
+div.onclick = ()=>{
+active=i;
+update();
+render();
+};
+
+container.appendChild(div);
+
+});
+
+}
+
+function changeBg(url){
+
+const bg1=document.getElementById("bg1");
+const bg2=document.getElementById("bg2");
+
+if(currentBg===1){
+bg2.style.backgroundImage=`url(${url})`;
+bg2.style.opacity=1;
+bg1.style.opacity=0;
+currentBg=2;
+}else{
+bg1.style.backgroundImage=`url(${url})`;
+bg1.style.opacity=1;
+bg2.style.opacity=0;
+currentBg=1;
+}
+
+}
+
+function update(){
+
+const s=services[active];
+
+document.getElementById("title").innerText=s.name;
+document.getElementById("desc").innerText=s.desc;
+
+const img=document.getElementById("mainImg");
+
+img.style.opacity=0;
+img.style.transform="scale(1.1)";
+
+setTimeout(()=>{
+
+img.src=s.img;
+img.style.opacity=1;
+img.style.transform="scale(1)";
+
+/* FIXED INITIAL BACKGROUND */
+const bg1=document.getElementById("bg1");
+
+if(!bg1.style.backgroundImage){
+bg1.style.backgroundImage=`url(${s.bg})`;
+}else{
+changeBg(s.bg);
+}
+
+},300);
+
+}
+
+render();
+update();
+
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Get in touch – PaintBharat Co.</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  min-height:100vh;
+  background:#1e1e1e;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Inter',sans-serif;
+}
+
+/* OUTER FRAME */
+.frame{
+  background:#2a2a2a;
+  padding:4px;
+  border-radius:10px;
+}
+
+/* MAIN CARD */
+.card{
+  width:1100px;
+  height:460px;
+  border-radius:20px;
+  padding:40px;
+  display:grid;
+  grid-template-columns:1fr 420px;
+  gap:40px;
+  position:relative;
+  overflow:hidden;
+
+  /* ✅ SHADOW ADDED */
+  box-shadow:0 40px 120px rgba(0,0,0,.6);
+}
+
+/* SLIDING BACKGROUND */
+.card-bg{
+  position:absolute;
+  inset:0;
+  width:800%;
+  height:100%;
+  display:flex;
+  animation:slideBg 24s linear infinite;
+}
+
+.card-bg img{
+  width:12.5%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* DARK OVERLAY */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+}
+
+/* ANIMATION */
+@keyframes slideBg{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* LEFT CONTENT */
+.left{
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  max-width:420px;
+  position:relative;
+  z-index:1;
+}
+
+.left h1{
+  font-family:'Playfair Display', serif;
+  font-size:48px;
+  font-weight:700;
+  text-shadow:0 10px 40px rgba(0,0,0,.7);
+}
+
+.left h1 span{
+  display:block;
+  color:#ffcd16;
+  font-style:italic;
+}
+
+.left p{
+  opacity:.9;
+}
+
+/* FORM */
+.form{
+  background:#fff;
+  border-radius:18px;
+  padding:28px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  box-shadow:0 30px 60px rgba(0,0,0,.35);
+  position:relative;
+  z-index:1;
+}
+
+.form h2{
+  font-size:20px;
+  font-weight:500;
+}
+
+input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid #e6e6e6;
+  font-size:14px;
+}
+
+/* CUSTOM DROPDOWN */
+.custom-select{
+  position:relative;
+  font-size:14px;
+  cursor:pointer;
+}
+
+.selected{
+  padding:12px 14px;
+  border:1px solid #ffbb33;
+  border-radius:10px;
+}
+
+.options{
+  position:absolute;
+  top:110%;
+  left:0;
+  width:100%;
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 15px 40px rgba(255, 255, 255, 0.838);
+  display:none;
+  overflow:hidden;
+  z-index:10;
+}
+
+.options div{
+  padding:12px 14px;
+  transition:.2s;
+}
+
+.options div:hover{
+  background:#ffcd16;
+  color:#000;
+}
+
+button{
+  margin-top:10px;
+  padding:12px;
+  border-radius:20px;
+  border:none;
+  background:#ffcd16;
+  cursor:pointer;
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(255,205,22,.5);
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .card{
+    grid-template-columns:1fr;
+    height:auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="frame">
+  <div class="card">
+
+    <!-- BACKGROUND -->
+    <div class="card-bg">
+      <img src="images/home_exterior1.jpg">
+      <img src="images/home_interior1.jpg">
+      <img src="images/home_exterior.jpg">
+
+      <img src="images/home_interior4.jpg">
+      <img src="images/home_exterior3.jpg">
+      <img src="images/home_interior5.jpg">
+      <img src="images/jewel tones.png">
+    </div>
+
+    <!-- LEFT -->
+    <div class="left">
+      <h1>Let’s Talk.<span>PaintBharat Co.</span></h1>
+      <p>Got a project or just vibing? Drop a message.</p>
+    </div>
+
+    <!-- FORM -->
+    <div class="form">
+      <h2>Get In Touch</h2>
+      <input type="text" placeholder="Your full name">
+      <input type="email" placeholder="Your email address">
+      <input type="tel" placeholder="Your phone number">
+
+      <div class="custom-select">
+        <div class="selected">Select services</div>
+        <div class="options">
+          <div>Painting</div>
+          <div>Interior Design</div>
+          <div>Exterior Design</div>
+        </div>
+      </div>
+
+      <button>Submit</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const select = document.querySelector(".custom-select");
+const selected = select.querySelector(".selected");
+const options = select.querySelector(".options");
+
+selected.onclick = () => {
+  options.style.display = options.style.display === "block" ? "none" : "block";
+};
+
+options.querySelectorAll("div").forEach(opt=>{
+  opt.onclick = ()=>{
+    selected.innerText = opt.innerText;
+    options.style.display = "none";
+  }
+});
+
+document.addEventListener("click",e=>{
+  if(!select.contains(e.target)) options.style.display="none";
+});
+</script>
+
+</body>
+</html>

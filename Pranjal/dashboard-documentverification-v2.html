@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint Bharat | Document Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* ULTRA GLASS MORPHISM TOKENS */
+            --glass-bg: rgba(10, 10, 10, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-reflection: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+            --primary-text: #ffffff;
+            --secondary-text: rgba(255, 255, 255, 0.5);
+            --accent: #a3cf62;
+            --warning: #ffcc33;
+            --error: #ff5e57;
+        }
+
+        body { 
+            background-color: #0a0a0a;
+            background-image: 
+                linear-gradient(to bottom, rgba(10, 10, 10, 0.35), rgba(10, 10, 10, 0.35)),
+                url('images/dashboard_bg.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            min-height: 100vh;
+            color: var(--primary-text);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Logic */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--glass-reflection);
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(163, 207, 98, 0.4);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .status-pill {
+            font-size: 9px;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-approved { background: rgba(163, 207, 98, 0.15); color: var(--accent); border: 1px solid rgba(163, 207, 98, 0.2); }
+        .status-pending { background: rgba(255, 204, 51, 0.1); color: var(--warning); border: 1px solid rgba(255, 204, 51, 0.2); }
+        .status-missing { background: rgba(255, 255, 255, 0.05); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); }
+        .status-compulsory { background: rgba(255, 94, 87, 0.1); color: #ff5e57; border: 1px solid rgba(255, 94, 87, 0.2); }
+
+        .drop-zone-mini {
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .drop-zone-mini:hover {
+            border-color: var(--accent);
+            background: rgba(163, 207, 98, 0.05);
+        }
+
+        .action-btn-mini {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        .action-btn-mini:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+        }
+
+        .fade-slide-in {
+            animation: fadeSlide 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Specific style to force dark dropdown options */
+        #roleSwitcher option {
+            background-color: #1a1a1a;
+            color: white;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="min-h-screen">
+        <!-- Main Content (Full width) -->
+        <main class="p-6 md:p-12 max-w-7xl mx-auto">
+            <!-- Header Section -->
+            <header class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 fade-slide-in">
+                <div class="flex items-center gap-6">
+                    <!-- Progress Circle Wrapper -->
+                    <div class="relative w-20 h-20 flex items-center justify-center glass-card border-none bg-white/5 shadow-2xl">
+                        <svg class="w-full h-full transform -rotate-2">
+                            <circle cx="40" cy="40" r="32" stroke="rgba(255,255,255,0.05)" stroke-width="6" fill="transparent" />
+                            <circle id="progressCircle" cx="40" cy="40" r="32" stroke="var(--accent)" stroke-width="6" fill="transparent" 
+                                stroke-dasharray="201.06" stroke-dashoffset="201.06" stroke-linecap="round" class="progress-ring__circle" 
+                                style="filter: drop-shadow(0 0 5px rgba(163,207,98,0.4))" />
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="percentLabel" class="text-lg font-black leading-none text-white">0%</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                             <div class="w-8 h-8 bg-[#a3cf62] rounded-lg flex items-center justify-center text-black">
+                                <i class="fas fa-paint-roller text-xs"></i>
+                            </div>
+                            <span class="text-sm font-black tracking-widest text-white/50 uppercase">Paint Bharat</span>
+                        </div>
+                        <h1 class="text-4xl font-black tracking-tighter mb-1.5 bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent">Verification Desk</h1>
+                        <p class="text-white/30 text-sm font-medium">Compliance documentation and KYC management.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="relative group">
+                        <i class="fas fa-chevron-down absolute right-6 top-1/2 -translate-y-1/2 text-white/20 group-hover:text-accent transition-colors pointer-events-none text-xs"></i>
+                        <select id="roleSwitcher" class="glass-card px-8 py-3.5 text-xs font-bold cursor-pointer outline-none bg-black/60 border-white/10 appearance-none pr-14 min-w-[220px] text-white" onchange="switchRole(this.value)">
+                            <option value="contractor">Partner Contractor</option>
+                            <option value="employee">Employee Profile</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+            </header>
+
+            <div id="documentContainer" class="space-y-4"></div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-10 right-10 glass-card bg-black/95 px-6 py-4 rounded-2xl shadow-2xl translate-y-32 opacity-0 transition-all duration-500 pointer-events-none flex items-center gap-4 z-[100] border-accent/20">
+        <div class="w-10 h-10 rounded-xl bg-accent/20 text-accent flex items-center justify-center"><i class="fas fa-check-circle"></i></div>
+        <div>
+            <p id="toastTitle" class="font-bold text-xs tracking-tight">Notification</p>
+            <p id="toastMessage" class="text-[10px] text-white/40">Success message.</p>
+        </div>
+    </div>
+
+    <script>
+        let currentTotalDocs = 0;
+        let currentUploadedDocs = 0;
+
+        const mandatoryDocs = [
+            { name: 'Aadhaar Card', desc: 'Front and back side in single PDF', compulsory: true },
+            { name: 'PAN Card', desc: 'Clear photo of original card', compulsory: true }
+        ];
+
+        const roleData = {
+            contractor: [
+                { cat: 'Identity Baseline', icon: 'fa-user-check', docs: [...mandatoryDocs] },
+                { 
+                    cat: 'Legal Credentials', icon: 'fa-briefcase',
+                    docs: [
+                        { name: 'Contract Agreement', desc: 'Signed stamp paper copy' },
+                        { name: 'Trade License', desc: 'Valid municipal license' },
+                        { name: 'GST Certification', desc: 'GST-R1 filing certificate' }
+                    ] 
+                }
+            ],
+            employee: [
+                { cat: 'Identity Proof', icon: 'fa-id-card', docs: [...mandatoryDocs] },
+                { 
+                    cat: 'Employment Records', icon: 'fa-file-invoice',
+                    docs: [
+                        { name: 'Offer Letter', desc: 'Issued by HR Dept' },
+                        { name: 'Experience Letter', desc: 'Previous organization' },
+                        { name: 'Pay Slip', desc: 'Recent salary statement' }
+                    ] 
+                }
+            ],
+            admin: [
+                { cat: 'Core Identity', icon: 'fa-fingerprint', docs: [...mandatoryDocs] },
+                { 
+                    cat: 'System Access', icon: 'fa-terminal',
+                    docs: [
+                        { name: 'Security Clearance', desc: 'HQ Auth Letter' },
+                        { name: 'Digital Signature', desc: 'Class 3 DSC' }
+                    ] 
+                }
+            ]
+        };
+
+        function updateProgress() {
+            const percentage = currentTotalDocs > 0 ? Math.round((currentUploadedDocs / currentTotalDocs) * 100) : 0;
+            const circle = document.getElementById('progressCircle');
+            const radius = 32;
+            const circumference = radius * 2 * Math.PI;
+            const offset = circumference - (percentage / 100 * circumference);
+            circle.style.strokeDashoffset = offset;
+            document.getElementById('percentLabel').innerText = percentage + '%';
+        }
+
+        function createHorizontalCard(doc, delay) {
+            const isCompulsory = doc.compulsory;
+            return `
+                <div class="glass-card px-6 py-4 flex flex-col md:flex-row items-center gap-6 group fade-slide-in" style="animation-delay: ${delay}s">
+                    <!-- Icon & Status -->
+                    <div class="flex items-center gap-4 min-w-[200px] w-full md:w-auto">
+                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white/20 group-hover:text-accent group-hover:bg-accent/5 transition-all">
+                            <i class="fas fa-file-alt text-lg"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="status-pill w-fit ${isCompulsory ? 'status-compulsory' : 'status-missing'}">
+                                ${isCompulsory ? 'Required' : 'Optional'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="flex-1 w-full">
+                        <h4 class="font-bold text-sm text-white/90 group-hover:text-accent transition-colors">${doc.name}</h4>
+                        <p class="text-[10px] text-white/20 font-medium">${doc.desc}</p>
+                    </div>
+
+                    <!-- Action Area -->
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <div class="relative upload-area flex-1 md:flex-none">
+                            <input type="file" class="hidden" onchange="handleUpload(this, '${doc.name}')">
+                            <div class="drop-zone-mini px-6 py-2.5 flex items-center justify-center gap-3 cursor-pointer group/zone min-w-[140px]" onclick="this.previousElementSibling.click()">
+                                <i class="fas fa-cloud-upload-alt text-[10px] text-white/20 group-hover/zone:text-accent"></i>
+                                <span class="text-[9px] font-black text-white/40 uppercase tracking-widest group-hover/zone:text-white">Upload</span>
+                            </div>
+                        </div>
+
+                        <div class="action-area hidden flex items-center gap-2">
+                            <button onclick="viewDoc('${doc.name}')" class="action-btn-mini w-10 h-10 rounded-xl flex items-center justify-center text-accent text-xs" title="Preview">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="reuploadDoc(this)" class="action-btn-mini w-10 h-10 rounded-xl flex items-center justify-center text-white/30 hover:text-white text-xs" title="Replace">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleUpload(input, name) {
+            if (input.files[0]) {
+                const card = input.closest('.glass-card');
+                const badge = card.querySelector('.status-pill');
+                const uploadArea = card.querySelector('.upload-area');
+                const actionArea = card.querySelector('.action-area');
+                
+                if (badge.innerText !== "VERIFIED") {
+                    currentUploadedDocs++;
+                    updateProgress();
+                }
+
+                badge.innerText = "Verifying...";
+                badge.className = "status-pill status-pending animate-pulse";
+                
+                setTimeout(() => {
+                    badge.className = "status-pill status-approved";
+                    badge.innerText = "Verified";
+                    uploadArea.classList.add('hidden');
+                    actionArea.classList.remove('hidden');
+                    showToast('Upload Success', `${name} is now encrypted and stored.`);
+                }, 1200);
+            }
+        }
+
+        function reuploadDoc(btn) {
+            btn.closest('.glass-card').querySelector('input[type="file"]').click();
+        }
+
+        function viewDoc(name) {
+            showToast('Secure Viewer', `Decrypting ${name} preview...`);
+        }
+
+        function switchRole(role) {
+            const container = document.getElementById('documentContainer');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                container.innerHTML = '';
+                const categories = roleData[role];
+                if (!categories) return;
+                
+                currentTotalDocs = 0;
+                currentUploadedDocs = 0;
+                categories.forEach(c => currentTotalDocs += c.docs.length);
+                updateProgress();
+
+                categories.forEach((cat, cIdx) => {
+                    const section = document.createElement('section');
+                    section.className = "mb-8 last:mb-0";
+                    section.innerHTML = `
+                        <div class="flex items-center gap-4 mb-5 ml-2">
+                            <div class="w-2 h-2 rounded-full bg-accent shadow-[0_0_10px_rgba(163,207,98,0.6)]"></div>
+                            <h3 class="text-[9px] font-black uppercase tracking-[4px] text-white/30">${cat.cat}</h3>
+                        </div>
+                        <div class="flex flex-col gap-3">
+                            ${cat.docs.map((doc, dIdx) => createHorizontalCard(doc, (cIdx * 0.1) + (dIdx * 0.04))).join('')}
+                        </div>`;
+                    container.appendChild(section);
+                });
+                container.style.opacity = '1';
+            }, 250);
+        }
+
+        function showToast(title, msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-32', 'opacity-0'), 3500);
+        }
+
+        window.onload = () => switchRole('contractor');
+    </script>
+</body>
+</html>

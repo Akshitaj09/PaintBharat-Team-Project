@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury Color Collection</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* Fonts */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.luxury-heading {
+    font-family: 'Playfair Display', serif;
+}
+
+/* ===== BACKGROUND IMAGE ===== */
+.bg-main {
+    position: absolute;
+    inset: 0;
+    background-image: url('images/pastel family.png');
+    background-size: cover;
+    background-position: center;
+    z-index: -3;
+}
+
+/* ===== MIRROR EFFECT ===== */
+.bg-main::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: inherit;
+    background-size: cover;
+    background-position: center;
+    transform: scaleY(-1);
+    opacity: 0.25;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+}
+
+/* ===== DARK BROWN OVERLAY ===== */
+.bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to right,
+        rgba(40,25,15,0.85),
+        rgba(40,25,15,0.55)
+    );
+    z-index: -2;
+}
+
+/* ===== GLASS CARD ===== */
+.glass-card {
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* ===== BROWN SEPARATOR ===== */
+@keyframes brownFlow {
+    0% { background-position: 0% }
+    100% { background-position: 200% }
+}
+
+.brown-line {
+    background: linear-gradient(
+        90deg,
+        #6E4E34,
+        #3E2A1F,
+        #6E4E34
+    );
+    background-size: 200%;
+    animation: brownFlow 3s linear infinite;
+}
+
+/* Image Hover */
+.img-hover {
+    transition: all 0.6s ease;
+}
+
+.img-hover:hover {
+    transform: scale(1.08);
+}
+
+/* ===== BROWN CTA BUTTON ===== */
+.luxury-btn {
+    background: linear-gradient(135deg,#6E4E34,#3E2A1F);
+    color: white;
+    transition: all 0.4s ease;
+}
+
+.luxury-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+</style>
+</head>
+
+<body class="relative min-h-screen overflow-hidden text-white">
+
+<!-- Background -->
+<div class="bg-main"></div>
+<div class="bg-overlay"></div>
+
+<section class="relative min-h-screen flex items-center justify-center px-6">
+
+<div class="max-w-7xl w-full grid lg:grid-cols-2 gap-20 items-center glass-card rounded-3xl p-16 shadow-2xl">
+
+<!-- LEFT CONTENT -->
+<div>
+
+<p class="uppercase tracking-[6px] text-sm text-[#C2A58B] mb-6">
+Luxury Color Experience
+</p>
+
+<h1 class="luxury-heading text-6xl md:text-7xl leading-tight text-[#E8D8C3]">
+Discover Your <br>
+<span class="text-[#C2A58B]">Perfect Palette</span>
+</h1>
+
+<p class="mt-8 text-lg text-white/80 max-w-lg leading-relaxed">
+Explore curated shades designed to elevate every interior with elegance, warmth, and timeless sophistication.
+</p>
+
+<button class="luxury-btn mt-10 px-12 py-4 rounded-full text-lg tracking-wide">
+Explore Collection
+</button>
+
+</div>
+
+<!-- RIGHT IMAGES -->
+<div class="flex items-center justify-center gap-8">
+
+<div class="w-48 h-72 rounded-[120px] overflow-hidden shadow-2xl">
+<img src="images/homeinterior.jpg"
+class="img-hover w-full h-full object-cover">
+</div>
+
+<div class="brown-line w-[3px] h-60 rounded-full"></div>
+
+<div class="w-52 h-96 rounded-[120px] overflow-hidden shadow-2xl">
+<img src="images/light color.png"
+class="img-hover w-full h-full object-cover">
+</div>
+
+<div class="brown-line w-[3px] h-60 rounded-full"></div>
+
+<div class="w-48 h-72 rounded-[120px] overflow-hidden shadow-2xl">
+<img src="images/home_exterior.jpg"
+class="img-hover w-full h-full object-cover">
+</div>
+
+</div>
+
+</div>
+</section>
+
+</body>
+</html>

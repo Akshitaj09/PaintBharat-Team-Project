@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | Color Cards Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        
+        body {
+            font-family: 'Plus+Jakarta+Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .color-card-hover:hover .color-code {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .room-overlay {
+            mix-blend-mode: multiply;
+            transition: background-color 0.5s ease;
+        }
+
+        .modal-active {
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        #paletteContainer {
+            overflow: hidden;
+            position: relative;
+            padding: 12px 0;
+        }
+
+        #paletteTrack {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .palette-card {
+            flex: 0 0 100%;
+            padding: 0 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            .palette-card {
+                flex: 0 0 33.333%;
+            }
+        }
+
+        .nav-arrow {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 rgba(79, 70, 229, 0);
+        }
+
+        .nav-arrow:hover {
+            transform: scale(1.15);
+            background-color: #f5f3ff;
+            border-color: #c4b5fd;
+            color: #4f46e5;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1), 0 4px 6px -2px rgba(79, 70, 229, 0.05);
+        }
+
+        .nav-arrow:active {
+            transform: scale(0.95);
+        }
+
+        .palette-color-bar {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .palette-color-bar:hover {
+            transform: scaleY(1.3);
+            z-index: 10;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="palette" class="text-white w-5 h-5"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-slate-800">Paint<span class="text-indigo-600">Bharat</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                    <a href="#" class="text-slate-600 hover:text-indigo-600">Home</a>
+                    <a href="#" class="text-indigo-600 font-semibold border-b-2 border-indigo-600 pb-1">Color Cards</a>
+                    <a href="#" class="text-slate-600 hover:text-indigo-600">Wallpapers</a>
+                    <a href="#" class="text-slate-600 hover:text-indigo-600">Waterproofing</a>
+                </div>
+                <button class="bg-indigo-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition">
+                    Contact Us
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1513519247388-4e2b705771e7?q=80&w=2070&auto=format&fit=crop" 
+                 class="w-full h-full object-cover" alt="Interior Design">
+            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Explore Our Color World</h1>
+            <p class="text-lg md:text-xl text-white/90 mb-8">Wall Paints, Wallpapers & Waterproofing for Every Style</p>
+            
+            <div class="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto bg-white/10 p-2 backdrop-blur-md rounded-2xl border border-white/20">
+                <div class="flex-1 relative">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 w-5 h-5"></i>
+                    <input type="text" id="mainSearch" placeholder="Search by color name or code (e.g. Ocean Blue, #0077B6)" 
+                           class="w-full bg-white/20 text-white placeholder:text-white/60 border-none rounded-xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-white/50 outline-none transition">
+                </div>
+                <button class="bg-white text-indigo-600 font-bold px-8 py-4 rounded-xl hover:bg-indigo-50 transition shadow-lg">
+                    Find Color
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Palette Explorer -->
+        <section class="mb-16 overflow-hidden">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-3xl font-playfair italic text-slate-800">Curated Palettes</h2>
+                    <p class="text-slate-500 mt-1 font-playfair">Discover expert-selected color harmonies</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="slidePalettes('prev')" class="nav-arrow p-2 rounded-full border border-slate-200 bg-white text-slate-600">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="slidePalettes('next')" class="nav-arrow p-2 rounded-full border border-slate-200 bg-white text-slate-600">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="paletteContainer">
+                <div id="paletteTrack">
+                    <!-- Palettes will be injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters & Results -->
+        <section id="explorer" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <aside class="space-y-8">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm sticky top-24">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-bold text-lg">Filters</h3>
+                        <button onclick="resetFilters()" class="text-xs text-indigo-600 font-semibold hover:underline">Reset All</button>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="text-sm font-semibold text-slate-500 uppercase tracking-wider block mb-3">Color Family</label>
+                        <div id="familyFilterGrid" class="grid grid-cols-4 gap-2">
+                            <!-- Populated dynamically via renderFamilyFilters() -->
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="text-sm font-semibold text-slate-500 uppercase tracking-wider block mb-3">Finish Type</label>
+                        <select id="filterFinish" onchange="setFilter('finish', this.value)" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            <option value="all">All Finishes</option>
+                            <option value="Satin">Satin</option>
+                            <option value="Matte">Matte</option>
+                            <option value="Gloss">Gloss</option>
+                            <option value="Waterproof">Waterproof</option>
+                            <option value="Textured">Textured</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-500 uppercase tracking-wider block mb-3">Sort By</label>
+                        <select onchange="updateSorting(this.value)" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none">
+                            <option value="trending">Trending</option>
+                            <option value="az">A to Z</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="lg:col-span-3">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-bold text-xl"><span id="resultCount">0</span> Colors Found</h3>
+                    <div class="flex gap-4">
+                        <button class="flex items-center gap-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 px-4 py-2 rounded-lg hover:bg-slate-50">
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i> Grid
+                        </button>
+                    </div>
+                </div>
+
+                <div id="colorGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+
+                <div id="emptyState" class="flex flex-col items-center justify-center py-20 text-center">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="search" class="text-slate-400 w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-lg font-bold">Select a shade from the sidebar</h4>
+                    <p class="text-slate-500">Pick a Curated Palette or Color Family to explore variations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Room Visualizer Section -->
+        <section class="mt-24 bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="p-8 lg:p-12 space-y-8">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-600 text-xs font-bold rounded-full mb-4">INTERACTIVE TOOL</span>
+                        <h2 class="text-4xl font-bold text-slate-800">Visualizer</h2>
+                        <p class="text-slate-500 mt-2">See how your favorite shades look on real walls before you buy.</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold">Currently Selected:</span>
+                            <span id="visualizerColorName" class="text-indigo-600 font-semibold">Ocean Tranquility</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2" id="visualizerQuickPick"></div>
+                    </div>
+
+                    <div class="pt-6 border-t border-slate-100">
+                        <button class="w-full flex items-center justify-center gap-3 bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition">
+                            <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+                            Upload Your Own Room Image
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative bg-slate-200 min-h-[400px]">
+                    <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop" 
+                         class="absolute inset-0 w-full h-full object-cover" alt="Room Sample">
+                    <div id="roomWallOverlay" class="absolute inset-0 room-overlay bg-indigo-500/30 pointer-events-none"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wallpaper Pairings -->
+        <section class="mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">Wallpaper Pairings</h2>
+                <p class="text-slate-500 max-w-xl mx-auto mt-2">Perfect combinations curated by our lead interior designers to match your selected palette.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="wallpaperGrid"></div>
+        </section>
+
+        <!-- Download CTA -->
+        <section class="mt-24 bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-3xl p-8 lg:p-16 text-center text-white">
+            <h2 class="text-3xl lg:text-5xl font-bold mb-6">Found Your Perfect Match?</h2>
+            <p class="text-white/80 text-lg mb-10 max-w-2xl mx-auto">Download the complete digital shade card for this palette or request a physical brochure delivered to your doorstep.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-indigo-50 transition">
+                    <i data-lucide="download" class="w-5 h-5"></i>
+                    Download PDF Guide
+                </button>
+                <button class="bg-indigo-500/30 backdrop-blur text-white border border-white/20 px-8 py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-indigo-500/50 transition">
+                    <i data-lucide="mail" class="w-5 h-5"></i>
+                    Request Physical Shade Card
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-white py-16 mt-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                            <i data-lucide="palette" class="text-white w-5 h-5"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight">Paint<span class="text-indigo-400">Bharat</span></span>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed">Bringing color to life since 1998. We provide premium wall paints, designer wallpapers, and industry-leading waterproofing solutions.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Services</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li><a href="#" class="hover:text-white transition">Interior Painting</a></li>
+                        <li><a href="#" class="hover:text-white transition">Exterior Solutions</a></li>
+                        <li><a href="#" class="hover:text-white transition">Wood Coatings</a></li>
+                        <li><a href="#" class="hover:text-white transition">Waterproofing</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Resources</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li><a href="#" class="hover:text-white transition">Color Cards</a></li>
+                        <li><a href="#" class="hover:text-white transition">Visualizer App</a></li>
+                        <li><a href="#" class="hover:text-white transition">Painting Guide</a></li>
+                        <li><a href="#" class="hover:text-white transition">Dealer Locator</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-6">Stay Connected</h4>
+                    <div class="flex gap-4 mb-6">
+                        <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Color Detail Modal -->
+    <div id="colorModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="relative bg-white w-full max-w-4xl rounded-3xl overflow-hidden shadow-2xl animate-fade-in">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-slate-900 transition">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
+                <div id="modalColorBlock" class="flex flex-col justify-end p-8 lg:p-12 transition-colors duration-500">
+                    <div class="bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-lg inline-block self-start">
+                        <h2 id="modalColorName" class="text-3xl font-bold text-slate-900 mb-1 font-playfair">Color Name</h2>
+                        <div class="flex items-center gap-3">
+                            <code id="modalColorCode" class="text-indigo-600 font-mono text-lg font-semibold tracking-wider">#CODE</code>
+                            <button onclick="copyCode()" class="text-slate-400 hover:text-indigo-600 transition"><i data-lucide="copy" class="w-4 h-4"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 lg:p-12 space-y-8 bg-white overflow-y-auto custom-scrollbar max-h-[85vh]">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Color Character</h3>
+                        <p id="modalDescription" class="text-slate-600 leading-relaxed text-lg font-playfair">Information about the shade.</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Best Applied To</h3>
+                            <div id="modalBestFor" class="flex flex-wrap gap-2"></div>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Available Finishes</h3>
+                            <p class="text-sm font-semibold text-slate-800">Premium Satin, Lustre, Matte</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Designer Wallpaper Pairing</h3>
+                        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100 group cursor-pointer hover:bg-slate-100 transition">
+                            <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=200&auto=format&fit=crop" class="w-20 h-20 rounded-xl object-cover shadow-sm group-hover:scale-105 transition" alt="Wallpaper">
+                            <div>
+                                <h4 class="text-base font-bold text-slate-800">Geometric Birch</h4>
+                                <p class="text-sm text-slate-500">Structural patterns</p>
+                            </div>
+                            <i data-lucide="external-link" class="w-5 h-5 text-slate-300 ml-auto group-hover:text-indigo-600 transition"></i>
+                        </div>
+                    </div>
+                    <div class="pt-8 flex gap-4">
+                        <button class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-indigo-700 hover:shadow-lg transition-all active:scale-[0.98]">
+                            <i data-lucide="heart" class="w-5 h-5"></i> Save to Favorites
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const colorNamesByHex = {
+        '#50C878': 'Emerald', '#228B22': 'Forest Green', '#006A4E': 'Bottle Green',
+        '#00A86B': 'Jade', '#355E3B': 'Hunter Green', '#008080': 'Deep Teal',
+        '#4E5D2F': 'Moss Luxe', '#40826D': 'Viridian',
+        '#0F52BA': 'Sapphire Blue', '#4169E1': 'Royal Blue', '#191970': 'Midnight Blue',
+        '#000080': 'Navy', '#003153': 'Prussian Blue', '#0047AB': 'Deep Cobalt',
+        '#2E0854': 'Indigo Luxe',
+        '#E0115F': 'Ruby Red', '#DC143C': 'Crimson', '#800020': 'Burgundy',
+        '#722F37': 'Wine', '#733635': 'Garnet', '#800000': 'Maroon',
+        '#4A0404': 'Ox Blood',
+        '#9966CC': 'Amethyst', '#8E4585': 'Plum', '#614051': 'Eggplant',
+        '#3D0734': 'Aubergine', '#330066': 'Deep Violet', '#7851A9': 'Royal Purple',
+        '#210124': 'Blackberry',
+        '#40E0D0': 'Turquoise', '#0073CF': 'Blue Topaz', '#004953': 'Peacock Blue',
+        '#00A383': 'Lagoon', '#5D8AA8': 'Aqua Luxe', '#006D6F': 'Caribbean Teal',
+        '#E4D00A': 'Citrine', '#FFBF00': 'Amber', '#E1AD01': 'Mustard Gold',
+        '#F4C430': 'Saffron', '#CC5500': 'Burnt Orange', '#AF922D': 'Honey Gold',
+        '#BA8E23': 'Marigold Luxe',
+        '#D05E70': 'Garnet Pink', '#C71585': 'Deep Rose', '#99748D': 'Dusty Mauve',
+        '#D291BC': 'Antique Pink', '#F7CAC9': 'Rose Quartz', '#B48395': 'Dark Blush',
+        '#C54B8C': 'Mulberry',
+        '#C04000': 'Mahogany', '#4E312D': 'Espresso', '#954535': 'Chestnut',
+        '#D2691E': 'Cocoa', '#773F1A': 'Walnut', '#804A00': 'Bronze Brown',
+        '#3C2A21': 'Dark Mocha',
+        '#CFB53B': 'Antique Gold', '#D7BD81': 'Champagne Gold', '#CD7F32': 'Bronze',
+        '#B87333': 'Copper', '#B76E79': 'Rose Gold', '#848482': 'Deep Silver',
+        '#E5E4E2': 'Platinum', '#2A3439': 'Gunmetal', '#71797E': 'Steel Grey',
+        '#5A5A5A': 'Smoky Silver', '#36454F': 'Graphite', '#353935': 'Onyx',
+        '#2F2F2F': 'Charcoal',
+        '#4B6F44': 'Leaf Green', '#BCB88A': 'Sage', '#71BC78': 'Fern',
+        '#8A9A5B': 'Moss', '#808000': 'Olive', '#32612D': 'Basil',
+        '#5F8575': 'Eucalyptus', '#006633': 'Clover',
+        '#F5F5F5': 'Pure White', '#ECE9E6': 'Linen', '#D7D2CC': 'Raw Stone',
+        '#8E9EAB': 'Cloud Grey', '#606C88': 'Steel Beam', '#3F4C6B': 'Deep Slate',
+        '#757F9A': 'Atmosphere', '#D1913C': 'Sand Drift',
+        '#9B1B30': 'Ruby Master', '#00A572': 'Emerald Master',
+        '#6A0DAD': 'Amethyst Master', '#FFD700': 'Gold Master',
+        '#E0F7FA': 'Icy Breath', '#B2EBF2': 'Aqua Tint', '#80DEEA': 'Sky Light',
+        '#4DD0E1': 'Ocean Wave', '#00BCD4': 'Deep Sea', '#0097A7': 'Arctic Blue',
+        '#B3E5FC': 'Frozen Lake', '#01579B': 'Midnight Arctic',
+        '#FFF9C4': 'Vanilla Cream', '#F1F8E9': 'Mint Whisper', '#E1F5FE': 'Airy Blue',
+        '#FCE4EC': 'Pink Petal', '#F3E5F5': 'Lilac Dream', '#E8EAF6': 'Indigo Mist',
+        '#FAFAFA': 'Alabaster', '#FDF5E6': 'Old Lace',
+        '#FFB7B2': 'Pastel Salmon', '#FFDAC1': 'Pastel Peach', '#E2F0CB': 'Pastel Lime',
+        '#B5EAD7': 'Pastel Mint', '#C7CEEA': 'Pastel Lavender', '#FF9AA2': 'Pastel Pink',
+        '#E0BBE4': 'Soft Orchid', '#957DAD': 'Muted Lavender',
+        '#FF8A65': 'Sunset Red', '#FFB74D': 'Apricot Warm', '#FFF176': 'Golden Sun',
+        '#D4E157': 'Pear Warm', '#AED581': 'Apple Warm', '#FF5722': 'Deep Ginger',
+        '#FFC107': 'Amber Warm', '#FFEB3B': 'Yellow Blaze'
+    };
+
+    const palettes = [
+        { id: 'p14', name: 'The Serene Cool Tones', description: 'Calming icy blues and oceanic cyans.', colors: ['#E0F7FA', '#B2EBF2', '#80DEEA', '#4DD0E1', '#00BCD4', '#0097A7', '#B3E5FC', '#01579B'], bg: 'https://images.unsplash.com/photo-1502672023488-70e25813eb80?q=80&w=800' },
+        { id: 'p10', name: 'Smoky Luxe', description: 'Modern royal neutrals like Gunmetal.', colors: ['#E5E4E2', '#2A3439', '#71797E', '#5A5A5A', '#36454F', '#353935', '#2F2F2F'], bg: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=800' },
+        { id: 'p2', name: 'Sapphire Family', description: 'Deep and authoritative blues.', colors: ['#0F52BA', '#4169E1', '#191970', '#000080', '#003153', '#0047AB', '#2E0854'], bg: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800' },
+        { id: 'p1', name: 'Emerald Family', description: 'Rich jewel tones including Emerald.', colors: ['#50C878', '#228B22', '#006A4E', '#00A86B', '#355E3B', '#008080', '#4E5D2F', '#40826D'], bg: 'https://images.unsplash.com/photo-1588666309990-d68f08e3d4a6?q=80&w=800' },
+        { id: 'p3', name: 'Ruby Family', description: 'Passionate shades of Crimson.', colors: ['#E0115F', '#DC143C', '#800020', '#722F37', '#733635', '#800000', '#4A0404'], bg: 'https://images.unsplash.com/photo-1513519247388-4e2b705771e7?q=80&w=800' }
+    ];
+
+    const descs = ["A serene and balanced shade that brings nature indoors.", "Bold and commanding focal point.", "Inspired by natural gradients.", "A designer favorite.", "Evokes timeless elegance."];
+    const bestForTags = ["Living Rooms", "Accent Walls", "Ceilings", "Home Offices", "Master Suites", "Modern Kitchens"];
+    const finishes = ['Satin', 'Matte', 'Gloss', 'Waterproof', 'Textured'];
+
+    // State Management
+    let currentFilters = { search: '', family: 'all', finish: 'all', palette: null, selectedSubColor: null, sort: 'trending' };
+    let currentPaletteIndex = 0;
+    let itemsPerView = 3;
+
+    window.onload = () => {
+        lucide.createIcons();
+        updateCarouselMetrics();
+        renderPalettes();
+        renderFamilyFilters();
+        renderColors();
+        setupVisualizer();
+        setupSearch();
+        window.addEventListener('resize', () => { updateCarouselMetrics(); updateTrackPosition(); });
+    };
+
+    function updateCarouselMetrics() { itemsPerView = window.innerWidth < 768 ? 1 : 3; }
+
+    function setupSearch() {
+        document.getElementById('mainSearch').addEventListener('input', (e) => {
+            currentFilters.search = e.target.value;
+            renderColors();
+        });
+    }
+
+    function renderPalettes() {
+        const track = document.getElementById('paletteTrack');
+        track.innerHTML = palettes.map(p => {
+            const isSelected = currentFilters.palette === p.id;
+            const selectedClasses = isSelected ? 'border-indigo-600 ring-4 ring-indigo-600/20 scale-[0.98]' : 'border-slate-200';
+            return `
+            <div class="palette-card">
+                <div onclick="selectPalette('${p.id}')" class="group cursor-pointer bg-white h-full rounded-3xl border-2 overflow-hidden transition-all duration-300 ${selectedClasses} hover:shadow-xl">
+                    <div class="h-32 relative overflow-hidden">
+                        <img src="${p.bg}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute inset-0 bg-slate-900/20"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-1 font-playfair">${p.name}</h3>
+                        <p class="text-xs text-slate-500 mb-4 line-clamp-1 font-playfair">${p.description}</p>
+                        <div class="grid grid-cols-6 gap-1 mt-auto">
+                            ${p.colors.slice(0, 6).map(c => `<div class="w-full h-6 rounded-sm shadow-inner" style="background-color: ${c}"></div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        updateTrackPosition();
+    }
+
+    function selectPalette(id) {
+        currentFilters.palette = (currentFilters.palette === id) ? null : id;
+        currentFilters.family = 'all';
+        currentFilters.selectedSubColor = null; // Clear main grid selection
+        
+        renderPalettes();
+        renderFamilyFilters();
+        renderColors();
+    }
+
+    function renderFamilyFilters() {
+        const container = document.getElementById('familyFilterGrid');
+        
+        // If a palette is selected, show its colors. Otherwise show default families.
+        if (currentFilters.palette) {
+            const palette = palettes.find(p => p.id === currentFilters.palette);
+            let html = `<button onclick="resetFilters()" class="w-full h-8 rounded-md bg-slate-100 border-2 border-slate-200 flex items-center justify-center transition" title="Back"><i data-lucide="arrow-left" class="w-4 h-4 text-slate-500"></i></button>`;
+            
+            palette.colors.forEach(hex => {
+                const isActive = currentFilters.selectedSubColor === hex;
+                html += `<button onclick="setSubColor('${hex}')" class="w-full h-8 rounded-md border-2 ${isActive ? 'border-slate-900 scale-110' : 'border-transparent'} transition shadow-sm" style="background-color: ${hex}" title="${colorNamesByHex[hex] || hex}"></button>`;
+            });
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = `
+                <button onclick="setFilter('family', 'all')" class="w-full h-8 rounded-md bg-slate-100 border-2 ${currentFilters.family === 'all' ? 'border-indigo-600' : 'border-transparent'} flex items-center justify-center" title="All"><i data-lucide="check" class="w-4 h-4 ${currentFilters.family === 'all' ? 'text-indigo-600' : 'text-slate-300'}"></i></button>
+                <button onclick="setFilter('family', 'red')" class="w-full h-8 rounded-md bg-red-500 border-2 ${currentFilters.family === 'red' ? 'border-slate-900' : 'border-transparent'}" title="Red"></button>
+                <button onclick="setFilter('family', 'blue')" class="w-full h-8 rounded-md bg-blue-500 border-2 ${currentFilters.family === 'blue' ? 'border-slate-900' : 'border-transparent'}" title="Blue"></button>
+                <button onclick="setFilter('family', 'green')" class="w-full h-8 rounded-md bg-green-500 border-2 ${currentFilters.family === 'green' ? 'border-slate-900' : 'border-transparent'}" title="Green"></button>
+                <button onclick="setFilter('family', 'yellow')" class="w-full h-8 rounded-md bg-yellow-400 border-2 ${currentFilters.family === 'yellow' ? 'border-slate-900' : 'border-transparent'}" title="Yellow"></button>
+                <button onclick="setFilter('family', 'neutral')" class="w-full h-8 rounded-md bg-stone-300 border-2 ${currentFilters.family === 'neutral' ? 'border-slate-900' : 'border-transparent'}" title="Neutral"></button>
+                <button onclick="setFilter('family', 'purple')" class="w-full h-8 rounded-md bg-purple-500 border-2 ${currentFilters.family === 'purple' ? 'border-slate-900' : 'border-transparent'}" title="Purple"></button>
+            `;
+        }
+        lucide.createIcons();
+    }
+
+    function setSubColor(hex) {
+        currentFilters.selectedSubColor = hex;
+        renderFamilyFilters();
+        renderColors();
+    }
+
+    function renderColors() {
+        const container = document.getElementById('colorGrid');
+        const emptyState = document.getElementById('emptyState');
+        const resultCount = document.getElementById('resultCount');
+
+        // Logic Requirement: If Palette is clicked, main section is empty until sub-color picked
+        if (currentFilters.palette && !currentFilters.selectedSubColor) {
+            container.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            emptyState.querySelector('h4').textContent = "Select a shade from the sidebar";
+            emptyState.querySelector('p').textContent = "Pick a color from the Curated Palette grouping to see variations.";
+            resultCount.textContent = "0";
+            return;
+        }
+
+        emptyState.classList.add('hidden');
+        let displayList = [];
+
+        if (currentFilters.selectedSubColor) {
+            // Generate 8 Variations of the selected shade
+            const baseHex = currentFilters.selectedSubColor;
+            const baseName = colorNamesByHex[baseHex] || "Shade";
+            
+            for (let i = 0; i < 8; i++) {
+                const opacity = (100 - (i * 10)) / 100;
+                displayList.push({
+                    name: i === 0 ? baseName : `${baseName} T-0${i}`,
+                    code: baseHex,
+                    style: `background-color: ${baseHex}; opacity: ${opacity}`,
+                    finish: finishes[i % finishes.length]
+                });
+            }
+        }
+
+        resultCount.textContent = displayList.length;
+        container.innerHTML = displayList.map(c => `
+            <div onclick="openColorDetail('${c.code}', '${c.name}')" class="group color-card-hover cursor-pointer bg-white rounded-2xl p-4 border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300">
+                <div class="aspect-square rounded-xl shadow-inner mb-4 relative overflow-hidden" style="${c.style || 'background-color:' + c.code}">
+                    <div class="color-code absolute bottom-2 left-2 right-2 bg-white/90 backdrop-blur py-1 px-2 rounded-lg text-[10px] font-mono text-center font-bold text-slate-700 opacity-0 translate-y-2 transition-all duration-300">${c.code}</div>
+                </div>
+                <div><h4 class="font-bold text-sm text-slate-800 line-clamp-1">${c.name}</h4><p class="text-[10px] text-slate-500 font-medium uppercase mt-0.5">${c.finish}</p></div>
+            </div>`).join('');
+    }
+
+    function slidePalettes(direction) {
+        const maxIndex = palettes.length - itemsPerView;
+        if (direction === 'next') currentPaletteIndex = currentPaletteIndex >= maxIndex ? 0 : currentPaletteIndex + 1;
+        else currentPaletteIndex = currentPaletteIndex <= 0 ? maxIndex : currentPaletteIndex - 1;
+        updateTrackPosition();
+    }
+
+    function updateTrackPosition() {
+        const track = document.getElementById('paletteTrack');
+        if (!track) return;
+        const step = 100 / itemsPerView;
+        track.style.transform = `translateX(-${currentPaletteIndex * step}%)`;
+    }
+
+    function setFilter(key, value) {
+        currentFilters[key] = value;
+        if (key === 'family') {
+            currentFilters.palette = null;
+            currentFilters.selectedSubColor = null;
+            // For family selection, we'll pick the first matching color as the "subcolor" to show variations
+            const firstOfFamily = Object.entries(colorNamesByHex).find(([hex, name]) => name.toLowerCase().includes(value))[0];
+            currentFilters.selectedSubColor = firstOfFamily;
+        }
+        renderPalettes();
+        renderFamilyFilters();
+        renderColors();
+    }
+
+    function resetFilters() {
+        currentFilters = { search: '', family: 'all', finish: 'all', palette: null, selectedSubColor: null, sort: 'trending' };
+        renderPalettes();
+        renderFamilyFilters();
+        renderColors();
+    }
+
+    function openColorDetail(hex, name) {
+        const modal = document.getElementById('colorModal');
+        document.getElementById('modalColorBlock').style.backgroundColor = hex;
+        document.getElementById('modalColorName').textContent = name;
+        document.getElementById('modalColorCode').textContent = hex;
+        document.getElementById('modalDescription').textContent = descs[Math.floor(Math.random() * descs.length)];
+        const tags = [...bestForTags].sort(() => 0.5 - Math.random()).slice(0, 3);
+        document.getElementById('modalBestFor').innerHTML = tags.map(t => `<span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-full">${t}</span>`).join('');
+        modal.classList.remove('hidden');
+        document.body.classList.add('modal-active');
+        lucide.createIcons();
+    }
+
+    function closeModal() { document.getElementById('colorModal').classList.add('hidden'); document.body.classList.remove('modal-active'); }
+    
+    function copyCode() {
+        const code = document.getElementById('modalColorCode').textContent;
+        navigator.clipboard.writeText(code);
+        const btn = document.querySelector('[onclick="copyCode()"]');
+        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-500"></i>';
+        lucide.createIcons();
+        setTimeout(() => { btn.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i>'; lucide.createIcons(); }, 1500);
+    }
+
+    function setupVisualizer() {
+        const samples = ['#0F52BA', '#50C878', '#E0115F', '#9966CC', '#40E0D0', '#FFBF00', '#F5F5F5', '#2A3439'];
+        document.getElementById('visualizerQuickPick').innerHTML = samples.map(c => `<button onclick="updateVisualizer('${c}', '${colorNamesByHex[c] || 'Color'}')" class="w-10 h-10 rounded-full border-2 border-white shadow-sm transition hover:scale-110" style="background-color: ${c}"></button>`).join('');
+    }
+
+    function updateVisualizer(hex, name) {
+        document.getElementById('roomWallOverlay').style.backgroundColor = hex;
+        document.getElementById('visualizerColorName').textContent = name;
+    }
+
+    function renderWallpapers() {
+        const wallpapers = [
+            { name: 'Geometric Bliss', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800', match: 'Modern Teals' },
+            { name: 'Tropical Ferns', img: 'https://images.unsplash.com/photo-1588666309990-d68f08e3d4a6?q=80&w=800', match: 'Earth Greens' },
+            { name: 'Silk Texture', img: 'https://images.unsplash.com/photo-1502672023488-70e25813eb80?q=80&w=800', match: 'Warm Neutrals' },
+            { name: 'Industrial Mesh', img: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=800', match: 'Loft Greys' }
+        ];
+        document.getElementById('wallpaperGrid').innerHTML = wallpapers.map(w => `
+            <div class="group cursor-pointer">
+                <div class="relative h-64 rounded-3xl overflow-hidden mb-4 shadow-md">
+                    <img src="${w.img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 text-white"><h4 class="font-bold text-xl">${w.name}</h4><p class="text-white/80 text-sm">Suggested: ${w.match}</p></div>
+                </div>
+            </div>`).join('');
+    }
+    renderWallpapers();
+</script>
+</body>
+</html>

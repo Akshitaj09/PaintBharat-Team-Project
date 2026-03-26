@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | Our Hiring Process</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paint-navy: #0A192F;
+            --paint-pink: #FF2E63; 
+            --paint-pink-glow: rgba(255, 46, 99, 0.3);
+            --deep-black: #05070a;
+            --hub-black: #000000;
+        }
+
+        body {
+            background-color: var(--deep-black);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            perspective: 1200px;
+        }
+
+        /* Structural Background with Grid and Pink Blueprints */
+        .hero-bg {
+            position: fixed;
+            inset: 0;
+            background-color: var(--deep-black);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* Animated Pink Grid System */
+        .hero-bg::before {
+            content: "";
+            position: absolute;
+            inset: -100px;
+            background-image: 
+                linear-gradient(rgba(255, 46, 99, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 46, 99, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at 50% 50%, black 20%, transparent 85%);
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .structural-lines {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(45deg, transparent 49.5%, rgba(255,255,255,0.01) 50%, transparent 50.5%),
+                linear-gradient(-45deg, transparent 49.5%, rgba(255,255,255,0.01) 50%, transparent 50.5%);
+            background-size: 300px 300px;
+            opacity: 0.3;
+        }
+
+        .long-shadow {
+            text-shadow: 
+                1px 1px 0px #1a1a1a,
+                2px 2px 0px #1a1a1a,
+                15px 15px 40px rgba(255, 46, 99, 0.15);
+        }
+
+        .central-hub-container {
+            transition: transform 0.2s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .central-hub {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: hubAppear 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes hubAppear {
+            0% { opacity: 0; transform: scale(0.7) rotate(-15deg) translateZ(-200px); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg) translateZ(0); }
+        }
+
+        /* Rotating structural accent ring - Pink themed */
+        .rotating-ring {
+            position: absolute;
+            inset: -50px;
+            border: 1px dashed rgba(255, 46, 99, 0.2);
+            border-radius: 50%;
+            animation: spin 80s linear infinite;
+        }
+
+        .rotating-ring::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            width: 10px;
+            height: 10px;
+            background: var(--paint-pink);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--paint-pink);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .navy-base {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0a1a 0%, #05070a 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 0 1px rgba(255, 46, 99, 0.1),
+                0 0 80px rgba(255, 46, 99, 0.05),
+                40px 40px 80px rgba(0,0,0,0.8);
+            transform: rotate(-2deg);
+        }
+
+        .black-inner {
+            position: relative;
+            width: 84%;
+            height: 84%;
+            background-color: var(--hub-black);
+            border-radius: 50%;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                inset 10px 10px 20px rgba(255,255,255,0.02),
+                inset -20px -20px 40px rgba(0,0,0,0.8),
+                30px 30px 60px rgba(0,0,0,0.9);
+            animation: pinkPulse 5s ease-in-out infinite;
+        }
+
+        @keyframes pinkPulse {
+            0%, 100% { border-color: rgba(255, 255, 255, 0.08); }
+            50% { border-color: rgba(255, 46, 99, 0.3); box-shadow: inset 0 0 30px rgba(255, 46, 99, 0.05), 30px 30px 80px rgba(0,0,0,0.9); }
+        }
+
+        /* Pill Styles */
+        .feature-pill {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 16px 24px;
+            width: 270px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 10;
+            box-shadow: 25px 25px 50px rgba(0,0,0,0.9);
+            opacity: 0;
+            backdrop-filter: blur(10px);
+            animation: pillFloat 6s ease-in-out infinite, pillFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: border 0.3s ease, transform 0.3s ease;
+        }
+
+        .feature-pill:hover {
+            border-color: var(--paint-pink);
+            transform: scale(1.02) translateZ(50px) !important;
+        }
+
+        @keyframes pillFadeIn {
+            0% { opacity: 0; transform: translateY(40px) scale(0.8); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes pillFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .pill-top-left { top: 10%; left: -220px; animation-delay: 0.2s, 0.4s; }
+        .pill-top-right { top: 10%; right: -220px; animation-delay: 0.5s, 0.7s; }
+        .pill-bottom-left { bottom: 8%; left: -160px; animation-delay: 0.8s, 1.0s; }
+        .pill-bottom-right { bottom: 8%; right: -160px; animation-delay: 1.1s, 1.3s; }
+        .pill-center-bottom { bottom: -120px; left: 50%; transform: translateX(-50%) !important; width: 340px; animation: pillFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 1.6s; }
+
+        /* Modified Icon Box: White BG, Pink Border on Hover */
+        .pill-icon-box {
+            width: 42px;
+            height: 42px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 2px solid transparent; /* Ready for hover */
+        }
+
+        .feature-pill:hover .pill-icon-box {
+            background: white; /* Keep it white */
+            color: var(--paint-pink);
+            border-color: var(--paint-pink); /* Only add pink border */
+            box-shadow: 0 0 10px rgba(255, 46, 99, 0.2);
+        }
+
+        .pill-title {
+            font-size: 9px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+
+        .pill-val {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+        }
+
+        @media (max-width: 1200px) {
+            .central-hub { width: 300px; height: 300px; margin-top: 40px; margin-bottom: 180px; }
+            .feature-pill { position: relative; left: 0 !important; right: 0 !important; top: 0 !important; bottom: 0 !important; margin: 20px auto; transform: none !important; animation: pillFadeIn 0.8s forwards !important; width: 90%; max-width: 300px; }
+            .pill-center-bottom { transform: none !important; }
+            body { height: auto; overflow: auto; }
+            .rotating-ring { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-bg">
+        <div class="structural-lines"></div>
+        <div id="particle-container" class="particles"></div>
+    </div>
+
+    <main class="flex-grow flex items-center justify-center">
+        
+        <div id="scene" class="central-hub-container">
+            <div class="central-hub">
+                <div class="rotating-ring"></div>
+                <div class="absolute inset-0 border border-white/5 rounded-full scale-110"></div>
+                <div class="absolute inset-0 border border-pink-500/5 rounded-full scale-125"></div>
+                <div class="navy-base"></div>
+                
+                <div class="feature-pill pill-top-left">
+                    <div class="pill-icon-box">📂</div>
+                    <div class="pill-text">
+                        <div class="pill-title">STEP 01</div>
+                        <div class="pill-val">RESUME SUBMISSION</div>
+                    </div>
+                </div>
+
+                <div class="feature-pill pill-bottom-left">
+                    <div class="pill-icon-box">🔎</div>
+                    <div class="pill-text">
+                        <div class="pill-title">PHASE 02</div>
+                        <div class="pill-val">PORTFOLIO REVIEW</div>
+                    </div>
+                </div>
+
+                <div class="black-inner">
+                    <p class="text-[9px] font-black tracking-[4px] mb-3 text-slate-500 uppercase">Career Portal</p>
+                    <h2 class="text-sm font-bold tracking-[1px] mb-1 uppercase opacity-90">WHAT MAKES <span class="text-white">PAINTBHARAT</span></h2>
+                    <h3 class="text-[11px] font-medium tracking-[1px] mb-4 uppercase text-slate-400 italic">The Global Leader in</h3>
+                    <h1 class="text-5xl font-black text-white long-shadow leading-[0.85]">RENOVATION?</h1>
+                    <div class="w-10 h-0.5 bg-pink-500 mt-8 rounded-full opacity-60 shadow-[0_0_10px_#FF2E63]"></div>
+                </div>
+
+                <div class="feature-pill pill-top-right">
+                    <div class="pill-icon-box">💬</div>
+                    <div class="pill-text">
+                        <div class="pill-title">STEP 03</div>
+                        <div class="pill-val">INTERVIEW ROUNDS</div>
+                    </div>
+                </div>
+
+                <div class="feature-pill pill-bottom-right">
+                    <div class="pill-icon-box">🏠</div>
+                    <div class="pill-text">
+                        <div class="pill-title">STEP 04</div>
+                        <div class="pill-val">FIELD ONBOARDING</div>
+                    </div>
+                </div>
+
+                <div class="feature-pill pill-center-bottom">
+                    <div class="pill-icon-box">✓</div>
+                    <div class="pill-text">
+                        <div class="pill-val uppercase tracking-tighter text-center">EXCELLENCE IN EVERY STROKE</div>
+                        <div class="pill-title text-center">SINCE 2012</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const scene = document.getElementById('scene');
+        const particleContainer = document.getElementById('particle-container');
+        
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth < 1200) return;
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 30;
+            scene.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            scene.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+
+        function createParticles() {
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                const size = Math.random() * 3 + 1;
+                p.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: rgba(255, 46, 99, ${Math.random() * 0.4});
+                    border-radius: 50%;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    pointer-events: none;
+                    box-shadow: 0 0 10px rgba(255, 46, 99, 0.2);
+                    animation: floatUp ${10 + Math.random() * 20}s linear infinite;
+                `;
+                particleContainer.appendChild(p);
+            }
+        }
+
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes floatUp {
+                0% { transform: translateY(0) translateX(0); opacity: 0; }
+                10% { opacity: 1; }
+                90% { opacity: 1; }
+                100% { transform: translateY(-100vh) translateX(${Math.random() * 100 - 50}px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+        createParticles();
+    </script>
+</body>
+</html>

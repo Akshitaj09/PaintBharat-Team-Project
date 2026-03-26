@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PaintBharat Auth</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Poppins',sans-serif;
+background-image:url("images/home_interior4.jpg");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
+
+.overlay{
+background:rgba(0,0,0,0.55);
+}
+
+.glass{
+backdrop-filter: blur(14px);
+background: rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.18);
+}
+
+.input-style{
+background:rgba(255,255,255,0.1);
+border:1px solid rgba(255,255,255,0.2);
+color:white;
+}
+
+.input-style::placeholder{
+color:#ddd;
+}
+
+.input-style:focus{
+border-color:#8B5E3C;
+outline:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="overlay min-h-screen flex items-center justify-center px-6">
+
+<div class="grid md:grid-cols-2 gap-12 max-w-7xl w-full items-center">
+
+<!-- LEFT SECTION -->
+
+<div class="text-white">
+
+<div class="flex items-center gap-3 mb-8">
+
+<div class="w-12 h-12 rounded-xl bg-[#8B5E3C] flex items-center justify-center text-white text-xl">
+🎨
+</div>
+
+<h2 class="text-2xl font-semibold">
+PaintBharat
+</h2>
+
+</div>
+
+<h1 class="text-6xl font-bold mb-6">
+Welcome!
+</h1>
+
+<p class="text-lg text-gray-200 mb-6 max-w-xl">
+Access the PaintBharat platform to manage projects, colors, and collaborations.
+</p>
+
+<p class="text-gray-300 mb-8 max-w-xl">
+Join our community of painters, contractors, and project managers. 
+Streamline your workflow, collaborate seamlessly, and bring your creative vision to life.
+</p>
+
+<button class="px-8 py-3 border border-white/30 rounded-full hover:bg-white hover:text-black transition">
+Learn More
+</button>
+
+</div>
+
+<!-- RIGHT SECTION -->
+
+<div class="glass p-10 rounded-3xl text-white w-full max-w-md ml-auto">
+
+<!-- SIGN IN FORM -->
+
+<div id="loginForm">
+
+<h2 class="text-3xl font-semibold mb-8 text-center">
+Sign In
+</h2>
+
+<div class="space-y-5">
+
+<input
+type="text"
+placeholder="Username / Email"
+class="input-style w-full px-5 py-3 rounded-xl"
+/>
+
+<input
+type="password"
+placeholder="Password"
+class="input-style w-full px-5 py-3 rounded-xl"
+/>
+
+<button class="w-full py-3 rounded-xl bg-[#8B5E3C] hover:bg-[#6f472d] transition font-semibold">
+Submit
+</button>
+
+</div>
+
+<div class="flex justify-center gap-6 mt-6 text-xl">
+
+<button class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/20">
+f
+</button>
+
+<button class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/20">
+i
+</button>
+
+<button class="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center hover:bg-white/20">
+g
+</button>
+
+</div>
+
+<p class="text-center mt-6 text-gray-300">
+Don't have an account?
+<button onclick="showSignup()" class="text-[#8B5E3C] font-medium">
+Sign Up
+</button>
+</p>
+
+</div>
+
+<!-- SIGN UP FORM -->
+
+<div id="signupForm" class="hidden">
+
+<h2 class="text-3xl font-semibold mb-8 text-center">
+Create Account
+</h2>
+
+<div class="space-y-5">
+
+<input
+type="text"
+placeholder="Full Name"
+class="input-style w-full px-5 py-3 rounded-xl"
+/>
+
+<input
+type="email"
+placeholder="Email Address"
+class="input-style w-full px-5 py-3 rounded-xl"
+/>
+
+<input
+type="password"
+placeholder="Password"
+class="input-style w-full px-5 py-3 rounded-xl"
+/>
+
+<input
+type="password"
+placeholder="Confirm Password"
+class="input-style w-full px-5 py-3 rounded-xl"
+/>
+
+<select class="input-style w-full px-5 py-3 rounded-xl bg-transparent">
+
+<option class="text-black">Select Role</option>
+<option class="text-black">Admin</option>
+<option class="text-black">Contractor</option>
+<option class="text-black">Client</option>
+<option class="text-black">Employee</option>
+
+</select>
+
+<button class="w-full py-3 rounded-xl bg-[#8B5E3C] hover:bg-[#6f472d] transition font-semibold">
+Create Account
+</button>
+
+</div>
+
+<p class="text-center mt-6 text-gray-300">
+Already have an account?
+<button onclick="showLogin()" class="text-[#8B5E3C] font-medium">
+Sign In
+</button>
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function showSignup(){
+document.getElementById("loginForm").classList.add("hidden")
+document.getElementById("signupForm").classList.remove("hidden")
+}
+
+function showLogin(){
+document.getElementById("signupForm").classList.add("hidden")
+document.getElementById("loginForm").classList.remove("hidden")
+}
+
+</script>
+
+</body>
+</html>

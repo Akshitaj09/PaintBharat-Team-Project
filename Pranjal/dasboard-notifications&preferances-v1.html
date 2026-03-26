@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications & Preferences | PaintBharat CO</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--glass-bg:rgba(18,18,18,0.75);
+--glass-border:rgba(255,255,255,0.15);
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+body{
+font-family:'Plus Jakarta Sans',sans-serif;
+color:#fff;
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow-x:hidden;
+position:relative;
+margin: 0;
+}
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background-image:url('images/dashboard_bg.png');
+background-size:cover;
+background-position:center;
+filter: brightness(0.6); 
+z-index:-2;
+}
+
+body::after{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.6) 100%);
+z-index:-1;
+}
+
+.glass-card{
+background:var(--glass-bg);
+backdrop-filter:blur(24px) saturate(180%);
+border:1px solid var(--glass-border);
+border-radius:28px;
+box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);
+overflow: hidden;
+animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-msg {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    z-index: 100;
+    display: none;
+    animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.toast-msg.show {
+    display: block;
+}
+
+.glass-input{
+background:rgba(255,255,255,0.03);
+border:1px solid rgba(255,255,255,0.08);
+color:white;
+transition:all .3s ease;
+appearance: none;
+background-image: url("images/dashboard_bg.png");
+background-repeat: no-repeat;
+background-position: right 1.25rem center;
+background-size: 1.2rem;
+padding-right: 3rem;
+}
+
+.glass-input:focus{
+background:rgba(255,255,255,0.07);
+border-color:rgba(255,255,255,0.3);
+box-shadow:0 0 0 4px rgba(255,255,255,0.05);
+outline:none;
+transform: translateY(-1px);
+}
+
+.glass-input option {
+background-color: #1a1a1a;
+color: white;
+}
+
+.tab-button{
+color:rgba(255,255,255,0.4);
+position: relative;
+transition: color 0.3s ease;
+}
+
+.tab-button:hover {
+color: rgba(255,255,255,0.8);
+}
+
+.tab-button.active{
+color:white;
+}
+
+.tab-button.active::after{
+content:"";
+position:absolute;
+bottom:-1px;
+left:0;
+width:100%;
+height:2px;
+background:white;
+animation: scaleIn 0.3s ease-out;
+}
+
+.toggle-switch{
+position:relative;
+display:inline-block;
+width:44px;
+height:24px;
+}
+
+.toggle-switch input{
+opacity:0;
+}
+
+.slider{
+position:absolute;
+cursor:pointer;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(255,255,255,0.1);
+border-radius:24px;
+transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slider:before{
+position:absolute;
+content:"";
+height:16px;
+width:16px;
+left:3px;
+bottom:3px;
+background:#999;
+border-radius:50%;
+transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input:checked + .slider{
+background:white;
+}
+
+input:checked + .slider:before{
+transform:translateX(20px);
+background:black;
+}
+
+.settings-card-item{
+background:rgba(255,255,255,0.02);
+border:1px solid rgba(255,255,255,0.05);
+transition: all 0.3s ease;
+animation: fadeInUp 0.5s ease backwards;
+}
+
+.settings-card-item:hover {
+background: rgba(255,255,255,0.05);
+border-color: rgba(255,255,255,0.1);
+transform: translateX(4px);
+}
+
+.btn-primary{
+background:white;
+color:black;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-secondary{
+background:rgba(255,255,255,0.05);
+color:white;
+border: 1px solid rgba(255,255,255,0.1);
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+transform: translateY(-2px);
+box-shadow: 0 10px 20px -10px rgba(255,255,255,0.15);
+}
+
+.btn-secondary:hover {
+background: rgba(255,255,255,0.1);
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+
+</style>
+</head>
+
+<body class="py-12 px-4">
+
+<div id="toast" class="toast-msg">
+    <div class="flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span id="toast-text" class="text-sm font-medium">Changes saved successfully</span>
+    </div>
+</div>
+
+<div class="w-full max-w-4xl glass-card p-8 md:p-12">
+
+<div class="mb-10">
+<h1 class="text-4xl font-bold mb-2">Notifications & Preferences</h1>
+<p class="text-white/50">Manage your notifications and preferences.</p>
+</div>
+
+<nav class="flex gap-6 border-b border-white/10 mb-10">
+
+<button onclick="switchTab('notifications')" id="tab-notifications" class="tab-button px-2 py-4 text-sm font-semibold active">
+Notifications
+</button>
+
+<button onclick="switchTab('preferences')" id="tab-preferences" class="tab-button px-2 py-4 text-sm font-semibold">
+Preferences
+</button>
+
+</nav>
+
+<div id="main-view-container"></div>
+
+</div>
+
+<script>
+
+let currentActiveTab='notifications'
+
+const DEFAULT_NOTIFS=[
+{
+id:'project_deadlines',
+title:'Project Deadlines',
+desc:'Get notified when a project milestone or deadline is approaching.',
+channels:{push:true,email:true,sms:false}
+},
+{
+id:'new_login',
+title:'New Login Alerts',
+desc:'Critical security alerts when your account is accessed from a new device.',
+channels:{push:true,email:true,sms:true}
+},
+{
+id:'new_member',
+title:'New Team Member',
+desc:'Alerts when a new person joins your workspace or team project.',
+channels:{push:true,email:false,sms:false}
+},
+{
+id:'reminders',
+title:'Daily Reminders',
+desc:'General updates and tasks you might have missed during the day.',
+channels:{push:false,email:true,sms:false}
+}
+]
+
+let notificationData=JSON.parse(JSON.stringify(DEFAULT_NOTIFS))
+
+// Default Preferences values
+const DEFAULT_PREFS = {
+    theme: 'Dark',
+    language: 'English'
+};
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastText = document.getElementById('toast-text');
+    toastText.innerText = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function switchTab(tab){
+    currentActiveTab=tab
+    document.querySelectorAll('.tab-button').forEach(btn=>{
+        btn.classList.remove('active')
+    })
+    document.getElementById('tab-'+tab).classList.add('active')
+    renderView()
+}
+
+// Logic to Reset Notifications
+function resetToDefaultNotifications() {
+    notificationData = JSON.parse(JSON.stringify(DEFAULT_NOTIFS));
+    renderNotificationList();
+    showToast('Notifications reset to default');
+}
+
+// Logic to Reset Preferences
+function resetToDefaultPreferences() {
+    const themeSelect = document.getElementById('theme-select');
+    const langSelect = document.getElementById('lang-select');
+    if(themeSelect) themeSelect.value = DEFAULT_PREFS.theme;
+    if(langSelect) langSelect.value = DEFAULT_PREFS.language;
+    showToast('Preferences reset to default');
+}
+
+function renderView(){
+const container=document.getElementById('main-view-container')
+
+if(currentActiveTab==='preferences'){
+container.innerHTML=`
+<div class="space-y-8 animate-[fadeInUp_0.5s_ease-out]">
+<div class="max-w-md">
+<div class="mt-8 space-y-6">
+<div class="space-y-3">
+<label class="text-xs font-bold text-white/40 uppercase">
+Display Theme
+</label>
+<select id="theme-select" class="glass-input w-full px-5 py-4 rounded-2xl text-sm">
+<option>Dark</option>
+<option>Light</option>
+<option>System Default</option>
+</select>
+</div>
+<div class="space-y-3">
+<label class="text-xs font-bold text-white/40 uppercase">
+Preferred Language
+</label>
+<select id="lang-select" class="glass-input w-full px-5 py-4 rounded-2xl text-sm">
+<option>English</option>
+<option>Hindi</option>
+<option>Marathi</option>
+</select>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-white/10 flex justify-end gap-4">
+<button onclick="resetToDefaultPreferences()" class="btn-secondary px-8 py-4 rounded-2xl text-sm font-bold">
+Set as Default
+</button>
+<button onclick="showToast('Preferences saved successfully')" class="btn-primary px-10 py-4 rounded-2xl text-sm font-bold">
+Save Preferences
+</button>
+</div>
+</div>
+`
+}
+
+else{
+container.innerHTML=`
+<div id="settings-list" class="space-y-4"></div>
+<div class="mt-12 flex justify-end border-t border-white/10 pt-8 gap-4">
+<button onclick="resetToDefaultNotifications()" class="btn-secondary px-10 py-4 text-sm font-bold rounded-2xl">
+Set as Default
+</button>
+<button onclick="showToast('Changes confirmed and synced')" class="btn-primary px-12 py-4 text-sm font-bold rounded-2xl">
+Confirm All Changes
+</button>
+</div>
+`
+renderNotificationList()
+}
+}
+
+function renderNotificationList(){
+const list=document.getElementById('settings-list')
+list.innerHTML=notificationData.map((item, index)=>`
+<div class="p-6 settings-card-item rounded-3xl flex justify-between items-center stagger-${index + 1}">
+<div>
+<h3 class="font-bold">${item.title}</h3>
+<p class="text-sm text-white/40">
+${item.desc}
+</p>
+</div>
+<div class="flex gap-6">
+${['push','email','sms'].map(type=>`
+<div class="flex flex-col items-center gap-2">
+<span class="text-[10px] uppercase text-white/40">
+${type}
+</span>
+<label class="toggle-switch">
+<input type="checkbox" ${item.channels[type]?'checked':''}
+onchange="updateToggle('${item.id}','${type}',this.checked)">
+<span class="slider"></span>
+</label>
+</div>
+`).join('')}
+</div>
+</div>
+`).join('')
+}
+
+function updateToggle(id,type,val){
+notificationData.find(i=>i.id===id).channels[type]=val
+}
+
+renderView()
+
+</script>
+
+</body>
+</html>

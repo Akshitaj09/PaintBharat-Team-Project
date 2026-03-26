@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PaintBharat Premium</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+@keyframes reveal{
+from{opacity:0; transform:translateY(30px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+.reveal{
+animation:reveal .8s ease;
+}
+
+/* BACKGROUND */
+
+#bgImage{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-2;
+transition:opacity .6s ease;
+}
+
+.bgOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.55);
+z-index:-1;
+}
+
+</style>
+</head>
+
+<body class="text-white font-sans">
+
+<!-- BACKGROUND IMAGE -->
+
+<img id="bgImage">
+
+<div class="bgOverlay"></div>
+
+
+<div class="relative min-h-screen flex items-center justify-center p-6">
+
+<div class="max-w-6xl w-full">
+
+
+<!-- TITLE -->
+
+<div class="text-center mb-10">
+
+<h1 class="text-3xl font-bold mb-4">
+PaintBharat Services
+</h1>
+
+<div id="buttons"
+class="flex flex-wrap justify-center gap-3 bg-white/10 backdrop-blur-xl px-4 py-3 rounded-full border border-white/20 shadow-lg">
+</div>
+
+</div>
+
+
+<!-- GLASS CARD -->
+
+<div class="rounded-[2rem] bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl p-10">
+
+<div class="grid md:grid-cols-2 gap-10 items-center">
+
+
+<!-- LEFT -->
+
+<div class="space-y-6 reveal">
+
+<h2 id="title" class="text-5xl font-bold"></h2>
+
+<p id="desc" class="text-gray-200 text-lg"></p>
+
+<div class="grid grid-cols-2 gap-4 text-sm mt-6">
+
+<div class="bg-white/10 p-4 rounded-xl border border-white/10">
+<p class="font-semibold">✔ Premium Finish</p>
+<p class="text-gray-300 text-xs">Smooth & elegant walls</p>
+</div>
+
+<div class="bg-white/10 p-4 rounded-xl border border-white/10">
+<p class="font-semibold">✔ Eco Friendly</p>
+<p class="text-gray-300 text-xs">Safe for family</p>
+</div>
+
+<div class="bg-white/10 p-4 rounded-xl border border-white/10">
+<p class="font-semibold">✔ Fast Delivery</p>
+<p class="text-gray-300 text-xs">On-time completion</p>
+</div>
+
+<div class="bg-white/10 p-4 rounded-xl border border-white/10">
+<p class="font-semibold">✔ Expert Team</p>
+<p class="text-gray-300 text-xs">Professional painters</p>
+</div>
+
+</div>
+
+<button class="mt-6 px-6 py-3 bg-[#6b3e2e] rounded-full hover:scale-105 transition">
+Explore Service →
+</button>
+
+</div>
+
+
+<!-- RIGHT IMAGE -->
+
+<div class="flex justify-center">
+
+<div class="relative w-[420px] h-[480px] rounded-[2rem] overflow-hidden shadow-2xl">
+
+<img id="mainImg"
+class="w-full h-full object-cover transition duration-500"/>
+
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+<div class="absolute bottom-6 left-6">
+<h3 id="cardTitle" class="text-2xl font-semibold"></h3>
+</div>
+
+</div>
+
+</div>
+
+
+</div>
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+const services=[
+
+{
+name:"Interior Painting",
+desc:"Modern interior painting with premium finish.",
+img:"images/home_interior1.jpg"
+},
+
+{
+name:"Exterior Painting",
+desc:"Durable exterior protection.",
+img:"images/home_exterior1.jpg"
+},
+
+{
+name:"House Wallpaper",
+desc:"Stylish wallpapers for your home.",
+img:"images/wallpaper.jpg"
+},
+
+{
+name:"Design Painting",
+desc:"images/jewel tones.png",
+img:"images/metallic royal.png"
+},
+
+{
+name:"Expert Consultation",
+desc:"Professional guidance.",
+img:"images/hiring_process.jpg"
+},
+
+{
+name:"Waterproofing",
+desc:"Protect your home from leakage and moisture.",
+img:"images/home_exterior4.jpg"
+}
+
+];
+
+let active=0;
+
+
+function renderButtons(){
+
+const container=document.getElementById("buttons");
+container.innerHTML="";
+
+services.forEach((s,i)=>{
+
+const btn=document.createElement("button");
+
+btn.innerText=s.name;
+
+btn.className=`
+px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
+${i===active
+?"bg-[#6b3e2e] text-white scale-110 shadow-lg"
+:"bg-white/20 hover:bg-white/30"}
+`;
+
+btn.onclick=()=>{
+active=i;
+updateUI();
+renderButtons();
+};
+
+container.appendChild(btn);
+
+});
+
+}
+
+
+function updateUI(){
+
+const s=services[active];
+
+document.getElementById("title").innerText=s.name;
+document.getElementById("desc").innerText=s.desc;
+document.getElementById("cardTitle").innerText=s.name;
+
+const mainImg=document.getElementById("mainImg");
+const bg=document.getElementById("bgImage");
+
+mainImg.style.opacity=0;
+bg.style.opacity=0;
+
+setTimeout(()=>{
+
+mainImg.src=s.img;
+bg.src=s.img;
+
+mainImg.style.opacity=1;
+bg.style.opacity=1;
+
+},200);
+
+}
+
+
+renderButtons();
+updateUI();
+
+</script>
+
+</body>
+</html>
