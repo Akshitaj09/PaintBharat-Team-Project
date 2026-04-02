@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar - Premium Interior Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-red: #ec1348;
+            --transition-speed: 1.1s; /* Snappy, fast reveal */
+            --slide-delay: 5s;
+            --ease-reveal: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Slide Structure - Dark-to-Light Image Reveal */
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 1;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        /* The Mask Reveal Transition */
+        .slide.entering {
+            z-index: 10;
+            animation: beforeAfterReveal var(--transition-speed) var(--ease-reveal) forwards;
+        }
+
+        @keyframes beforeAfterReveal {
+            0% { clip-path: polygon(110% 0, 140% 0, 110% 100%, 80% 100%); }
+            100% { clip-path: polygon(-40% 0, 100% 0, 100% 100%, 0% 100%); }
+        }
+
+        /* Background with Ambient Zoom and Overlay Fade */
+        .slide-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-image: url('https://i.pinimg.com/1200x/80/04/78/80047801e341f90658bba5e7e5d7bf23.jpg');
+            transform: scale(1.1);
+            transition: transform 8s ease-out;
+        }
+
+        .active .slide-bg {
+            transform: scale(1.05);
+        }
+
+        /* Dark-to-Light State Styling */
+        .night-slide .slide-bg {
+            filter: brightness(0.25) contrast(1.1) saturate(0.6);
+        }
+
+        .day-slide .slide-bg {
+            filter: brightness(1.05) contrast(1);
+        }
+
+        /* Content Styles */
+        .content {
+            position: relative;
+            z-index: 20;
+            padding: 0 8%;
+            color: white;
+            pointer-events: none;
+        }
+
+        /* Side-sliding Text Reveal Animation */
+        .headline {
+            font-size: clamp(60px, 6vw, 84px);
+            line-height: 1.05;
+            margin-bottom: 24px;
+            font-weight: 300;
+            transform: translateX(-60px);
+            opacity: 0;
+            transition: transform var(--transition-speed) var(--ease-reveal), opacity var(--transition-speed) ease;
+        }
+
+        .subtext {
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            max-width: 520px;
+            transform: translateX(-40px);
+            opacity: 0;
+            transition: transform var(--transition-speed) var(--ease-reveal) 0.1s, opacity var(--transition-speed) ease 0.1s;
+        }
+
+        .more-link {
+            color: #012e69;
+            font-size: 13px;
+            text-decoration: underline;
+            margin-bottom: 40px;
+            display: block;
+            pointer-events: auto;
+            transform: translateX(-30px);
+            opacity: 0;
+            transition: transform var(--transition-speed) var(--ease-reveal) 0.2s, opacity var(--transition-speed) ease 0.2s;
+        }
+
+        .cta-btn-wrapper {
+            transform: translateX(-20px);
+            opacity: 0;
+            transition: transform var(--transition-speed) var(--ease-reveal) 0.3s, opacity var(--transition-speed) ease 0.3s;
+        }
+
+        /* Trigger active text state */
+        .active .headline,
+        .active .subtext,
+        .active .more-link,
+        .active .cta-btn-wrapper {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .headline strong { font-weight: 700; letter-spacing: -1px; }
+
+        /* Header Navigation */
+        .header-nav {
+            position: absolute;
+            top: 40px;
+            left: 8%;
+            right: 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            color: white;
+        }
+
+        .logo { font-size: 26px; font-weight: 700; }
+        .logo span { color: #f1c40f; }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        /* Premium Before-After Action Button */
+        .cta-btn {
+            display: inline-block;
+            background-color: var(--brand-red);
+            color: white;
+            padding: 18px 48px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 25px rgba(236, 19, 72, 0.3);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            pointer-events: auto;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            background-color: #f1154c;
+            box-shadow: 0 15px 35px rgba(236, 19, 72, 0.5);
+        }
+
+        /* Navigation Tab Indicators */
+        .bottom-tabs {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 50px;
+            z-index: 100;
+            color: rgba(255,255,255,0.4);
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .tab-item {
+            padding-bottom: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tab-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: white;
+            transition: width var(--slide-delay) linear;
+        }
+
+        .tab-active { color: white; }
+        .tab-active::after { width: 100%; }
+
+        @media (max-width: 768px) {
+            .nav-links, .see-more, .bottom-tabs { display: none; }
+            .headline { font-size: 42px; }
+            .content { padding: 0 10%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-nav">
+        <div class="logo">PAINTBHARAT CO.<span>.</span></div>
+        <div class="see-more">
+            <button class="px-8 py-2 border border-white/30 rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">See More</button>
+        </div>
+    </header>
+
+    <div class="hero-slider" id="slider">
+        
+        <!-- SLIDE 1: BEFORE (NIGHT/FUTURE) -->
+        <div class="slide night-slide active" id="slide-night">
+            <div class="slide-bg"></div>
+            <div class="content">
+                <h1 class="headline">Where Design<br>feels <strong>Incomplete</strong></h1>
+                <p class="subtext">
+                    Choose an energy-efficient home of the future that gets all its light 
+                    and energy right from the sun. Made of high-quality and eco-friendly 
+                    materials, it will become the cozy nest for your family.
+                </p>
+                <a href="#" class="more-link">More about PaintBharat</a>
+                <div class="cta-btn-wrapper"><button class="cta-btn">View in your room</button></div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: AFTER (DAY/LIFE) -->
+        <div class="slide day-slide" id="slide-day" style="display: none;">
+            <div class="slide-bg"></div>
+            <div class="content">
+                <h1 class="headline">Where<br>Elegance Comes <strong>Alive</strong></h1>
+                <p class="subtext">
+                    No need to give up daily comfort if you care about the environment. 
+                    Nature gives what you need, and we know how to take it for you. 
+                    Get a smart, sustainable home with innovative solar panels.
+                </p>
+                <a href="#" class="more-link">More about Solar</a>
+                <div class="cta-btn-wrapper"><button class="cta-btn">View in your room</button></div>
+            </div>
+        </div>
+
+        <div class="bottom-tabs">
+            <div id="tab-day" class="tab-item">Day</div>
+            <div id="tab-night" class="tab-item tab-active">Night</div>
+            <div class="tab-item">Benefits</div>
+            <div class="tab-item">Inside</div>
+        </div>
+    </div>
+
+    <script>
+        const nightSlide = document.getElementById('slide-night');
+        const daySlide = document.getElementById('slide-day');
+        const nightTab = document.getElementById('tab-night');
+        const dayTab = document.getElementById('tab-day');
+        
+        let currentSlide = 'night';
+        let isTransitioning = false;
+
+        function switchSlide() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            const incoming = currentSlide === 'night' ? daySlide : nightSlide;
+            const outgoing = currentSlide === 'night' ? nightSlide : daySlide;
+            const incomingTab = currentSlide === 'night' ? dayTab : nightTab;
+            const outgoingTab = currentSlide === 'night' ? nightTab : dayTab;
+
+            // Start Dark-to-Light Image Reveal Transition
+            incoming.style.display = 'flex';
+            incoming.classList.add('entering');
+            
+            // Sync UI Tabs
+            outgoingTab.classList.remove('tab-active');
+            // Small delay to reset the progress bar animation
+            setTimeout(() => {
+                incomingTab.classList.add('tab-active');
+            }, 50);
+
+            // Wait for transition speed to conclude
+            setTimeout(() => {
+                incoming.classList.add('active');
+                incoming.classList.remove('entering');
+                
+                outgoing.classList.remove('active');
+                outgoing.style.display = 'none';
+                
+                currentSlide = currentSlide === 'night' ? 'day' : 'night';
+                isTransitioning = false;
+            }, 1100); 
+        }
+
+        // Loop timing for the reveal sequence
+        setInterval(switchSlide, 5500);
+    </script>
+</body>
+</html>
