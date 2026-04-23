@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paintbharat Co. | Premium Services</title>
+    <!-- Favicon Added -->
+    <link rel="icon" type="image/png" href="https://chat.google.com/u/1/api/get_attachment_url?url_type=FIFE_URL&content_type=image%2Fpng&attachment_token=AOo0EEW1gsUKY1JrNnrchRkEqjnxRFZBbqHmLcQzdCIwD4JrIlSVdBqLpWw9h8j9p8ARAg%2FlhbX4atUjurdXCZus8j5%2BDASIVRUre5%2FfROvXYjHtMX4gdwR0vh%2BQCXFAF7MSVROPyBYdgZxmtbhJr94sSxr65xGGBikqvMa7IlFdmh5TWLQDJpbvv5TWtTI7%2B5otrQwOlb088NCFOdy4fqNEONc9VtEoioP6Z9HWQ%2BIKsLye8nk%2FEJ9wDmcq3xDLII0D7W6CtJcbhSjViqz%2BinqHI9M0aIckszAQ9YIvpnzoxlnoo%2B6WxNgA7rjEJn88Yu1blb9HqfQsx1tqtgKcggDst%2BSlbC6ypUUMGimc8ryK5PX5puW0aPBhsYjEZvB57smnShWvX8HLN4GT33groff5G9s5quQc038Khn0kprk%2FdtYduy9mCBTN4Jvu6nOKDJFHAAlccmSvZ8qn216cpjeKzFToXFsN6A76x3s4JAW8NZfO%2B8Gj2sODzgDO%2B9xGElKi5QiitkyjLhF17XigcL2UU2YzbUs7Nx3M%2FTL9JRQzob08WDD1hgBOy7frP2myUph5ODxHjdyZDof4gSejwnJ7E%2B%2BOSg%3D%3D&allow_caching=true&sz=w512&authuser=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lato:ital,wght@0,400;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,300;1,300&family=Spectral:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold-solid: #D4AF37; --warm-white: #f7f5f2; }
+        body { background-color: var(--warm-white); font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 300; margin: 0; overflow-x: hidden; }
+        .main-title { font-family: 'Spectral', serif; font-size: 60px; font-weight: 500; }
+        .sub-title { font-family: 'Lato', sans-serif; font-size: 28px; font-weight: 400; }
+        .font-lora { font-family: 'Lora', serif; }
+        .font-dm-serif { font-family: 'DM Serif Display', serif; }
+
+        /* Sidebar & Nav */
+        .sidebar { width: 320px; height: 100vh; background: white; position: fixed; left: 0; border-right: 1px solid rgba(212,175,55,0.15); z-index: 100; padding: 4rem 0; display: flex; flex-direction: column; }
+        .brand { padding: 0 3rem; margin-bottom: 5rem; }
+        .nav-item { padding: 1.25rem 2rem; color: #666; cursor: pointer; transition: all 0.3s ease-out; display: flex; align-items: center; border-radius: 8px; margin: 0 1rem; text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.12em; }
+        .nav-item:hover { color: var(--gold-solid); }
+        .nav-item.active { color: var(--gold-solid) !important; font-weight: 500; }
+
+        /* Elegant Card & Hover */
+        .elegant-card { position: relative; transition: 0.6s; cursor: pointer; }
+        .image-viewport { position: relative; overflow: hidden; background: #f1efed; border: 1px solid transparent; transition: 0.6s; aspect-ratio: 4/5; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+        .elegant-card:hover .image-viewport { border-color: rgba(212,175,55,0.2); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); }
+        
+        /* Golden Line Effect */
+        .card-name { position: relative; display: inline-block; transition: 0.3s; }
+        .card-name::after { 
+            content: ''; position: absolute; width: 0; height: 1.5px; 
+            bottom: -2px; left: 0; background-color: var(--gold-solid); 
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .elegant-card:hover .card-name::after { width: 100%; }
+
+        /* Hover Circular Button */
+        .focus-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: 0.6s; opacity: 0; background: rgba(0,0,0,0.05); border-radius: 4px; }
+        .elegant-card:hover .focus-overlay { opacity: 1; }
+        
+        .view-btn-circle { 
+            width: 85px; height: 85px; 
+            border: 1px solid var(--gold-solid); 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            color: var(--gold-solid); font-size: 10px; 
+            text-transform: uppercase; letter-spacing: 2px;
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(12px);
+            transform: scale(0.7); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .elegant-card:hover .view-btn-circle { transform: scale(1); }
+
+        /* Filter Bar */
+        .sticky-filter-bar { background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 40; padding: 1.5rem 4rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+        .filter-btn { background: #f8f9fa; border: 1px solid #e5e7eb; padding: 0.6rem 1.5rem; border-radius: 9999px; display: flex; align-items: center; gap: 0.75rem; font-size: 0.95rem; }
+        .reset-btn { color: #ef4444; text-transform: uppercase; font-size: 0.75rem; font-weight: 600; cursor: pointer; margin-left: auto; border: 1px solid #fee2e2; padding: 0.5rem 1rem; border-radius: 50px; transition: 0.3s; }
+        .reset-btn:hover { background: #fef2f2; }
+
+        /* Mega Menu & WP Dropdown */
+        .dropdown-parent { position: relative; }
+        .brands-list { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 240px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 12px; z-index: 100; padding: 10px 0; border: 1px solid rgba(0,0,0,0.05); }
+        .dropdown-parent:hover .brands-list { display: block; }
+        
+        .brand-item, .wp-brand-item { padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; position: relative; cursor: pointer; color: #444; font-size: 0.9rem; }
+        .brand-item:hover, .wp-brand-item:hover { color: var(--gold-solid); background: #fafafa; }
+        
+        .mega-menu { display: none; position: absolute; left: 100%; top: -10px; width: 780px; background: white; box-shadow: 25px 25px 60px rgba(0,0,0,0.1); border-radius: 20px; padding: 30px; border: 1px solid rgba(212,175,55,0.1); }
+        .brand-item:hover .mega-menu { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .brand-item:hover .mega-menu.mini { grid-template-columns: 1fr; width: max-content; min-width: 220px; }
+        
+        .menu-col-title { color: var(--gold-solid); font-weight: 700; font-size: 0.75rem; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .menu-opt { color: #666; font-size: 0.85rem; padding: 4px 0; cursor: pointer; transition: 0.2s; }
+        .menu-opt:hover { color: black; transform: translateX(5px); }
+
+        /* Active Filter Chips */
+        .filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; width: 100%; }
+        .chip { background: #efebe5; color: #7a6e5d; font-size: 10px; padding: 4px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
+        .chip-remove { cursor: pointer; opacity: 0.5; }
+        .chip-remove:hover { opacity: 1; }
+
+        /* Marquee */
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-container { overflow: hidden; background: #0b0b0b; padding: 4rem 0; cursor: pointer; }
+        .marquee-content { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+        .marquee-container:hover .marquee-content { animation-play-state: paused; }
+
+        /* Popup Modal */
+        #details-popup { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.3); 
+            backdrop-filter: blur(15px); z-index: 500; 
+            display: none; align-items: center; justify-content: center; 
+            padding: 2rem; opacity: 0; transition: 0.4s;
+        }
+        #details-popup.active { display: flex; opacity: 1; }
+        .popup-card { 
+            background: white; width: 100%; max-width: 950px; 
+            display: flex; border-radius: 4px; overflow: hidden; 
+            box-shadow: 0 40px 100px rgba(0,0,0,0.15); transform: translateY(20px); transition: 0.5s;
+            position: relative;
+        }
+        #details-popup.active .popup-card { transform: translateY(0); }
+
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        .hero { height: 60vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; justify-content: flex-start; padding: 4rem; background: #111; text-align: left; }
+        .hero-img { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.6; animation: zoom 20s forwards; }
+        @keyframes zoom { from { transform: scale(1.1); } to { transform: scale(1); } }
+
+        .bucket-wrapper { position: relative; width: 160px; height: 160px; }
+        .bucket-label { position: absolute; top: 58px; left: 50%; transform: translateX(-50%); font-size: 9px; font-weight: 900; color: #444; text-align: center; width: 70%; pointer-events: none; }
+
+        #toast { position: fixed; bottom: 2rem; right: 2rem; transform: translateY(150%); transition: 0.5s; z-index: 2000; background: #1a1a1a; color: white; padding: 1rem 2rem; border-radius: 1rem; }
+        #toast.show { transform: translateY(0); }
+    </style>
+</head>
+<body class="flex">
+
+    <div id="toast"><span id="toast-msg">Filter Applied</span></div>
+
+    <!-- Details Popup -->
+    <div id="details-popup" onclick="closePopup()">
+        <div class="popup-card" style="max-width: 1050px;" onclick="event.stopPropagation()">
+            <div class="w-1/2 bg-[#f8f6f2] h-[650px] p-0">
+                <div id="popup-media-container" class="w-full h-full flex items-center justify-center overflow-hidden">
+                    <img id="popup-img" src="" class="w-full h-full object-cover">
+                    <div id="popup-bucket-svg" class="w-full h-full hidden p-16"></div>
+                </div>
+            </div>
+            <div class="w-1/2 p-14 flex flex-col justify-start relative h-[650px] bg-white">
+                <button onclick="closePopup()" class="absolute top-8 right-8 text-black opacity-30 hover:opacity-100 hover:text-[#ec1348] transition-all z-10">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                
+                <div class="brand-line w-12 h-[1px] bg-[#ec1348] mb-8 mt-4"></div>
+                
+                <h2 id="popup-name" class="sub-title mb-3 leading-tight">Product Name</h2>
+                <p id="popup-brand" class="text-[10px] uppercase tracking-[0.3em] opacity-40 mb-10">Heritage Collection</p>
+                
+                <div class="grid grid-cols-1 gap-8 mb-8">
+                    <div>
+                        <p id="popup-meta-label" class="text-[10px] uppercase opacity-40 mb-2 font-bold tracking-widest">Specifications</p>
+                        <p id="popup-meta-val" class="font-light text-xl italic font-lora">Detail Value</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase opacity-40 mb-2 font-bold tracking-widest">Price Guide</p>
+                        <p id="popup-price" class="font-medium text-2xl text-black">$0.00</p>
+                    </div>
+                </div>
+
+                <div class="mt-auto w-full pb-2">
+                    <button class="w-full border-2 border-transparent bg-black text-white py-5 px-4 text-sm font-medium rounded-[4px] uppercase tracking-[0.2em] hover:bg-[#ec1348] hover:border-[#ec1348] transition-all shadow-xl text-center">
+                        Explore More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="brand !px-8 flex items-center gap-1.5">
+            <!-- Updated back to the clean, local image file reference for code export -->
+            <img src="https://chat.google.com/u/1/api/get_attachment_url?url_type=FIFE_URL&content_type=image%2Fpng&attachment_token=AOo0EEW1gsUKY1JrNnrchRkEqjnxRFZBbqHmLcQzdCIwD4JrIlSVdBqLpWw9h8j9p8ARAg%2FlhbX4atUjurdXCZus8j5%2BDASIVRUre5%2FfROvXYjHtMX4gdwR0vh%2BQCXFAF7MSVROPyBYdgZxmtbhJr94sSxr65xGGBikqvMa7IlFdmh5TWLQDJpbvv5TWtTI7%2B5otrQwOlb088NCFOdy4fqNEONc9VtEoioP6Z9HWQ%2BIKsLye8nk%2FEJ9wDmcq3xDLII0D7W6CtJcbhSjViqz%2BinqHI9M0aIckszAQ9YIvpnzoxlnoo%2B6WxNgA7rjEJn88Yu1blb9HqfQsx1tqtgKcggDst%2BSlbC6ypUUMGimc8ryK5PX5puW0aPBhsYjEZvB57smnShWvX8HLN4GT33groff5G9s5quQc038Khn0kprk%2FdtYduy9mCBTN4Jvu6nOKDJFHAAlccmSvZ8qn216cpjeKzFToXFsN6A76x3s4JAW8NZfO%2B8Gj2sODzgDO%2B9xGElKi5QiitkyjLhF17XigcL2UU2YzbUs7Nx3M%2FTL9JRQzob08WDD1hgBOy7frP2myUph5ODxHjdyZDof4gSejwnJ7E%2B%2BOSg%3D%3D&allow_caching=true&sz=w512&authuser=1" alt="Paintbharat Co. Logo" class="w-12 h-12 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/64x64/ec1348/ffffff?text=Logo'">
+            <h1 class="font-dm-serif text-[21px] uppercase whitespace-nowrap mt-1">Paintbharat <span class="text-[#ec1348]">Co.</span></h1>
+        </div>
+        <nav>
+            <div class="nav-item active" onclick="switchView('interior', this)">Interior</div>
+            <div class="nav-item" onclick="switchView('exterior', this)">Exterior</div>
+            <div class="nav-item" onclick="switchView('waterproof', this)">Waterproof</div>
+            <div class="nav-item" onclick="switchView('wallpaper', this)">Wallpaper</div>
+        </nav>
+    </aside>
+
+    <main class="ml-[320px] w-full">
+        <!-- Interior View -->
+        <div id="view-interior" class="view-section active">
+            <div class="hero">
+                <div class="hero-img" style="background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000')"></div>
+                <h1 class="main-title text-white relative z-10">Interior Couture</h1>
+            </div>
+            <div class="sticky-filter-bar">
+                <div class="dropdown-parent">
+                    <button class="filter-btn">Painting Brands <i data-lucide="chevron-down" class="w-4 h-4 text-[#D4AF37]"></i></button>
+                    <div class="brands-list" id="interior-menu"></div>
+                </div>
+                <div class="dropdown-parent">
+                    <button class="filter-btn">Colors <i data-lucide="chevron-down" class="w-4 h-4 text-[#D4AF37]"></i></button>
+                    <div class="brands-list" id="interior-color-menu"></div>
+                </div>
+                <button onclick="resetFilters('interior')" class="reset-btn">Reset Filters</button>
+                <div id="interior-chips" class="filter-chips"></div>
+            </div>
+            <div id="interior-grid" class="grid grid-cols-4 gap-12 p-16"></div>
+        </div>
+
+        <!-- Exterior View -->
+        <div id="view-exterior" class="view-section">
+            <div class="hero">
+                <div class="hero-img" style="background-image: url('https://i.pinimg.com/1200x/88/0d/08/880d08bd926be284c07a82b5f2a6c509.jpg')"></div>
+                <div class="relative z-10 text-left">
+                    <h1 class="font-dm-serif text-white text-[60px] font-normal tracking-wide drop-shadow-md">Exterior Armor</h1>
+                </div>
+            </div>
+            <div class="sticky-filter-bar">
+                <div class="dropdown-parent">
+                    <button class="filter-btn">Painting Brands <i data-lucide="chevron-down" class="w-4 h-4 text-[#D4AF37]"></i></button>
+                    <div class="brands-list" id="exterior-menu"></div>
+                </div>
+                <div class="dropdown-parent">
+                    <button class="filter-btn">Colors <i data-lucide="chevron-down" class="w-4 h-4 text-[#D4AF37]"></i></button>
+                    <div class="brands-list" id="exterior-color-menu"></div>
+                </div>
+                <button onclick="resetFilters('exterior')" class="reset-btn">Reset Filters</button>
+                <div id="exterior-chips" class="filter-chips"></div>
+            </div>
+            <div id="exterior-grid" class="grid grid-cols-4 gap-12 p-16"></div>
+        </div>
+
+        <!-- Waterproof View -->
+        <div id="view-waterproof" class="view-section">
+            <div class="hero">
+                <div class="hero-img" style="background-image: url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2000')"></div>
+                <h1 class="main-title text-white relative z-10">Waterproofing</h1>
+            </div>
+            <div class="sticky-filter-bar justify-between">
+                <div class="dropdown-parent">
+                    <button class="filter-btn">Filter Brands <i data-lucide="chevron-down" class="w-4 h-4 text-[#D4AF37]"></i></button>
+                    <div class="brands-list p-2">
+                        <div class="wp-brand-item" onclick="updateFilter('waterproof', 'brand', 'Asian Paints')">Asian Paints</div>
+                        <div class="wp-brand-item" onclick="updateFilter('waterproof', 'brand', 'Berger Paints')">Berger Paints</div>
+                        <div class="wp-brand-item" onclick="updateFilter('waterproof', 'brand', 'Nerolac')">Nerolac</div>
+                    </div>
+                </div>
+                <button onclick="resetFilters('waterproof')" class="reset-btn">Reset All</button>
+                <div id="waterproof-chips" class="filter-chips"></div>
+            </div>
+            <div id="waterproof-grid" class="grid grid-cols-4 gap-12 p-16"></div>
+        </div>
+
+        <!-- Wallpaper View -->
+        <div id="view-wallpaper" class="view-section">
+            <div class="hero">
+                <div class="hero-img" style="background-image: url('https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=2000')"></div>
+                <h1 class="main-title text-white relative z-10">The Art of Living</h1>
+            </div>
+            <div class="marquee-container">
+                <div class="marquee-content" id="wallpaper-marquee"></div>
+            </div>
+            
+            <div class="bg-white pt-24 px-16">
+                <h2 class="sub-title mb-2 italic">Curated Designs</h2>
+                <div class="w-12 h-1 bg-black mb-12"></div>
+            </div>
+
+            <div id="wallpaper-grid" class="grid grid-cols-4 gap-12 p-16 bg-white"></div>
+        </div>
+    </main>
+
+    <script>
+        const brands = ["Asian Paints", "Berger Paints", "Nerolac"];
+        
+        // Structured Product Taxonomy
+        const taxonomy = {
+            "Asian Paints": {
+                interior: ["Royale Luxury Emulsion", "Royale Aspira", "Royale Shyne", "Royale Matt", "Apcolite Premium Emulsion", "Ace Advanced", "Tractor Emulsion"],
+                exterior: ["Apex Ultima", "Apex Advanced", "Apex Weatherproof", "Tractor Aqualock"],
+                finishes: ["Matt", "Soft Sheen", "High Sheen", "Luxury Low-Sheen", "Washable"],
+                positioning: "Luxury Market Leader"
+            },
+            "Berger Paints": {
+                interior: ["Silk Glamor High Sheen", "Silk Glamor Soft Sheen", "Silk Glamor Matt", "Silk Breathe Easy", "Rangoli Total Care", "Bison Acrylic Emulsion"],
+                exterior: ["WeatherCoat Long Life", "WeatherCoat Anti Dust", "WeatherCoat All Guard"],
+                finishes: ["Matt", "Soft Sheen", "High Sheen", "Low VOC", "Washable"],
+                positioning: "Mid to Premium Aesthetic Focus"
+            },
+            "Nerolac": {
+                interior: ["Impressions Ultra HD", "Impressions Kashmir", "Impressions Sheen", "Beauty Gold Washable", "Beauty Sheen", "Beauty Smooth"],
+                exterior: ["Excel Everlast", "Excel Mica Marble", "Excel Rain Guard"],
+                finishes: ["Matt", "Soft Sheen", "Pearl Finish", "High Washable", "Anti-Microbial"],
+                positioning: "Technology Driven Premium"
+            }
+        };
+
+        const palettes = {
+            "Earthy Tones": ["Terracotta Warmth", "Raw Umber", "Desert Sand", "Olive Grove", "Canyon Clay"],
+            "Pastel Collection": ["Morning Mist", "Blush Petal", "Minty Whisper", "Lavender Haze", "Lemon Sorbet"],
+            "Royal & Bold": ["Imperial Purple", "Peacock Blue", "Ruby Heritage", "Emerald Green", "Midnight Gold"],
+            "Neutral Classics": ["Ivory Silk", "Stone Grey", "Champagne Beige", "Graphite Cool", "Warm Taupe"],
+            "Luxury Metallics": ["Antique Gold", "Shimmering Silver", "Copper Glow", "Bronze Luxe", "Pearl Sparkle"]
+        };
+
+        const colorHexMap = {
+            "Terracotta Warmth": "#E2725B", "Raw Umber": "#826644", "Desert Sand": "#EDC9AF", "Olive Grove": "#808000", "Canyon Clay": "#D27D46",
+            "Morning Mist": "#E5E4E2", "Blush Petal": "#F4C2C2", "Minty Whisper": "#98FF98", "Lavender Haze": "#E6E6FA", "Lemon Sorbet": "#FFFACD",
+            "Imperial Purple": "#66023C", "Peacock Blue": "#33A1C9", "Ruby Heritage": "#9B111E", "Emerald Green": "#50C878", "Midnight Gold": "#706146",
+            "Ivory Silk": "#FFFFF0", "Stone Grey": "#928E85", "Champagne Beige": "#F7E7CE", "Graphite Cool": "#53565A", "Warm Taupe": "#8B8589",
+            "Antique Gold": "#CFB53B", "Shimmering Silver": "#E0E0E0", "Copper Glow": "#B87333", "Bronze Luxe": "#CD7F32", "Pearl Sparkle": "#EAE0C8"
+        };
+
+        const rangesList = ["Budget", "Mid-Range", "Premium"];
+
+        let database = { interior: [], exterior: [], waterproof: [], wallpaper: [] };
+        let activeFilters = { interior: {}, exterior: {}, waterproof: {}, wallpaper: {} };
+
+        // Fix syntax issues and rebuild data generation logic safely
+        function initData() {
+            // Interior/Exterior Generation
+            ['interior', 'exterior'].forEach(view => {
+                brands.forEach(brand => {
+                    const brandData = taxonomy[brand];
+                    const cats = view === 'interior' ? brandData.interior : brandData.exterior;
+                    const finishes = brandData.finishes;
+
+                    cats.forEach((cat, cIdx) => {
+                        let range;
+                        let basePrice;
+                        if (cIdx <= 1) {
+                            range = "Premium";
+                            basePrice = 650;
+                        }
+                        else if (cIdx <= 4) {
+                            range = "Mid-Range";
+                            basePrice = 420;
+                        }
+                        else {
+                            range = "Budget";
+                            basePrice = 220;
+                        }
+
+                        Object.keys(palettes).forEach(paletteName => {
+                            palettes[paletteName].forEach(color => {
+                                finishes.forEach(finish => {
+                                    database[view].push({
+                                        type: 'paint',
+                                        brand: brand,
+                                        category: cat,
+                                        palette: paletteName,
+                                        color: color,
+                                        finish: finish,
+                                        range: range,
+                                        positioning: brandData.positioning,
+                                        name: `${cat} ${color}`, 
+                                        price: `₹${basePrice + Math.floor(Math.random() * 50)}/Ltr`
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+
+            // Waterproofing Data
+            brands.forEach(b => {
+                const products = ["Dampp-Proof", "SmartCare Vital", "Leak Seal", "Hydroloc Pro"];
+                products.forEach((p, i) => {
+                    database.waterproof.push({ 
+                        type: 'paint', brand: b, 
+                        name: `${b} ${p}`, 
+                        price: `₹${350 + i*100}/Ltr`, 
+                        category: "Protection", range: "Performance" 
+                    });
+                });
+            });
+
+            // Wallpaper Data
+            const wpImages = [
+                "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800",
+                "https://images.unsplash.com/photo-1558603668-6570496b66f8?q=80&w=800",
+                "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=800",
+                "https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=800"
+            ];
+            for(let i=0; i<8; i++) {
+                database.wallpaper.push({ 
+                    type: 'wallpaper', brand: "Heritage", name: `Luxury Texture ${i+1}`, 
+                    price: `₹${2400 + i*500}`, category: "Wall Decor", img: wpImages[i % 4],
+                    size: "10ft x 8ft"
+                });
+            }
+        }
+
+        const getSVG = (brand, isPopup = false) => `
+            <svg viewBox="0 0 200 200" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40,50 L160,50 L145,160 C143,175 130,185 115,185 L85,185 C70,185 57,175 55,160 L40,50 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+                <ellipse cx="100" cy="50" rx="65" ry="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                <text x="100" y="${isPopup ? 110 : 105}" text-anchor="middle" font-family="Montserrat" font-weight="900" font-size="${isPopup ? 10 : 8}" fill="#999">${brand.toUpperCase()}</text>
+            </svg>`;
+
+        function render(view) {
+            const grid = document.getElementById(`${view}-grid`);
+            const chips = document.getElementById(`${view}-chips`);
+            grid.innerHTML = '';
+            
+            const filters = activeFilters[view];
+            let filteredData = database[view].filter(item => {
+                return Object.keys(filters).every(key => !filters[key] || item[key] === filters[key]);
+            });
+
+            if(chips) {
+                chips.innerHTML = '';
+                Object.entries(filters).forEach(([key, val]) => {
+                    if(val) {
+                        const chip = document.createElement('div');
+                        chip.className = "chip";
+                        chip.innerHTML = `${key}: ${val} <i data-lucide="x" class="w-3 h-3 chip-remove" onclick="removeFilter('${view}', '${key}')"></i>`;
+                        chips.appendChild(chip);
+                    }
+                });
+                lucide.createIcons();
+            }
+
+            // Shuffle for realism and slice
+            const displayData = filteredData.sort(() => Math.random() - 0.5).slice(0, 24);
+            if(displayData.length === 0) {
+                grid.innerHTML = `<div class="col-span-4 py-20 text-center opacity-30 font-lora text-2xl">No matching products found.</div>`;
+                return;
+            }
+
+            displayData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "elegant-card group";
+                card.onclick = () => openPopup(item);
+
+                const media = item.img ? `<img src="${item.img}" class="w-full h-full object-cover">` : `<div class="bucket-wrapper">${getSVG(item.brand)}<div class="bucket-label">${item.category || item.name}</div></div>`;
+                
+                let label2Text = '';
+                if (item.type === 'paint') {
+                    label2Text = `${item.category} • ${item.finish} Finish • ${item.range}`;
+                } else {
+                    label2Text = item.category || 'Standard';
+                }
+
+                card.innerHTML = `
+                    <div class="image-viewport">
+                        ${media}
+                        <div class="focus-overlay">
+                            <div class="view-btn-circle">View</div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-between items-start">
+                        <div class="flex-1">
+                            <h3 class="sub-title card-name">${item.name}</h3>
+                            <p class="text-[9px] uppercase tracking-widest opacity-30 mt-3 font-medium">${item.brand} • ${label2Text}</p>
+                        </div>
+                        <div class="text-right pl-4">
+                           <span class="text-sm opacity-40 font-medium">${item.price}</span>
+                        </div>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function openPopup(item) {
+            const imgEl = document.getElementById('popup-img');
+            const svgEl = document.getElementById('popup-bucket-svg');
+            
+            if(item.img) {
+                imgEl.src = item.img;
+                imgEl.classList.remove('hidden');
+                svgEl.classList.add('hidden');
+            } else {
+                imgEl.classList.add('hidden');
+                svgEl.classList.remove('hidden');
+                svgEl.innerHTML = getSVG(item.brand, true);
+            }
+
+            document.getElementById('popup-name').innerText = item.name;
+            document.getElementById('popup-brand').innerText = `${item.brand} — ${item.range || 'Standard'} Tier ${item.positioning ? `| ${item.positioning}` : ''}`;
+            document.getElementById('popup-price').innerText = `${item.price}`;
+            
+            const metaLabel = document.getElementById('popup-meta-label');
+            const metaVal = document.getElementById('popup-meta-val');
+
+            if(item.type === 'wallpaper') {
+                metaLabel.innerText = "Dimensions";
+                metaVal.innerText = item.size || "Standard Size";
+            } else {
+                metaLabel.innerText = "Selected Configuration";
+                metaVal.innerText = `${item.finish || 'Any'} Finish / ${item.color || 'Base'} Tone`;
+            }
+            document.getElementById('details-popup').classList.add('active');
+        }
+
+        function closePopup() { document.getElementById('details-popup').classList.remove('active'); }
+
+        function updateFilter(view, key, value) {
+            if (value === null) delete activeFilters[view][key];
+            else activeFilters[view][key] = value;
+            render(view);
+            showToast(`${key}: ${value || 'Cleared'}`);
+        }
+
+        function removeFilter(view, key) {
+            delete activeFilters[view][key];
+            render(view);
+        }
+
+        function resetFilters(view) {
+            activeFilters[view] = {};
+            render(view);
+            showToast("Filters Cleared");
+        }
+
+        function switchView(view, btn) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`view-${view}`).classList.add('active');
+            
+            if(view === 'wallpaper') {
+                const marquee = document.getElementById('wallpaper-marquee'); 
+                let marqueeHTML = '';
+                [...database.wallpaper, ...database.wallpaper].forEach(w => {
+                    marqueeHTML += `
+                        <div class="w-[300px] mx-8 flex-shrink-0 group cursor-pointer" onclick="openPopup(${JSON.stringify(w).replace(/"/g, '&quot;')})">
+                            <div class="aspect-[4/5] bg-stone-200 overflow-hidden relative rounded-[4px]">
+                                <img src="${w.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <div class="view-btn-circle border-white text-white">View</div>
+                                </div>
+                            </div>
+                            <p class="text-white mt-4 font-lora text-center text-lg italic opacity-80 group-hover:opacity-100">${w.name}</p>
+                        </div>`;
+                });
+                marquee.innerHTML = marqueeHTML;
+            }
+            render(view);
+        }
+
+        function buildMenus() {
+            ['interior', 'exterior'].forEach(view => {
+                const container = document.getElementById(`${view}-menu`);
+                const colorContainer = document.getElementById(`${view}-color-menu`);
+                
+                if (container) container.innerHTML = ''; 
+                if (colorContainer) colorContainer.innerHTML = '';
+                
+                brands.forEach(b => {
+                    const brandData = taxonomy[b];
+                    const cats = view === 'interior' ? brandData.interior : brandData.exterior;
+                    const paletteFamilies = Object.keys(palettes);
+                    
+                    const item = document.createElement('div');
+                    item.className = "brand-item";
+                    item.innerHTML = `
+                        <span>${b}</span> <i data-lucide="chevron-right" class="w-3 h-3 opacity-20"></i>
+                        <div class="mega-menu" onclick="event.stopPropagation()">
+                            <div><div class="menu-col-title">Categories</div>${cats.map(c => `<div class="menu-opt" onclick="updateFilter('${view}', 'category', '${c}'); updateFilter('${view}', 'brand', '${b}')">${c}</div>`).join('')}</div>
+                            <div><div class="menu-col-title">Finishes</div>${brandData.finishes.map(f => `<div class="menu-opt" onclick="updateFilter('${view}', 'finish', '${f}'); updateFilter('${view}', 'brand', '${b}')">${f}</div>`).join('')}</div>
+                            <div><div class="menu-col-title">Palette Families</div>${paletteFamilies.map(p => `<div class="menu-opt" onclick="updateFilter('${view}', 'palette', '${p}'); updateFilter('${view}', 'brand', '${b}')">${p}</div>`).join('')}</div>
+                            <div><div class="menu-col-title">Price Range</div>${rangesList.map(r => `<div class="menu-opt" onclick="updateFilter('${view}', 'range', '${r}'); updateFilter('${view}', 'brand', '${b}')">${r}</div>`).join('')}</div>
+                        </div>`;
+                    item.addEventListener('click', () => updateFilter(view, 'brand', b));
+                    if (container) container.appendChild(item);
+                });
+
+                // Colors Custom Filter Menu Dropdown
+                if(colorContainer) {
+                    Object.entries(palettes).forEach(([family, colors]) => {
+                        const item = document.createElement('div');
+                        item.className = "brand-item";
+                        item.innerHTML = `
+                            <span>${family}</span> <i data-lucide="chevron-right" class="w-3 h-3 opacity-20"></i>
+                            <div class="mega-menu mini" onclick="event.stopPropagation()">
+                                <div>
+                                    <div class="menu-col-title">${family} Shades</div>
+                                    ${colors.map(c => `
+                                        <div class="menu-opt flex items-center gap-3 py-2" onclick="updateFilter('${view}', 'color', '${c}')">
+                                            <div class="w-4 h-4 rounded-full shadow-sm border border-black/10" style="background-color: ${colorHexMap[c] || '#cccccc'}"></div>
+                                            ${c}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>`;
+                        colorContainer.appendChild(item);
+                    });
+                }
+            });
+            lucide.createIcons();
+        }
+
+        function showToast(m) { 
+            const t = document.getElementById("toast"); 
+            document.getElementById("toast-msg").innerText = m; 
+            t.classList.add("show"); 
+            setTimeout(() => t.classList.remove("show"), 2000); 
+        }
+
+        window.onload = () => { initData(); buildMenus(); render('interior'); lucide.createIcons(); };
+    </script>
+</body>
+</html>
