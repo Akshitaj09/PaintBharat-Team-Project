@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hot-pink: #ec1348;
+            --navy-blue: #000080;
+            --black: #0F172A;
+            --white: #FFFFFF;
+            --animation-speed: 40s;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--white);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* High Contrast Decorative Elements */
+        .bg-accent-shape {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.08) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        /* Seamless Infinite Scroll Animation */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-280px * 6 - 2rem * 6)); }
+        }
+
+        .scroll-track {
+            display: flex;
+            width: calc(280px * 12 + 2rem * 12);
+            animation: scroll var(--animation-speed) linear infinite;
+        }
+
+        .scroll-container:hover .scroll-track {
+            animation-play-state: paused;
+        }
+
+        .brand-card {
+            width: 280px;
+            flex-shrink: 0;
+            background: var(--white);
+            border: 2px solid #f1f5f9;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--hot-pink);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-12px);
+            border-color: var(--navy-blue);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 128, 0.15);
+        }
+
+        .brand-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .brand-logo-img {
+            filter: grayscale(1) brightness(0.8);
+            opacity: 0.6;
+            transition: all 0.5s ease;
+            max-height: 55px;
+            max-width: 180px;
+            object-fit: contain;
+        }
+
+        .brand-card:hover .brand-logo-img {
+            filter: grayscale(0) brightness(1);
+            opacity: 1;
+            transform: scale(1.08);
+        }
+
+        /* Gradient Edge Fades */
+        .scroll-wrapper {
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .section-title {
+            color: var(--navy-blue);
+        }
+
+        .pink-highlight {
+            color: var(--hot-pink);
+        }
+
+        @media (max-width: 768px) {
+            .brand-card {
+                width: 240px;
+            }
+            @keyframes scroll {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(calc(-240px * 6 - 1.5rem * 6)); }
+            }
+            .scroll-track {
+                width: calc(240px * 12 + 1.5rem * 12);
+            }
+        }
+    </style>
+</head>
+<body class="py-24 px-6 relative">
+
+    <!-- Decorative Palette Blobs -->
+    <div class="bg-accent-shape top-[-200px] left-[-200px]"></div>
+    <div class="bg-accent-shape bottom-[-200px] right-[-200px]" style="background: radial-gradient(circle, rgba(0, 0, 128, 0.05) 0%, transparent 70%);"></div>
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="text-center mb-20">
+            <h4 class="text-sm font-bold uppercase tracking-[0.3em] pink-highlight mb-4">Quality First</h4>
+            <h2 class="text-4xl md:text-6xl font-black section-title tracking-tight mb-6">
+                Trusted Paint Brands <br class="hidden md:block"> We Use
+            </h2>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto font-medium">
+                We use genuine products from India's top manufacturers to ensure your walls stay
+                <span class="text-slate-900">flawless for years.</span>
+            </p>
+        </div>
+
+        <!-- Scrolling Brands Section -->
+        <div class="scroll-wrapper overflow-hidden py-10">
+            <div class="scroll-container overflow-hidden">
+                <div class="scroll-track gap-8">
+                    
+                    <!-- Brand Card 1: Asian Paints -->
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/ascian[aints_logo.jpg" alt="Asian Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Asian Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">India's leader in premium finishes and long-term durability.</p>
+                    </div>
+
+                    <!-- Brand Card 2: Berger -->
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/berger_logo.jpg" alt="Berger Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Berger Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">Advanced protection with a signature silk-smooth finish.</p>
+                    </div>
+
+                    <!-- Brand Card 3: Nerolac -->
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/nerolac_logo.jpg" alt="Nerolac" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Kansai Nerolac</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">The global standard for eco-friendly coating technology.</p>
+                    </div>
+
+                    <!-- Brand Card 4: Indigo -->
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/indigo_logo.jpg" alt="Indigo Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Indigo Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">Bold, innovative textures and modern home solutions.</p>
+                    </div>
+
+                    <!-- Brand Card 5: JSW -->
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/jsw_logo.jpg" alt="JSW Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">JSW Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">Think Beautiful. Environment-first sustainable coatings.</p>
+                    </div>
+
+                    <!-- Brand Card 6: Dulux -->
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/dulux_logo.jpg" alt="Dulux" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Dulux</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">International quality benchmarks for luxury interiors.</p>
+                    </div>
+
+                    <!-- DUPLICATE SET (CLONE) FOR SEAMLESS LOOP -->
+                    
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/ascian[aints_logo.jpg" alt="Asian Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Asian Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">India's leader in premium finishes and long-term durability.</p>
+                    </div>
+
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/berger_logo.jpg" alt="Berger Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Berger Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">Advanced protection with a signature silk-smooth finish.</p>
+                    </div>
+
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/nerolac_logo.jpg" alt="Nerolac" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Kansai Nerolac</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">The global standard for eco-friendly coating technology.</p>
+                    </div>
+
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/indigo_logo.jpg" alt="Indigo Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Indigo Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">Bold, innovative textures and modern home solutions.</p>
+                    </div>
+
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/jsw_logo.jpg" alt="JSW Paints" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">JSW Paints</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">Think Beautiful. Environment-first sustainable coatings.</p>
+                    </div>
+
+                    <div class="brand-card p-10 rounded-2xl">
+                        <div class="h-20 flex items-center justify-center mb-4">
+                            <img src="images/dulux_logo.jpg" alt="Dulux" class="brand-logo-img">
+                        </div>
+                        <h4 class="font-extrabold text-navy-blue mb-2">Dulux</h4>
+                        <p class="text-xs text-slate-400 text-center leading-relaxed px-4">International quality benchmarks for luxury interiors.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Call to Action -->
+        <div class="mt-16 text-center">
+            <button class="bg-black text-white px-10 py-5 rounded-full font-extrabold hover:bg-navy-blue transition-all duration-300 flex items-center gap-4 mx-auto group shadow-xl">
+                Get Your Color Estimate
+                <span class="group-hover:translate-x-2 transition-transform duration-300">→</span>
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

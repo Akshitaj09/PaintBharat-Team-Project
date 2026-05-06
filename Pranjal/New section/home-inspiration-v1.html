@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Homes | Artisan Excellence</title>
+    <!-- Tailwind CDN is used for prototyping; for production, follow Tailwind's PostCSS installation guides -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
+    
+    <script>
+        // Move Tailwind configuration here if you want to extend the theme or add custom utilities
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: '#ff1493', // Hot Pink
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-deep: #0a0b0d;
+            --accent: #ec1348;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .playfair { font-family: 'Playfair Display', serif; }
+
+        /* Custom Cursor */
+        #cursor {
+            width: 8px; height: 8px;
+            background: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 10px var(--accent);
+        }
+        #cursor-follower {
+            width: 40px; height: 40px;
+            background: radial-gradient(circle, rgb(226, 15, 68) 0%, transparent 70%);
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Typography & Effects */
+        .text-reveal {
+            background: linear-gradient(to bottom, #fff 30%, rgba(255,255,255,0.2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Bento Grid Structure */
+        .artisan-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(180px, auto);
+            gap: 1.25rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .bento-card {
+            position: relative;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .bento-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bento-card:hover {
+            border-color: rgb(226, 15, 68);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: block; /* Ensures no bottom-gap */
+        }
+
+        .bento-card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        /* Overlay Styles */
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+        }
+
+        .card-tag {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.25rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            color: white;
+        }
+
+        /* Hot Pink Accent Class */
+        .text-accent {
+            color: var(--accent) !important;
+        }
+
+        @media (max-width: 1024px) {
+            .artisan-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .artisan-grid { display: flex; flex-direction: column; }
+            .bento-card { min-height: 300px; }
+        }
+    </style>
+</head>
+<body class="px-6 py-12 md:px-12">
+
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+
+    <header class="mt-20 mb-20 text-center relative z-10">
+        <h1 class="text-6xl md:text-8xl lg:text-9xl playfair leading-none tracking-tight">
+            <span class="text-reveal">Beautiful</span>
+            <span class="italic font-light text-accent">Homes<span class="text-white opacity-20">.</span></span>
+        </h1>
+    </header>
+
+    <main class="artisan-grid">
+        
+        <!-- Row 1: Left Big Block -->
+        <div class="bento-card col-span-2 row-span-2">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200" class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Living Spaces</span>
+                <h3 class="card-title">Interior Design</h3>
+            </div>
+        </div>
+
+        <!-- Row 1: Top Right Small -->
+        <div class="bento-card col-span-1 row-span-1">
+            <img src="images/home_exterior.jpg"  class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Residential</span>
+                <h3 class="card-title">Exterior Facades</h3>
+            </div>
+        </div>
+
+        <!-- Row 1 & 2: Far Right Tall -->
+        <div class="bento-card col-span-1 row-span-2">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800" class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Wallcoverings</span>
+                <h3 class="card-title">Wallpaper</h3>
+            </div>
+        </div>
+
+        <!-- Row 2: Mid Right Verticalish (Waterproofing) - FIXED CLASS -->
+        <div class="bento-card col-span-1 row-span-3">
+            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=800" class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Protection</span>
+                <h3 class="card-title">Waterproofing</h3>
+            </div>
+        </div>
+
+        <!-- Row 3: Left Tall (Interior Curation) - FIXED CLASS -->
+        <div class="bento-card col-span-1 row-span-3">
+            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=800" class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Bespoke Rooms</span>
+                <h3 class="card-title">Interior Curation</h3>
+            </div>
+        </div>
+
+        <!-- Row 3: Middle Square Upper -->
+        <div class="bento-card col-span-1 row-span-1">
+            <img src="images/home_exterior3.jpg" class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Architecture</span>
+                <h3 class="card-title">Exterior Concepts</h3>
+            </div>
+        </div>
+
+        <!-- Row 3 & 4: Far Right Big -->
+        <div class="bento-card col-span-1 row-span-3">
+            <img src="images/turqoise family.png" class="card-image">
+            <div class="card-overlay items-center text-center">
+                <h3 class="card-title mb-4">Full Service Mastery</h3>
+                <button class="px-6 py-2 bg-white text-black text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-accent hover:text-white transition-colors">Explore More</button>
+            </div>
+        </div>
+
+        <!-- Row 4: Middle Square Lower -->
+        <div class="bento-card col-span-1 row-span-2">
+            <img src="images/wallpaper.jpg" class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Patterns</span>
+                <h3 class="card-title">Wall Art</h3>
+            </div>
+        </div>
+
+        <!-- Row 5: Near Right Small -->
+        <div class="bento-card col-span-1 row-span-1">
+            <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=600" class="card-image">
+            <div class="card-overlay">
+                <span class="card-tag">Durability</span>
+                <h3 class="card-title">Sealant Tech</h3>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="mt-40 mb-20"></footer>
+
+    <script>
+        const cursor = document.getElementById('cursor');
+        const follower = document.getElementById('cursor-follower');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            follower.style.left = e.clientX + 'px';
+            follower.style.top = e.clientY + 'px';
+        });
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.bento-card').forEach(card => observer.observe(card));
+
+        document.querySelectorAll('.bento-card, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(6)';
+                cursor.style.background = 'rgba(255, 20, 147, 0.1)';
+                cursor.style.border = '1px solid rgba(255, 20, 147, 0.5)';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.background = 'white';
+                cursor.style.border = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Premium Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .bg-transition {
+            transition: background-color 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            align-items: center;
+        }
+
+        /* Left Side: Content */
+        .content-section {
+            width: 40%;
+            padding: 0 6%;
+            z-index: 50;
+        }
+
+        /* Right Side: Visual */
+        .visual-section {
+            width: 60%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        /* MODERN GRID DESIGN */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(12, 1fr);
+            width: 100%;
+            height: 80%;
+            gap: 20px;
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .grid-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 32px;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            background: #eee;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* Initial Mosaic Layout */
+        .item-1 { grid-area: 1 / 1 / 9 / 8; z-index: 3; } /* Large Main */
+        .item-2 { grid-area: 2 / 8 / 7 / 13; z-index: 2; } /* Top Right */
+        .item-3 { grid-area: 7 / 6 / 13 / 12; z-index: 4; } /* Bottom Center */
+
+        .grid-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            z-index: 10;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1s ease;
+        }
+
+        .grid-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Viewing Mode Transitions */
+        .viewing-mode .grid-item {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .viewing-mode .active-view {
+            opacity: 1 !important;
+            transform: none !important;
+            width: 60vw !important;
+            height: 100vh !important;
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            border-radius: 0 !important;
+            z-index: 100 !important;
+            box-shadow: none !important;
+        }
+
+        .perspective-label {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 16px;
+            border-radius: 100px;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .grid-item:hover .perspective-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-ui {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .progress-ring {
+            transition: stroke-dashoffset 0.1s linear;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Detail State Toggles */
+        #detail-view-ui { display: none; }
+        .viewing-mode-active #home-view-ui { display: none; }
+        .viewing-mode-active #detail-view-ui { display: flex; }
+
+    </style>
+</head>
+<body class="bg-transition h-screen w-full relative">
+
+    <div id="bg-blob" class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full blur-[150px] opacity-20 transition-colors duration-1000"></div>
+
+    <main class="main-wrapper">
+        
+        <!-- CONTENT LEFT -->
+        <section class="content-section h-full flex flex-col justify-center relative">
+            <div id="brand-ui" class="absolute top-10 left-0">
+                <h1 class="text-2xl font-extrabold tracking-tighter text-gray-900 flex items-center gap-3">
+                    <span id="logo-icon" class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg transition-all duration-700">
+                        <i class="fas fa-swatchbook"></i>
+                    </span>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-xl">PAINTBHARAT</span>
+                        <span class="text-[10px] font-bold tracking-[0.3em] opacity-40 uppercase">Studio</span>
+                    </div>
+                </h1>
+            </div>
+
+            <!-- Home View Content -->
+            <div id="home-view-ui" class="animate-in">
+                <p class="text-[11px] font-black uppercase tracking-[0.5em] text-gray-400 mb-2">Curated Finishes</p>
+                <h2 id="home-color-name" class="text-7xl font-black text-gray-900 tracking-tighter leading-none mb-6"></h2>
+                <div class="flex items-center gap-4 mb-8">
+                    <span id="home-color-code" class="px-4 py-1.5 bg-gray-900 text-white text-[11px] font-bold rounded-full tracking-widest"></span>
+                    <div class="h-px w-12 bg-gray-200"></div>
+                    <span class="text-xs font-bold text-gray-400 tracking-widest uppercase">Premium Interior</span>
+                </div>
+                <p class="text-gray-500 text-sm leading-relaxed max-sm font-light">
+                    Explore how our pigments interact with different architectural spaces. Click on any frame to see full specifications.
+                </p>
+            </div>
+
+            <!-- Detail View Content -->
+            <div id="detail-view-ui" class="h-full flex flex-col justify-between py-24">
+                <!-- Top Content -->
+                <div class="animate-in">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.6em] text-white/50 mb-4">Perspective Detail</p>
+                    <h2 id="detail-name" class="text-7xl font-black text-white tracking-tighter leading-none mb-6"></h2>
+                    <span id="detail-code" class="inline-block px-5 py-2 bg-white text-gray-900 text-[12px] font-bold rounded-full tracking-widest shadow-2xl mb-12"></span>
+                    
+                    <div class="grid grid-cols-2 gap-y-8 gap-x-12 text-white/60 text-[10px] font-bold uppercase tracking-widest">
+                        <div class="border-l border-white/20 pl-4"><p class="opacity-40 mb-1">Finish</p><p class="text-white text-xs">Architectural Matte</p></div>
+                        <div class="border-l border-white/20 pl-4"><p class="opacity-40 mb-1">Coverage</p><p class="text-white text-xs">120 sq.ft / L</p></div>
+                        <div class="border-l border-white/20 pl-4"><p class="opacity-40 mb-1">Drying Time</p><p class="text-white text-xs">4-6 Hours</p></div>
+                        <div class="border-l border-white/20 pl-4"><p class="opacity-40 mb-1">Eco-Rating</p><p class="text-white text-xs">Zero VOC</p></div>
+                    </div>
+                </div>
+
+                <!-- Bottom Back Button -->
+                <div class="animate-in" style="animation-delay: 0.3s;">
+                    <button onclick="closeDetails()" class="group flex items-center gap-3 text-white/70 hover:text-white transition-all">
+                        <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:text-gray-900 transition-all">
+                            <i class="fas fa-arrow-left text-[10px]"></i>
+                        </div>
+                        <span class="text-[10px] font-black uppercase tracking-[0.4em]">Back to Home</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISUAL RIGHT -->
+        <section class="visual-section">
+            <div id="grid-parent" class="grid-container">
+                <div onclick="openDetails(this)" class="grid-item item-1">
+                    <img id="img-1" src="" alt="Interior 1">
+                    <div class="perspective-label">Living Room</div>
+                </div>
+                <div onclick="openDetails(this)" class="grid-item item-2">
+                    <img id="img-2" src="" alt="Interior 2">
+                    <div class="perspective-label">Bedroom View</div>
+                </div>
+                <div onclick="openDetails(this)" class="grid-item item-3">
+                    <img id="img-3" src="" alt="Interior 3">
+                    <div class="perspective-label">Minimalist Setup</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Controls -->
+    <div id="controls-ui" class="absolute bottom-10 left-1/2 -translate-x-1/2 z-50 transition-all duration-700">
+        <div class="glass-ui px-10 py-5 rounded-[40px] flex items-center gap-10">
+            <div id="color-picker" class="flex items-center gap-6"></div>
+            <div class="h-10 w-[1px] bg-gray-900/10"></div>
+            <div class="flex items-center gap-4">
+                <button id="prev-btn" class="w-10 h-10 rounded-full border border-gray-900/10 flex items-center justify-center hover:bg-white transition-all"><i class="fas fa-chevron-left text-xs"></i></button>
+                <button id="next-btn" class="w-10 h-10 rounded-full border border-gray-900/10 flex items-center justify-center hover:bg-white transition-all"><i class="fas fa-chevron-right text-xs"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colorData = [
+            { name: 'Royal Berry', hex: '#713232', light: '#FDF2F2', code: 'PB-701', images: ['https://images.unsplash.com/photo-1594142465967-a41296ea30bb?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?auto=format&fit=crop&w=1200'] },
+            { name: 'Deep Forest', hex: '#2D4138', light: '#F1F4F2', code: 'PB-442', images: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1615876234586-446589034731?auto=format&fit=crop&w=1200'] },
+            { name: 'Midnight Tide', hex: '#344D52', light: '#F0F6F7', code: 'PB-210', images: ['https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=1200'] },
+            { name: 'Desert Silk', hex: '#D7CFC4', light: '#F8F7F5', code: 'PB-108', images: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200'] }
+        ];
+
+        let currentIndex = 0;
+        let progress = 0;
+        let detailMode = false;
+        let isPaused = false;
+        const AUTO_PLAY_SPEED = 5000;
+        
+        function openDetails(el) {
+            if (detailMode) return;
+            detailMode = true;
+            isPaused = true;
+            const data = colorData[currentIndex];
+            document.getElementById('detail-name').innerText = data.name;
+            document.getElementById('detail-code').innerText = data.code;
+            document.body.classList.add('viewing-mode-active');
+            document.body.style.backgroundColor = data.hex;
+            document.getElementById('grid-parent').classList.add('viewing-mode');
+            el.classList.add('active-view');
+            document.getElementById('controls-ui').style.opacity = '0';
+            document.getElementById('controls-ui').style.pointerEvents = 'none';
+        }
+
+        function closeDetails() {
+            detailMode = false;
+            isPaused = false;
+            const data = colorData[currentIndex];
+            document.body.classList.remove('viewing-mode-active');
+            document.body.style.backgroundColor = data.light;
+            document.getElementById('grid-parent').classList.remove('viewing-mode');
+            document.querySelectorAll('.grid-item').forEach(item => item.classList.remove('active-view'));
+            document.getElementById('controls-ui').style.opacity = '1';
+            document.getElementById('controls-ui').style.pointerEvents = 'auto';
+        }
+
+        function updateUI(index) {
+            const data = colorData[index];
+            currentIndex = index;
+            progress = 0;
+            if(!detailMode) document.body.style.backgroundColor = data.light;
+            else document.body.style.backgroundColor = data.hex;
+            document.getElementById('logo-icon').style.backgroundColor = data.hex;
+            document.getElementById('bg-blob').style.backgroundColor = data.hex;
+            document.getElementById('home-color-name').innerText = data.name;
+            document.getElementById('home-color-code').innerText = data.code;
+            document.querySelectorAll('.grid-item img').forEach((img, i) => {
+                img.style.opacity = '0';
+                setTimeout(() => { img.src = data.images[i]; img.style.opacity = '1'; }, 300);
+            });
+            document.querySelectorAll('.color-dot').forEach((dot, i) => {
+                const circle = dot.querySelector('.progress-ring');
+                if(i === index) dot.classList.add('active');
+                else { dot.classList.remove('active'); if(circle) circle.style.strokeDashoffset = 100; }
+            });
+        }
+
+        function startAutoPlay() {
+            setInterval(() => {
+                if (!isPaused && !detailMode) {
+                    progress += (50 / AUTO_PLAY_SPEED) * 100;
+                    const activeDot = document.querySelector('.color-dot.active .progress-ring');
+                    if (activeDot) activeDot.style.strokeDashoffset = 100 - progress;
+                    if (progress >= 100) updateUI((currentIndex + 1) % colorData.length);
+                }
+            }, 50);
+        }
+
+        const picker = document.getElementById('color-picker');
+        colorData.forEach((color, index) => {
+            const container = document.createElement('div');
+            container.className = `color-dot relative w-8 h-8 cursor-pointer flex items-center justify-center`;
+            container.innerHTML = `<svg class="absolute inset-0 w-full h-full" viewBox="0 0 36 36"><circle class="progress-ring" cx="18" cy="18" r="16" fill="none" stroke="${color.hex}" stroke-width="2" stroke-dasharray="100" stroke-dashoffset="100"/></svg><div class="w-5 h-5 rounded-full shadow-inner" style="background-color: ${color.hex}"></div>`;
+            container.onclick = () => { isPaused = true; updateUI(index); setTimeout(() => isPaused = false, 2000); };
+            picker.appendChild(container);
+        });
+
+        document.getElementById('next-btn').onclick = () => { isPaused = true; updateUI((currentIndex + 1) % colorData.length); setTimeout(() => isPaused = false, 2000); };
+        document.getElementById('prev-btn').onclick = () => { isPaused = true; updateUI((currentIndex - 1 + colorData.length) % colorData.length); setTimeout(() => isPaused = false, 2000); };
+
+        window.onload = () => { updateUI(0); startAutoPlay(); };
+    </script>
+</body>
+</html>

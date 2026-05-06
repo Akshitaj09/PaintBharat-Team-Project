@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | Exterior Shield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #94A3B8;
+            --bg: #0A0A0A;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- THE MONOLITH CANVAS --- */
+        .canvas {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .background-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.55) contrast(1.05);
+            transition: transform 2.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+        }
+
+        /* --- NON-BOX GRADIENT OVERLAY --- */
+        .scrim {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+            z-index: 2;
+        }
+
+        /* --- CONTENT LAYER --- */
+        .content {
+            position: relative;
+            z-index: 10;
+            padding: 5vw;
+            max-width: 1200px;
+        }
+
+        .h1-mega {
+            font-size: clamp(55px, 9vw, 150px);
+            font-weight: 900;
+            line-height: 0.82;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .description {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 1.6;
+            max-width: 460px;
+            opacity: 0.8;
+            border-left: 2px solid var(--accent);
+            padding-left: 2rem;
+            transition: all 0.8s ease;
+        }
+
+        /* --- RATING CARD --- */
+        .rating-card {
+            position: absolute;
+            bottom: 15vw;
+            right: 5vw;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 2px;
+            width: 240px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .rating-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        /* --- FLUID RIBBON NAVIGATION --- */
+        .ribbon {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            padding: 0 5vw 4vw 5vw;
+            gap: 4rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .ribbon::-webkit-scrollbar { display: none; }
+
+        .nav-item {
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-item .label-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.4;
+            display: block;
+        }
+
+        .nav-item .name {
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- CIRCLE SWATCH --- */
+        .color-swatch {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .color-swatch::before {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: currentColor;
+            transition: transform 0.4s ease;
+        }
+
+        .nav-item.active .color-swatch {
+            border-color: rgba(255,255,255,0.4);
+            transform: scale(1.15);
+            box-shadow: 0 0 25px var(--accent);
+        }
+
+        .nav-item.active .color-swatch::before {
+            transform: scale(0.75);
+        }
+
+        .nav-item.active { opacity: 1; }
+        .nav-item:not(.active) { opacity: 0.4; }
+        .nav-item:not(.active):hover { opacity: 0.8; }
+
+        /* --- TECHNICAL OVERLAY --- */
+        .tech-specs {
+            position: absolute;
+            top: 5vw;
+            right: 5vw;
+            z-index: 10;
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tech-line {
+            font-size: 10px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- ANIMATION --- */
+        .is-changing .hero-img {
+            opacity: 0.05;
+            transform: scale(1.1) rotate(-0.5deg);
+        }
+
+        .is-changing .h1-mega {
+            transform: translateY(15px);
+            opacity: 0;
+        }
+
+        .is-changing .description {
+            opacity: 0;
+            transform: translateX(-5px);
+        }
+        
+        .is-changing .rating-card {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* Progress Bar for Autoplay */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: var(--accent);
+            width: 0%;
+            transition: width 3s linear;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="canvas" id="main-canvas">
+        <!-- BACKGROUND SYSTEM -->
+        <div class="background-wrap">
+            <div class="scrim"></div>
+            <img id="hero-img" class="hero-img" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070" alt="Modern Grey Exterior">
+        </div>
+
+        <!-- HEADER / TECH -->
+        <div class="tech-specs">
+            <div class="tech-line">Layout: Contemporary Minimalist</div>
+            <div class="tech-line" id="serial">HEX: #94A3B8</div>
+            <div class="mt-4 text-xs font-bold tracking-widest uppercase" id="finish-type">Velvet Carbon Finish</div>
+        </div>
+
+        <!-- RATING CARD -->
+        <div class="rating-card">
+            <div class="flex items-center gap-1 mb-2">
+                <svg class="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            </div>
+            <div class="text-xl font-black mb-1" id="rating-val">4.9/5.0</div>
+            <div class="text-[10px] font-bold uppercase tracking-wider opacity-60" id="review-count">2.4k Verified Owners</div>
+        </div>
+
+        <!-- MAIN BODY -->
+        <main class="content">
+            <div class="mb-4">
+                <span class="text-xs font-bold tracking-[0.5em] uppercase text-[var(--accent)]" id="category-tag">Lunar Neutrals</span>
+            </div>
+            <h1 class="h1-mega" id="title">Moonshadow<br>Grey</h1>
+            <p class="description" id="desc">
+                A deep, atmospheric grey inspired by twilight silhouettes. Engineered with micro-seal technology to repel pollutants and urban smog.
+            </p>
+            
+            <button class="mt-10 group flex items-center gap-4 text-xs font-black uppercase tracking-[0.3em]">
+                <span>Visualize on my home</span>
+                <div class="w-12 h-[1px] bg-white group-hover:w-20 transition-all duration-500"></div>
+            </button>
+        </main>
+
+        <!-- FOOTER RIBBON -->
+        <footer class="ribbon" id="ribbon">
+            <div class="nav-item active" onclick="manualUpdate(0)">
+                <div class="color-swatch" style="color: #94A3B8;"></div>
+                <div class="label-group">
+                    <span class="label">Vanish 01</span>
+                    <span class="name">Moonshadow</span>
+                </div>
+                <div class="progress-bar" id="pb-0"></div>
+            </div>
+            <div class="nav-item" onclick="manualUpdate(1)">
+                <div class="color-swatch" style="color: #F5F5DC;"></div>
+                <div class="label-group">
+                    <span class="label">Vanish 02</span>
+                    <span class="name">Alabaster Silk</span>
+                </div>
+                <div class="progress-bar" id="pb-1"></div>
+            </div>
+            <div class="nav-item" onclick="manualUpdate(2)">
+                <div class="color-swatch" style="color: #5D4037;"></div>
+                <div class="label-group">
+                    <span class="label">Vanish 03</span>
+                    <span class="name">Umber Earth</span>
+                </div>
+                <div class="progress-bar" id="pb-2"></div>
+            </div>
+            <div class="nav-item" onclick="manualUpdate(3)">
+                <div class="color-swatch" style="color: #4F7942;"></div>
+                <div class="label-group">
+                    <span class="label">Vanish 04</span>
+                    <span class="name">Jade Sanctuary</span>
+                </div>
+                <div class="progress-bar" id="pb-3"></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const colorData = [
+            {
+                title: "Moonshadow<br>Grey",
+                desc: "A deep, atmospheric grey inspired by twilight silhouettes. Perfectly suited for modern minimalist slabs and brutalist concrete facades.",
+                serial: "HEX: #94A3B8",
+                category: "Lunar Neutrals",
+                finish: "Velvet Carbon Finish",
+                accent: "#94A3B8",
+                layout: "Contemporary Minimalist",
+                img: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070",
+                rating: "4.9/5.0",
+                count: "2.4k Verified Owners"
+            },
+            {
+                title: "Alabaster<br>Silk",
+                desc: "A luminous, warm cream echoing the serenity of dawn. Ideal for grand bungalow layouts, highlighting colonial arches and expansive porches.",
+                serial: "HEX: #F5F5DC",
+                category: "Luminous Creams",
+                finish: "High-Glow Satin",
+                accent: "#F5F5DC",
+                layout: "Colonial Bungalow",
+                img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
+                rating: "4.8/5.0",
+                count: "1.9k Verified Owners"
+            },
+            {
+                title: "Umber<br>Earth",
+                desc: "A grounded, organic brown derived from forest floor mineral tones. Enhances rustic, stone-heavy designs and traditional tropical villas.",
+                serial: "HEX: #5D4037",
+                category: "Organic Bases",
+                finish: "Matte Mineral Shield",
+                accent: "#5D4037",
+                layout: "Traditional Tropical",
+                img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070",
+                rating: "4.7/5.0",
+                count: "3.1k Verified Owners"
+            },
+            {
+                title: "Jade<br>Sanctuary",
+                desc: "A muted, ethereal green that creates a living facade. Blends seamlessly with eco-modern designs featuring vertical gardens and timber accents.",
+                serial: "HEX: #4F7942",
+                category: "Botanical Tones",
+                finish: "Breathable Eco-Shield",
+                accent: "#4F7942",
+                layout: "Eco-Modern Biophilic",
+                img: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?q=80&w=2070",
+                rating: "4.9/5.0",
+                count: "1.2k Verified Owners"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isBusy = false;
+        let autoTimer;
+        const autoInterval = 3000;
+
+        function update(index) {
+            if (isBusy) return;
+            isBusy = true;
+            currentIndex = index;
+
+            const canvas = document.getElementById('main-canvas');
+            canvas.classList.add('is-changing');
+
+            // Handle Nav Items
+            document.querySelectorAll('.nav-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+
+            // Reset all progress bars
+            document.querySelectorAll('.progress-bar').forEach(pb => {
+                pb.style.transition = 'none';
+                pb.style.width = '0%';
+            });
+
+            setTimeout(() => {
+                const item = colorData[index];
+                document.getElementById('title').innerHTML = item.title;
+                document.getElementById('desc').innerText = item.desc;
+                document.getElementById('serial').innerText = item.serial;
+                document.getElementById('category-tag').innerText = item.category;
+                document.getElementById('finish-type').innerText = item.finish;
+                document.querySelector('.tech-line').innerText = "Layout: " + item.layout;
+                document.getElementById('hero-img').src = item.img;
+                
+                document.getElementById('rating-val').innerText = item.rating;
+                document.getElementById('review-count').innerText = item.count;
+                
+                document.documentElement.style.setProperty('--accent', item.accent);
+                
+                canvas.classList.remove('is-changing');
+                
+                setTimeout(() => {
+                    isBusy = false;
+                    startProgress(index);
+                }, 100);
+            }, 600);
+        }
+
+        function startProgress(index) {
+            const pb = document.getElementById(`pb-${index}`);
+            pb.style.transition = `width ${autoInterval}ms linear`;
+            pb.style.width = '100%';
+        }
+
+        function manualUpdate(index) {
+            if (index === currentIndex || isBusy) return;
+            clearInterval(autoTimer);
+            update(index);
+            resetAutoLoop();
+        }
+
+        function resetAutoLoop() {
+            autoTimer = setInterval(() => {
+                let next = (currentIndex + 1) % colorData.length;
+                update(next);
+            }, autoInterval);
+        }
+
+        // Kinetic Parallax
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 12;
+            const y = (e.clientY / window.innerHeight - 0.5) * 12;
+            document.getElementById('hero-img').style.transform = `scale(1.06) translate(${x}px, ${y}px)`;
+        });
+
+        // Initialize
+        window.onload = () => {
+            update(0);
+            resetAutoLoop();
+        };
+    </script>
+</body>
+</html>

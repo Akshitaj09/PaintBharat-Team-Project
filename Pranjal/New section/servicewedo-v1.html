@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevating Your Interiors | Premium Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FCFAF7;
+            --hot-pink: #ec1348;
+            --navy-blue: #003366;
+            --pink-glow: rgba(255, 16, 240, 0.2);
+            --text-dark: #222222;
+            --text-muted: #8E8E8E;
+            --pure-black: #000000;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Main Heading Styling */
+        .main-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            letter-spacing: 0.15em;
+            font-weight: 400;
+            color: #1a1a1a;
+        }
+
+        /* Animated Border Styling */
+        .treatment-card {
+            background: white;
+            padding: 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border: 2px solid transparent;
+            background-image: linear-gradient(white, white), 
+                              linear-gradient(90deg, var(--hot-pink), #ff85f2, var(--hot-pink));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            background-size: 200% 100%;
+            animation: gradient-move 3s infinite linear;
+        }
+
+        @keyframes gradient-move {
+            0% { background-position: 0% 0%, 0% 0%; }
+            100% { background-position: 0% 0%, 200% 0%; }
+        }
+
+        .treatment-card:hover {
+            box-shadow: 0 20px 40px var(--pink-glow);
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        /* The Wave Clip Path */
+        .wave-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            clip-path: url(#wave-clip);
+            -webkit-clip-path: url(#wave-clip);
+            background: #f0f0f0;
+        }
+
+        .wave-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .treatment-card:hover .wave-image-container img {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        /* Footer labels in card */
+        .card-footer {
+            border-top: 1px solid #f5f5f5;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+        }
+
+        /* Refined Action Link with Navy Blue */
+        .action-link {
+            color: var(--navy-blue);
+            font-weight: 700;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .action-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            /* Thickness reduced from 2px to 1px */
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--navy-blue);
+            transition: width 0.3s ease;
+        }
+
+        .treatment-card:hover .action-link::after {
+            width: 100%;
+        }
+
+        /* Decorative horizontal line - Width increased to 80px, Height kept at 1px */
+        .pink-divider {
+            width: 80px;
+            height: 1px;
+            background-color: var(--hot-pink);
+            margin: 1.5rem auto;
+            border-radius: 2px;
+        }
+
+        /* Transformation link - Updated to BLACK */
+        .begin-link {
+            font-size: 0.85rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--pure-black);
+            font-weight: 700;
+            position: relative;
+            padding: 14px 32px;
+            border: 2px solid var(--pure-black);
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .begin-link:hover {
+            background-color: var(--pure-black);
+            color: white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="py-16 px-6 md:px-12">
+
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <clipPath id="wave-clip" clipPathUnits="objectBoundingBox">
+                <path d="M0,0 H1 V0.85 C0.8,0.8 0.7,0.95 0.5,0.9 C0.3,0.85 0.2,1 0,0.95 V0 Z"></path>
+            </clipPath>
+        </defs>
+    </svg>
+
+    <header class="text-center max-w-3xl mx-auto mb-20">
+        <h1 class="main-heading uppercase">Elevating Your Interiors</h1>
+        <div class="pink-divider"></div>
+        <p class="text-sm md:text-base text-gray-500 font-medium tracking-wide leading-relaxed">
+            Transforming spaces with <span class="text-[#FF10F0]">vibrant precision</span>, elegance, and a commitment to architectural excellence.
+        </p>
+    </header>
+
+    <main class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            
+            <div class="treatment-card">
+                <div class="wave-image-container">
+                    <img src="https://images.unsplash.com/photo-1594488651099-00a0fe0a7259?auto=format&fit=crop&q=80&w=800" alt="Wall Painting">
+                </div>
+                <h3 class="serif-title text-center text-sm uppercase tracking-widest mt-6 font-semibold">Wall Painting</h3>
+                <div class="card-footer">
+                    <span>Pro Finish</span>
+                    <a href="#" class="action-link">Get Quote</a>
+                </div>
+            </div>
+
+            <div class="treatment-card">
+                <div class="wave-image-container">
+                    <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800" alt="Ceiling Painting">
+                </div>
+                <h3 class="serif-title text-center text-sm uppercase tracking-widest mt-6 font-semibold">Ceiling Painting</h3>
+                <div class="card-footer">
+                    <span>Durable</span>
+                    <a href="#" class="action-link">Estimate</a>
+                </div>
+            </div>
+
+            <div class="treatment-card">
+                <div class="wave-image-container">
+                    <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800" alt="Accent Walls">
+                </div>
+                <h3 class="serif-title text-center text-sm uppercase tracking-widest mt-6 font-semibold">Accent Walls</h3>
+                <div class="card-footer">
+                    <span>Sealant</span>
+                    <a href="#" class="action-link">Inquiry</a>
+                </div>
+            </div>
+
+            <div class="treatment-card">
+                <div class="wave-image-container">
+                    <img src="https://images.unsplash.com/photo-1615876234886-fd9a39faa97f?auto=format&fit=crop&q=80&w=800" alt="Trim Painting">
+                </div>
+                <h3 class="serif-title text-center text-sm uppercase tracking-widest mt-6 font-semibold">Trim Painting</h3>
+                <div class="card-footer">
+                    <span>Designer</span>
+                    <a href="#" class="action-link">Premium</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="mt-24 text-center">
+        <a href="#" class="begin-link">
+            Begin Your Transformation
+        </a>
+    </footer>
+
+</body>
+</html>

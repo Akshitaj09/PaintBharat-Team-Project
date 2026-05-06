@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat Premium Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+            background-color: #f8f9fa;
+        }
+
+        .bg-transition {
+            transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 50/50 Split Layout */
+        .content-section {
+            width: 50%;
+            height: 100%;
+            padding: 0 8%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 50;
+            position: relative;
+        }
+
+        .visual-section {
+            width: 50%;
+            height: 100%;
+            position: relative;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 3D Gallery Stack with Spread Animation */
+        .stack-container {
+            perspective: 2000px;
+            width: 80%;
+            max-width: 380px;
+            aspect-ratio: 4/5;
+            position: relative;
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .image-card {
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background: white;
+            border: 10px solid white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Default Stack positions */
+        .card-1 { transform: translateZ(100px); z-index: 30; }
+        .card-2 { transform: translateZ(20px) translateY(-25px) scale(0.92); z-index: 20; opacity: 0.8; }
+        .card-3 { transform: translateZ(-60px) translateY(-50px) scale(0.85); z-index: 10; opacity: 0.5; }
+
+        /* Spread Animation on Hover (SIDE ANIMATION) */
+        .stack-container:hover .card-1 { 
+            transform: translateZ(150px) translateX(-40px) rotateY(-10deg); 
+        }
+        .stack-container:hover .card-2 { 
+            transform: translateZ(80px) translateX(20px) translateY(-40px) rotateY(5deg) scale(0.95); 
+            opacity: 1;
+        }
+        .stack-container:hover .card-3 { 
+            transform: translateZ(20px) translateX(60px) translateY(-80px) rotateY(15deg) scale(0.9); 
+            opacity: 0.8;
+        }
+
+        /* Full Split Image Overlay (Detail State) */
+        .active-view-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 50vw;
+            height: 100vh;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(50px);
+            overflow: hidden;
+            box-shadow: -20px 0 60px rgba(0,0,0,0.3);
+        }
+
+        .viewing-mode-active .active-view-overlay {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+
+        .viewing-mode-active .stack-container {
+            opacity: 0;
+            transform: scale(0.8) translateX(100px);
+            pointer-events: none;
+        }
+
+        /* Detail State Left Edge Shadow */
+        .active-view-overlay::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 150px;
+            background: linear-gradient(to right, rgba(0,0,0,0.25), transparent);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .glass-ui {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .progress-ring {
+            transition: stroke-dashoffset 0.1s linear;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        #detail-view-ui { display: none; }
+        .viewing-mode-active #home-view-ui { display: none; }
+        .viewing-mode-active #detail-view-ui { display: block; }
+
+        .img-fill {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #bubble-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Back Button Positioned Bottom Left */
+        .back-btn-container {
+            position: fixed;
+            bottom: 40px;
+            left: 12%;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .viewing-mode-active .back-btn-container {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-transition h-screen w-full relative">
+
+    <canvas id="bubble-canvas"></canvas>
+
+    <!-- Detail View Image (Fills Right 50%) -->
+    <div id="full-image-overlay" class="active-view-overlay">
+        <img id="detail-img-source" src="" class="img-fill" alt="Detail View">
+    </div>
+
+    <!-- Persistent Back Button (Only visible in Detail Mode) -->
+    <div class="back-btn-container">
+        <button onclick="closeDetails()" class="flex items-center gap-4 px-6 py-3 rounded-full glass-ui text-white/90 hover:text-white hover:bg-white/20 transition-all shadow-xl group">
+            <i class="fas fa-arrow-left text-[10px] group-hover:-translate-x-1 transition-transform"></i>
+            <span class="text-[10px] font-black uppercase tracking-[0.4em]">Back to Gallery</span>
+        </button>
+    </div>
+
+    <main class="main-wrapper">
+        <!-- Content Side (Left 50%) -->
+        <section class="content-section">
+            <div id="brand-ui" class="absolute top-12 left-12">
+                <h1 class="text-xl font-extrabold tracking-tighter text-gray-900 flex items-center gap-3">
+                    <span id="logo-icon" class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg transition-all duration-700">
+                        <i class="fas fa-paint-roller"></i>
+                    </span>
+                    <div class="flex flex-col leading-none">
+                        <span class="text-lg">PAINTBHARAT CO.</span>
+                    </div>
+                </h1>
+            </div>
+
+            <!-- Home State UI -->
+            <div id="home-view-ui" class="animate-in">
+                <p class="text-[10px] font-black uppercase tracking-[0.5em] text-gray-400 mb-3">Signature Elements</p>
+                <h2 id="home-color-name" class="text-6xl md:text-7xl font-black text-gray-900 tracking-tighter leading-[0.9] mb-8"></h2>
+                <div class="flex items-center gap-4 mb-10">
+                    <span id="home-color-code" class="px-5 py-2.5 bg-gray-900 text-white text-[10px] font-bold rounded-full tracking-widest"></span>
+                    <div class="h-px w-12 bg-gray-200"></div>
+                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Architectural Finish</span>
+                </div>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-sm">
+                    Redefining luxury through monochromatic depth. Our curated palette utilizes high-density pigments to create a space that feels both grounded and ethereal.
+                </p>
+            </div>
+
+            <!-- Detail State UI -->
+            <div id="detail-view-ui" class="animate-in">
+                <h2 id="detail-name" class="text-7xl md:text-8xl font-black text-white tracking-tighter leading-[0.85] mb-8"></h2>
+                
+                <div class="mb-20">
+                    <span id="detail-code" class="px-7 py-3 bg-white text-gray-900 text-[11px] font-bold rounded-full tracking-widest shadow-2xl"></span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-12 text-white/90">
+                    <div class="border-l-2 border-white/20 pl-6">
+                        <p class="text-[9px] font-black uppercase tracking-widest opacity-40 mb-2">Pigment Grade</p>
+                        <p class="text-sm font-bold">Ultra-Refined Alpha</p>
+                    </div>
+                    <div class="border-l-2 border-white/20 pl-6">
+                        <p class="text-[9px] font-black uppercase tracking-widest opacity-40 mb-2">Vibe</p>
+                        <p class="text-sm font-bold">Luxe Minimalist</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Side (Right 50%) -->
+        <section class="visual-section">
+            <div id="main-stack" class="stack-container">
+                <div onclick="openDetails(0)" class="image-card card-1">
+                    <img id="img-1" src="" class="img-fill">
+                </div>
+                <div onclick="openDetails(1)" class="image-card card-2">
+                    <img id="img-2" src="" class="img-fill">
+                </div>
+                <div onclick="openDetails(2)" class="image-card card-3">
+                    <img id="img-3" src="" class="img-fill">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- UI Controls -->
+    <div id="controls-ui" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] transition-all duration-500">
+        <div class="glass-ui px-8 py-4 rounded-[40px] flex items-center gap-8 shadow-2xl">
+            <div id="color-picker" class="flex items-center gap-5"></div>
+            <div class="h-6 w-[1px] bg-gray-900/10"></div>
+            <div class="flex items-center gap-3">
+                <button id="prev-btn" class="w-10 h-10 rounded-full border border-gray-900/10 flex items-center justify-center hover:bg-white transition-all">
+                    <i class="fas fa-chevron-left text-[10px]"></i>
+                </button>
+                <button id="next-btn" class="w-10 h-10 rounded-full border border-gray-900/10 flex items-center justify-center hover:bg-white transition-all">
+                    <i class="fas fa-chevron-right text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const colorData = [
+            { name: 'Midnight Tide', hex: '#344D52', light: '#F0F6F7', code: 'AL-X-99', images: ['https://images.unsplash.com/photo-1615529328331-f8917597711f?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=1200'] },
+            { name: 'Royal Berry', hex: '#713232', light: '#FDF5F5', code: 'AL-R-42', images: ['https://images.unsplash.com/photo-1594142465967-a41296ea30bb?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?auto=format&fit=crop&w=1200'] },
+            { name: 'Deep Forest', hex: '#2D4138', light: '#F2F6F4', code: 'AL-G-77', images: ['https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1615876234586-446589034731?auto=format&fit=crop&w=1200'] },
+            { name: 'Desert Silk', hex: '#D7CFC4', light: '#FBF9F7', code: 'AL-S-12', images: ['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200'] }
+        ];
+
+        let currentIndex = 0;
+        let detailMode = false;
+        let isPaused = false;
+        let progress = 0;
+        const SPEED = 6000;
+        const TICK = 50;
+
+        const canvas = document.getElementById('bubble-canvas');
+        const ctx = canvas.getContext('2d');
+        let bubbles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Bubble {
+            constructor() { this.init(); }
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 100;
+                this.radius = Math.random() * 80 + 20;
+                this.speed = Math.random() * 0.4 + 0.3;
+                this.opacity = Math.random() * 0.12 + 0.05;
+                this.wobble = Math.random() * 100;
+            }
+            update() {
+                this.y -= this.speed;
+                this.x += Math.sin(this.wobble) * 0.3;
+                this.wobble += 0.01;
+                if (this.y < -100) this.init();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = colorData[currentIndex].hex;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function initBubbles() { bubbles = Array.from({ length: 12 }, () => new Bubble()); }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bubbles.forEach(b => { b.update(); b.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        function updateUI(index) {
+            const data = colorData[index];
+            currentIndex = index;
+            progress = 0;
+            
+            document.body.style.backgroundColor = detailMode ? data.hex : data.light;
+            document.getElementById('logo-icon').style.backgroundColor = data.hex;
+            document.getElementById('home-color-name').innerText = data.name;
+            document.getElementById('home-color-code').innerText = data.code;
+
+            document.querySelectorAll('.image-card img').forEach((img, i) => {
+                img.style.opacity = '0';
+                setTimeout(() => { img.src = data.images[i]; img.style.opacity = '1'; }, 400);
+            });
+
+            document.querySelectorAll('.color-dot').forEach((dot, i) => {
+                const ring = dot.querySelector('.progress-ring');
+                if(i === index) dot.classList.add('active');
+                else {
+                    dot.classList.remove('active');
+                    if(ring) ring.style.strokeDashoffset = 100;
+                }
+            });
+        }
+
+        function openDetails(imgIndex) {
+            if (detailMode) return;
+            detailMode = true;
+            isPaused = true;
+            const data = colorData[currentIndex];
+            
+            document.getElementById('detail-name').innerText = data.name;
+            document.getElementById('detail-code').innerText = data.code;
+            document.getElementById('detail-img-source').src = data.images[imgIndex];
+            
+            document.body.classList.add('viewing-mode-active');
+            document.body.style.backgroundColor = data.hex;
+            document.getElementById('controls-ui').classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function closeDetails() {
+            detailMode = false;
+            isPaused = false;
+            document.body.classList.remove('viewing-mode-active');
+            document.body.style.backgroundColor = colorData[currentIndex].light;
+            document.getElementById('controls-ui').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        const picker = document.getElementById('color-picker');
+        colorData.forEach((c, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'color-dot relative w-8 h-8 cursor-pointer flex items-center justify-center';
+            dot.innerHTML = `
+                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 36 36">
+                    <circle class="progress-ring" cx="18" cy="18" r="16" fill="none" 
+                        stroke="${c.hex}" stroke-width="2.5" stroke-dasharray="100" stroke-dashoffset="100"/>
+                </svg>
+                <div class="w-5 h-5 rounded-full" style="background: ${c.hex}"></div>
+            `;
+            dot.onclick = () => { isPaused = true; updateUI(i); setTimeout(() => isPaused = false, 5000); };
+            picker.appendChild(dot);
+        });
+
+        document.getElementById('next-btn').onclick = () => updateUI((currentIndex + 1) % colorData.length);
+        document.getElementById('prev-btn').onclick = () => updateUI((currentIndex - 1 + colorData.length) % colorData.length);
+
+        window.onload = () => {
+            resize();
+            initBubbles();
+            animate();
+            updateUI(0);
+            setInterval(() => {
+                if(!isPaused && !detailMode) {
+                    progress += (TICK/SPEED)*100;
+                    const active = document.querySelector('.color-dot.active .progress-ring');
+                    if(active) active.style.strokeDashoffset = 100 - progress;
+                    if(progress >= 100) updateUI((currentIndex + 1) % colorData.length);
+                }
+            }, TICK);
+        };
+        window.onresize = resize;
+    </script>
+</body>
+</html>

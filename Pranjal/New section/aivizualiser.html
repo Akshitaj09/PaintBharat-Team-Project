@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Color Visualizer - Automation & Side-by-Side</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400&family=Poppins:wght@300;400;500&family=Spectral:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1c1e;
+            --accent-primary: #ec1348; 
+            --btn-dark: #2a2c2e;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --font-heading: 'Spectral', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 18px;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, .heading-main, .logo-font {
+            font-family: var(--font-heading);
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        .heading-main {
+            font-size: 60px;
+            line-height: 1.1;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .metadata-text {
+            font-family: var(--font-body);
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .heading-main { font-size: 42px; }
+            .metadata-text { font-size: 16px; }
+        }
+
+        .hero-wrapper {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .hero-bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: var(--bg-dark);
+        }
+
+        .hero-bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 1.2s ease-in-out;
+            opacity: 0.15;
+        }
+
+        .accent-text {
+            color: var(--accent-primary);
+        }
+
+        .btn-upload-cta {
+            background-color: var(--btn-dark);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            border-radius: 9999px;
+        }
+        .btn-upload-cta:hover {
+            transform: translateY(-2px);
+            background-color: #3a3c3e;
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5);
+        }
+
+        .btn-watch-icon {
+            border-color: rgba(236, 19, 72, 0.5);
+            color: var(--accent-primary);
+        }
+        
+        .group:hover .btn-watch-icon {
+            background-color: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .preview-container {
+            position: relative;
+            width: 100%;
+            height: 550px;
+            border-radius: 2rem;
+            overflow: hidden;
+            background-color: #000;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .slide-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 1.2s ease-in-out;
+            opacity: 0;
+        }
+
+        .slide-img.active {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .carousel-view {
+            perspective: 1200px;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            width: 320px; 
+        }
+
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .swatch-3d {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .swatch-3d.active {
+            transform: translateZ(120px) translateX(0);
+            z-index: 50;
+            border: 2px solid white;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.2);
+            opacity: 1;
+        }
+
+        .swatch-3d.prev { transform: translateX(-70px) translateZ(-50px) rotateY(25deg); z-index: 40; opacity: 0.8; }
+        .swatch-3d.next { transform: translateX(70px) translateZ(-50px) rotateY(-25deg); z-index: 40; opacity: 0.8; }
+        .swatch-3d.far-prev { transform: translateX(-130px) translateZ(-180px) rotateY(45deg) scale(0.85); z-index: 30; opacity: 0.4; }
+        .swatch-3d.far-next { transform: translateX(130px) translateZ(-180px) rotateY(-45deg) scale(0.85); z-index: 30; opacity: 0.4; }
+        .swatch-3d.hidden { transform: translateZ(-400px); opacity: 0; pointer-events: none; }
+
+        .carousel-nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 60;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .automation-timer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background-color: var(--accent-primary);
+            width: 0%;
+            z-index: 20;
+        }
+
+        /* --- Interaction Styles --- */
+        #active-color-box {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #active-color-box:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 15px rgba(236, 19, 72, 0.4);
+        }
+
+        #heart-btn {
+            transition: all 0.3s ease;
+        }
+        #heart-btn:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+        #heart-btn.liked {
+            background-color: rgba(236, 19, 72, 0.1);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+        #heart-btn.liked i {
+            font-weight: 900; 
+        }
+
+        /* [NEW FEATURE] Add This CSS: Watch Preview Modal Styles */
+        .preview-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(208, 208, 208, 0.284);
+            backdrop-filter: blur(20px);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .preview-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .preview-modal-content {
+            width: 90%;
+            max-width: 1100px;
+            max-height: 85vh;
+            background: rgba(42, 44, 46, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 2.5rem;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            padding: 3rem;
+            scrollbar-width: none;
+        }
+        .preview-modal-overlay.active .preview-modal-content {
+            transform: scale(1) translateY(0);
+        }
+        .preview-modal-content::-webkit-scrollbar { display: none; }
+        
+        .exterior-card {
+            position: relative;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: #111;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            transition: all 0.4s ease;
+        }
+        .exterior-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .exterior-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.7);
+        }
+        .exterior-card:hover img {
+            transform: scale(1.1);
+        }
+        .close-preview {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .close-preview:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-wrapper min-h-screen text-white">
+        <div class="hero-bg-container">
+            <div id="full-page-bg" class="hero-bg-image"></div>
+        </div>
+
+        <button id="btn-reset-color" class="btn-reset absolute top-10 right-10 md:top-16 md:right-16 z-50 px-5 py-3 rounded-full text-[11px] tracking-[0.2em] flex items-center gap-3 uppercase text-gray-400 hover:text-white hover:border-white/40">
+            <i class="fa-solid fa-rotate-left"></i>
+            Reset Scene
+        </button>
+
+        <div class="w-full px-6 md:px-16 lg:px-24 py-16 md:py-24 flex flex-col h-full relative z-10">
+            <main class="grid lg:grid-cols-12 gap-16 lg:gap-24 items-center flex-grow">
+                <div class="lg:col-span-5 animate-fade-in">
+                    <h1 class="heading-main mb-8">
+                        Check out colors <br>
+                        with <span class="accent-text">AI Visualizer</span>
+                    </h1>
+                    
+                    <p class="metadata-text text-gray-200 mb-12 max-w-xl">
+                        Welcome to MetaGems, where artists, collectors, and enthusiasts come together to explore stunning digital artworks and interior color schemes.
+                    </p>
+
+                    <div class="flex flex-row flex-wrap items-center gap-6 mb-14">
+                        <button id="btn-upload" class="btn-upload-cta px-8 py-4 flex items-center gap-3 font-medium text-[16px]">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                            Upload Your Room
+                        </button>
+                        
+                        <button id="btn-watch" class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 rounded-full border btn-watch-icon flex items-center justify-center transition-all duration-300">
+                                <i class="fa-solid fa-play text-[10px]"></i>
+                            </div>
+                            <span class="font-medium text-[16px] transition-colors">Explore More</span>
+                        </button>
+                    </div>
+
+                    <div class="mt-8">
+                        <div class="flex items-center justify-between max-w-[320px] mb-4">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-[0.4em] font-medium">Choose Palette</div>
+                            <div id="automation-indicator" class="text-[10px] text-accent-primary uppercase font-bold opacity-0 transition-opacity">Auto Play</div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <button id="prev-swatch" class="carousel-nav-btn"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+                            <div class="carousel-view">
+                                <div id="swatch-track" class="carousel-track"></div>
+                            </div>
+                            <button id="next-swatch" class="carousel-nav-btn"><i class="fa-solid fa-chevron-right text-xs"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 relative">
+                    <div id="slideshow-container" class="preview-container shadow-2xl">
+                        <img id="img-1" src="" alt="Interior 1" class="slide-img active">
+                        <img id="img-2" src="" alt="Interior 2" class="slide-img">
+                        <div id="progress-bar" class="automation-timer"></div>
+                    </div>
+
+                    <div class="absolute bottom-[-20px] right-4 md:right-12 bg-[#2a2c2e]/90 backdrop-blur-xl p-4 rounded-xl border border-gray-700/50 flex items-center gap-6 z-30 shadow-xl min-w-[280px]">
+                        <div class="flex-grow">
+                            <div class="text-[10px] text-gray-500 uppercase tracking-widest font-medium mb-1">Selected Shade</div>
+                            <div id="active-shade-name" class="text-xl logo-font leading-tight">--</div>
+                            <div id="active-shade-hex" class="text-sm font-medium text-gray-400 font-mono mt-1 opacity-70">--</div>
+                        </div>
+                        <div class="flex flex-col items-center gap-3">
+                            <div id="active-color-box" class="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center transition-all border border-gray-600">
+                                <i class="fa-solid fa-paint-roller text-gray-500 text-sm"></i>
+                            </div>
+                            <button id="heart-btn" class="w-10 h-10 rounded-lg bg-transparent border border-white/20 flex items-center justify-center text-white transition-all transform hover:scale-110">
+                                <i id="heart-icon" class="fa-regular fa-heart text-base"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="modal-overlay">
+        <div class="bg-white p-10 rounded-3xl w-full max-w-md text-black shadow-2xl">
+            <h2 class="text-3xl mb-2 logo-font">Upload Your Room</h2>
+            <div id="drop-zone" class="border-2 border-dashed border-gray-300 rounded-2xl p-12 flex flex-col items-center justify-center gap-4 mb-6 cursor-pointer">
+                <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400"></i>
+                <p>Click to browse</p>
+                <input type="file" id="file-input" class="hidden" accept="image/*">
+            </div>
+            <div class="flex gap-4">
+                <button id="btn-cancel-upload" class="flex-1 py-4 rounded-xl bg-gray-100">Cancel</button>
+                <button id="btn-upload-now" class="flex-1 py-4 rounded-xl bg-[#ec1348] text-white">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- [NEW FEATURE] Add This HTML: Watch Preview Modal -->
+    <div id="preview-modal" class="preview-modal-overlay">
+        <div class="preview-modal-content">
+            <button id="close-preview-btn" class="close-preview"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="mb-12">
+                <h2 id="preview-color-name" class="text-5xl logo-font mb-2">Color Name</h2>
+                <div class="flex items-center gap-3">
+                    <span class="text-accent-primary uppercase tracking-[0.3em] text-[10px] font-bold">Exterior Preview</span>
+                    <div class="h-[1px] w-12 bg-white/20"></div>
+                </div>
+            </div>
+
+            <div id="exterior-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Dynamic Images injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Har color object mein 'isLiked' property add ki gayi hai
+        const colors = [
+            { hex: '#8A9A86', name: 'Sage Green', image: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: '#E2725B', name: 'Terracotta', image: 'https://images.unsplash.com/photo-1589834390005-5d4fb13904e2?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: '#1C2E4A', name: 'Deep Navy', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: '#BCAAA4', name: 'Warm Greige', image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: '#121214', name: 'Midnight Onyx', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: '#36454F', name: 'Charcoal Black', image: 'https://images.unsplash.com/photo-1600607687920-4e2a09be1587?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: '#DCAE96', name: 'Dusty Rose', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: '#F0ECE1', name: 'Alabaster White', image: 'https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&q=80&w=1200', isLiked: false },
+            { hex: 'transparent', name: 'More Colors', isMore: true, isLiked: false }
+        ];
+
+        // [NEW FEATURE] Add This JS: Exterior Image Data
+        const exteriorImages = {
+            "Sage Green": [
+                "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600"
+            ],
+            "Terracotta": [
+                "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1505843513577-22bb7d21ef45?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=600"
+            ],
+            "Deep Navy": [
+                "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1513584684032-43f52fddec8e?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=600"
+            ],
+            "Warm Greige": [
+                "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1519302959554-a75be0afc82a?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=600"
+            ],
+            "Midnight Onyx": [
+                "https://images.unsplash.com/photo-1549517045-bc93de0bcad3?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1628744448840-55e3e17f828d?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=600"
+            ],
+            "Charcoal Black": [
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=600"
+            ],
+            "Dusty Rose": [
+                "https://images.unsplash.com/photo-1472224371017-08207f84aaae?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1502673530728-f79b4cab31b1?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1501183315669-44bb3ad708b6?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=600"
+            ],
+            "Alabaster White": [
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1512918766775-d56aacc5955a?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1572120339559-d6c515374435?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&q=80&w=600",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=600"
+            ]
+        };
+
+        let activeColorIndex = 0;
+        let isAutomated = true;
+        let automationInterval;
+        let pauseTimeout;
+        let uploadedImage = null;
+
+        const swatchTrack = document.getElementById('swatch-track');
+        const img1 = document.getElementById('img-1');
+        const img2 = document.getElementById('img-2');
+        const fullPageBg = document.getElementById('full-page-bg');
+        const activeShadeName = document.getElementById('active-shade-name');
+        const activeShadeHex = document.getElementById('active-shade-hex');
+        const activeColorBox = document.getElementById('active-color-box');
+        const progressBar = document.getElementById('progress-bar');
+        const automationIndicator = document.getElementById('automation-indicator');
+        const heartBtn = document.getElementById('heart-btn');
+        const heartIcon = document.getElementById('heart-icon');
+
+        // [NEW FEATURE] Add This JS: Preview Modal Elements
+        const previewModal = document.getElementById('preview-modal');
+        const previewColorName = document.getElementById('preview-color-name');
+        const exteriorGrid = document.getElementById('exterior-grid');
+        const btnWatch = document.getElementById('btn-watch');
+        const closePreviewBtn = document.getElementById('close-preview-btn');
+
+        let activeImgElement = img1;
+        let nextImgElement = img2;
+
+        function updateBackground(src) {
+            fullPageBg.style.backgroundImage = `url('${src}')`;
+        }
+
+        function transitionToImage(src) {
+            if (!src || activeImgElement.src === src) return;
+            nextImgElement.src = src;
+            updateBackground(src);
+            nextImgElement.classList.add('active');
+            activeImgElement.classList.remove('active');
+            let temp = activeImgElement;
+            activeImgElement = nextImgElement;
+            nextImgElement = temp;
+        }
+
+        function renderSwatches() {
+            swatchTrack.innerHTML = '';
+            colors.forEach((c, i) => {
+                const div = document.createElement('div');
+                div.className = 'swatch-3d';
+                if (c.isMore) {
+                    div.style.background = 'rgba(255,255,255,0.05)';
+                    div.innerHTML = `<div class="flex flex-col items-center justify-center text-[10px] text-gray-400 uppercase text-center p-2"><i class="fa-solid fa-plus mb-1"></i>${c.name}</div>`;
+                } else {
+                    div.style.backgroundColor = c.hex;
+                }
+                div.onclick = () => selectColor(i, true);
+                swatchTrack.appendChild(div);
+            });
+            updateSwatchStates();
+        }
+
+        function updateSwatchStates() {
+            const swatches = document.querySelectorAll('.swatch-3d');
+            const len = colors.length;
+            swatches.forEach((s, i) => {
+                s.className = 'swatch-3d';
+                if (i === activeColorIndex) s.classList.add('active');
+                else if (i === (activeColorIndex - 1 + len) % len) s.classList.add('prev');
+                else if (i === (activeColorIndex + 1) % len) s.classList.add('next');
+                else if (i === (activeColorIndex - 2 + len) % len) s.classList.add('far-prev');
+                else if (i === (activeColorIndex + 2) % len) s.classList.add('far-next');
+                else s.classList.add('hidden');
+            });
+        }
+
+        function updateHeartUI(isLiked) {
+            if (isLiked) {
+                heartBtn.classList.add('liked');
+                heartIcon.className = 'fa-solid fa-heart text-base';
+            } else {
+                heartBtn.classList.remove('liked');
+                heartIcon.className = 'fa-regular fa-heart text-base';
+            }
+        }
+
+        function selectColor(index, manual = false) {
+            activeColorIndex = index;
+            const c = colors[index];
+
+            if (manual) {
+                stopAutomationTemporarily();
+            }
+
+            updateHeartUI(c.isLiked);
+
+            if (!c.isMore) {
+                activeShadeName.innerText = c.name;
+                activeShadeHex.innerText = c.hex;
+                activeColorBox.style.backgroundColor = c.hex;
+                activeColorBox.innerHTML = '';
+                if (!uploadedImage) transitionToImage(c.image);
+            } else {
+                activeShadeName.innerText = 'More Coming';
+                activeShadeHex.innerText = '--';
+                activeColorBox.style.backgroundColor = 'transparent';
+                activeColorBox.innerHTML = '<i class="fa-solid fa-palette text-gray-500 text-sm"></i>';
+            }
+
+            updateSwatchStates();
+            resetProgressBar();
+        }
+
+        function startAutomation() {
+            if (automationInterval) clearInterval(automationInterval);
+            isAutomated = true;
+            automationIndicator.style.opacity = '1';
+            resetProgressBar();
+            automationInterval = setInterval(() => {
+                let nextIdx = (activeColorIndex + 1) % colors.length;
+                if (colors[nextIdx].isMore) nextIdx = (nextIdx + 1) % colors.length;
+                selectColor(nextIdx);
+            }, 4000);
+        }
+
+        function stopAutomationTemporarily() {
+            clearInterval(automationInterval);
+            clearTimeout(pauseTimeout);
+            isAutomated = false;
+            automationIndicator.style.opacity = '0.3';
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            
+            pauseTimeout = setTimeout(() => {
+                if(!previewModal.classList.contains('active')) {
+                   startAutomation();
+                }
+            }, 10000);
+        }
+
+        function resetProgressBar() {
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                if (isAutomated) {
+                    progressBar.style.transition = 'width 4s linear';
+                    progressBar.style.width = '100%';
+                }
+            }, 50);
+        }
+
+        // [NEW FEATURE] Add This JS: Watch Preview Logic
+        btnWatch.onclick = () => {
+            const currentColor = colors[activeColorIndex];
+            if (currentColor.isMore) return;
+
+            // Update Modal Content
+            previewColorName.innerText = currentColor.name;
+            const imgs = exteriorImages[currentColor.name] || exteriorImages["Sage Green"];
+            
+            exteriorGrid.innerHTML = '';
+            imgs.forEach((src, idx) => {
+                const card = document.createElement('div');
+                card.className = 'exterior-card animate-fade-in';
+                card.style.animationDelay = `${idx * 0.1}s`;
+                card.innerHTML = `<img src="${src}" alt="Exterior Preview ${idx + 1}">`;
+                exteriorGrid.appendChild(card);
+            });
+
+            // Open Modal
+            previewModal.classList.add('active');
+            stopAutomationTemporarily();
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closePreview = () => {
+            previewModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            startAutomation();
+        };
+
+        closePreviewBtn.onclick = closePreview;
+        previewModal.onclick = (e) => { if(e.target === previewModal) closePreview(); };
+        window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closePreview(); });
+
+        window.onload = () => {
+            renderSwatches();
+            selectColor(0);
+            startAutomation();
+        };
+
+        document.getElementById('btn-reset-color').onclick = () => {
+            uploadedImage = null;
+            activeColorIndex = 0;
+            colors.forEach(c => c.isLiked = false);
+            selectColor(0); 
+            startAutomation();
+        };
+
+        heartBtn.onclick = () => {
+            const currentColor = colors[activeColorIndex];
+            currentColor.isLiked = !currentColor.isLiked; 
+            updateHeartUI(currentColor.isLiked);
+        };
+
+        document.getElementById('prev-swatch').onclick = () => selectColor((activeColorIndex - 1 + colors.length) % colors.length, true);
+        document.getElementById('next-swatch').onclick = () => selectColor((activeColorIndex + 1) % colors.length, true);
+        
+        const uploadModal = document.getElementById('upload-modal');
+        const fileInput = document.getElementById('file-input');
+        const dropZone = document.getElementById('drop-zone');
+
+        document.getElementById('btn-upload').onclick = () => uploadModal.style.display = 'flex';
+        document.getElementById('btn-cancel-upload').onclick = () => uploadModal.style.display = 'none';
+        document.getElementById('btn-upload-now').onclick = () => uploadModal.style.display = 'none';
+        
+        dropZone.onclick = () => fileInput.click();
+
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { 
+                    uploadedImage = ev.target.result; 
+                    transitionToImage(uploadedImage);
+                    uploadModal.style.display = 'none';
+                    stopAutomationTemporarily(); 
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    </script>
+</body>
+</html>

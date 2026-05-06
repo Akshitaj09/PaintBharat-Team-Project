@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAINTBHARAT | Fluid Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#ec1348',
+                        onyx: '#080808',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body { 
+            background-color: #000; 
+            color: white; 
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* --- Morphing Background --- */
+        .canvas-container {
+            clip-path: circle(150% at 50% 50%);
+            transition: clip-path 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .canvas-exit {
+            clip-path: circle(0% at 50% 50%);
+        }
+
+        .ken-burns {
+            animation: kenburns 20s ease infinite alternate;
+        }
+        @keyframes kenburns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.15) translate(1%, 1%); }
+        }
+
+        /* --- Fluid Typography --- */
+        .text-fluid {
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: blur(0px);
+            letter-spacing: -0.02em;
+        }
+        .text-transitioning {
+            filter: blur(20px);
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            letter-spacing: 0.2em;
+        }
+
+        /* --- Minimal Liquid CTA --- */
+        .btn-liquid {
+            position: relative;
+            padding: 14px 44px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: transparent;
+            overflow: hidden;
+            transition: border-color 0.4s ease;
+        }
+        .btn-liquid:hover {
+            border-color: #ec1348;
+        }
+        .btn-liquid .fill {
+            position: absolute;
+            top: 100%; left: 0; width: 100%; height: 100%;
+            background: #ec1348;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: -1;
+        }
+        .btn-liquid:hover .fill {
+            transform: translateY(-100%);
+        }
+
+        /* --- Progress Ring --- */
+        .progress-svg {
+            transform: rotate(-90deg);
+        }
+        .progress-circle {
+            transition: stroke-dashoffset 100ms linear;
+        }
+    </style>
+</head>
+<body x-data="fluidHero()" x-init="init()">
+
+    <!-- 1. BACKGROUND ENGINE -->
+    <div class="absolute inset-0 z-0">
+        <template x-for="(slide, index) in slides" :key="slide.id">
+            <div 
+                x-show="currentIndex === index"
+                class="absolute inset-0 canvas-container"
+                :class="isTransitioning ? 'canvas-exit' : ''"
+            >
+                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-10"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20 z-10"></div>
+                <img :src="slide.image" class="w-full h-full object-cover ken-burns brightness-[0.45]">
+            </div>
+        </template>
+    </div>
+
+    <!-- 2. MINIMAL OVERLAY -->
+    <header class="absolute top-0 left-0 w-full z-50 p-10 flex justify-between items-center">
+        <div class="flex items-center gap-4 group cursor-pointer">
+            <div class="w-1.5 h-8 bg-brand group-hover:h-12 transition-all duration-500"></div>
+            <span class="font-black text-sm uppercase tracking-[0.6em]">PaintBharat</span>
+        </div>
+        <button class="w-12 h-12 rounded-full border border-white/5 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 8h16M4 16h16" stroke-width="1.5" stroke-linecap="square"/></svg>
+        </button>
+    </header>
+
+    <!-- 3. MAIN CONTENT -->
+    <main class="relative z-20 h-screen w-full flex items-center px-12 md:px-32">
+        <div class="max-w-5xl">
+            <div class="mb-6 overflow-hidden">
+                <span 
+                    class="text-fluid block text-brand text-[10px] font-black tracking-[0.8em] uppercase"
+                    :class="isTransitioning ? 'text-transitioning' : ''"
+                    x-text="slides[currentIndex].category"
+                ></span>
+            </div>
+            
+            <div class="mb-10">
+                <h1 
+                    class="text-fluid text-7xl md:text-[160px] font-serif font-bold leading-[0.85] tracking-tighter"
+                    :class="isTransitioning ? 'text-transitioning' : ''"
+                    x-text="slides[currentIndex].title"
+                ></h1>
+            </div>
+
+            <div class="mb-16">
+                <p 
+                    class="text-fluid text-gray-400 text-lg md:text-2xl font-light leading-relaxed max-w-xl"
+                    :class="isTransitioning ? 'text-transitioning' : ''"
+                    x-text="slides[currentIndex].description"
+                    style="transition-delay: 0.1s"
+                ></p>
+            </div>
+
+            <div class="flex items-center gap-12">
+                <button class="btn-liquid">
+                    <span class="relative z-10">Discover Vision</span>
+                    <div class="fill"></div>
+                </button>
+
+                <!-- Minimal Next Circle -->
+                <div class="flex items-center gap-4 group cursor-pointer" @click="next()">
+                    <div class="relative w-12 h-12 flex items-center justify-center">
+                        <svg class="progress-svg absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                            <circle 
+                                class="progress-circle"
+                                cx="50" cy="50" r="45" fill="none" 
+                                stroke="#ec1348" stroke-width="2"
+                                stroke-dasharray="283"
+                                :stroke-dashoffset="283 - (283 * timerProgress / 100)"
+                            />
+                        </svg>
+                        <svg class="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span class="text-[9px] font-black tracking-[0.4em] uppercase text-white/30 group-hover:text-white transition-colors">Skip</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 4. SIDE INDICATOR -->
+    <div class="absolute right-12 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-8 items-center">
+        <template x-for="(s, i) in slides">
+            <div 
+                @click="manualJump(i)"
+                class="group flex items-center gap-4 cursor-pointer"
+            >
+                <span 
+                    class="text-[9px] font-bold transition-all duration-500 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
+                    :class="currentIndex === i ? 'opacity-100 translate-x-0 text-brand' : 'text-white/40'"
+                    x-text="s.title"
+                ></span>
+                <div 
+                    class="w-1.5 h-1.5 rounded-full transition-all duration-500"
+                    :class="currentIndex === i ? 'bg-brand scale-[2.5]' : 'bg-white/20 hover:bg-white/60'"
+                ></div>
+            </div>
+        </template>
+    </div>
+
+    <script>
+        function fluidHero() {
+            return {
+                currentIndex: 0,
+                isTransitioning: false,
+                timerProgress: 0,
+                intervalMs: 6000,
+                tickMs: 50,
+                timer: null,
+
+                slides: [
+                    { id: 1, title: "Velvet", category: "Interiors", description: "Bespoke palettes that redefine luxury. Experience surfaces that speak to the modern soul.", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 2, title: "Onyx", category: "Exteriors", description: "Architecture meeting resilience. High-performance shields designed for contemporary landmarks.", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 3, title: "Aura", category: "Textures", description: "Intricate patterns rendered in silk and stone. The final layer of architectural perfection.", image: "https://images.unsplash.com/photo-1615529151169-7b1ff50dc7f2?auto=format&fit=crop&q=80&w=2000" }
+                ],
+
+                init() {
+                    this.startLoop();
+                },
+
+                startLoop() {
+                    if (this.timer) clearInterval(this.timer);
+                    this.timer = setInterval(() => {
+                        this.timerProgress += (this.tickMs / this.intervalMs) * 100;
+                        if (this.timerProgress >= 100) {
+                            this.next();
+                        }
+                    }, this.tickMs);
+                },
+
+                next() {
+                    this.isTransitioning = true;
+                    this.timerProgress = 0;
+                    
+                    setTimeout(() => {
+                        this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+                        this.isTransitioning = false;
+                    }, 1200);
+                },
+
+                manualJump(index) {
+                    if (index === this.currentIndex || this.isTransitioning) return;
+                    this.isTransitioning = true;
+                    this.timerProgress = 0;
+                    setTimeout(() => {
+                        this.currentIndex = index;
+                        this.isTransitioning = false;
+                        this.startLoop();
+                    }, 1200);
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

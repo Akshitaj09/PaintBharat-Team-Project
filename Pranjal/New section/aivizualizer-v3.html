@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Color Visualizer - Neural UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500&family=Lato:wght@400&family=Poppins:wght@300&family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #060709;
+            --brand-accent: #ffffff; 
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --dynamic-glow: rgba(255, 255, 255, 0.15);
+            --dynamic-color: #8A9A86;
+            --ss-theme-color: #E91E63; 
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 300;
+            overflow: hidden; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 3D Background Canvas */
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .reset-cta {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 32px;
+            border-radius: 9999px;
+            border: 1.5px solid var(--ss-theme-color);
+            background: rgba(233, 30, 99, 0.05);
+            color: white;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .reset-cta.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .reset-cta:hover {
+            background: var(--ss-theme-color);
+            box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
+        }
+
+        .ss-themed-badge {
+            display: inline-block;
+            font-family: 'Poppins', sans-serif; 
+            font-size: 18px; 
+            font-weight: 300;
+            color: var(--ss-theme-color);
+            border: 1.5px solid var(--ss-theme-color);
+            padding: 8px 32px;
+            border-radius: 9999px; 
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .main-heading {
+            font-family: 'Spectral', serif;
+            font-size: clamp(40px, 5vw, 60px);
+            font-weight: 500;
+            line-height: 1.1;
+        }
+
+        .designer-text {
+            font-family: 'Lora', serif;
+            font-style: italic;
+        }
+
+        .image-portal {
+            position: relative;
+            width: 100%;
+            height: 60vh; 
+            min-height: 400px;
+            overflow: hidden;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2); 
+            box-shadow: 0 0 50px -5px var(--dynamic-glow);
+            transition: transform 0.1s ease-out, border-radius 1s ease;
+            animation: liquidMorph 15s infinite alternate ease-in-out;
+            transform-style: preserve-3d;
+            cursor: crosshair;
+        }
+
+        @keyframes liquidMorph {
+            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            33% { border-radius: 60% 40% 30% 70% / 50% 60% 40% 60%; }
+            66% { border-radius: 40% 60% 50% 50% / 60% 30% 70% 40%; }
+            100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+        }
+
+        .slide-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 180%; 
+            height: 180%; 
+            object-fit: cover;
+            opacity: 0;
+            transform: translate(calc(-50% + var(--p-x, 0px)), calc(-50% + var(--p-y, 0px))) scale(1.1);
+            transition: opacity 1s ease-in-out, transform 0.15s ease-out;
+        }
+
+        .slide-img.active { opacity: 1; }
+
+        .glass-card {
+            background: rgba(10, 11, 14, 0.7);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+        }
+
+        .swatch-sphere {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0;
+        }
+
+        .swatch-sphere.active {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 4px var(--bg-deep), 0 0 0 6px white;
+        }
+
+        #heart-btn.liked {
+            color: var(--ss-theme-color) !important;
+            opacity: 1 !important;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="three-canvas"></canvas>
+
+    <button id="btn-reset-scene" class="reset-cta">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span>Reset Scene</span>
+    </button>
+
+    <div class="max-w-[1600px] mx-auto px-6 h-screen flex items-center relative z-10">
+        <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center w-full">
+            
+            <div class="lg:col-span-5 z-20">
+                <div class="mb-10">
+                    <div id="top-tag" class="ss-themed-badge">Neural Space Design</div>
+                </div>
+
+                <h1 class="main-heading mb-8 text-white">
+                    Experience <br>
+                    <span id="hero-accent" class="designer-text">The Aura</span>
+                </h1>
+                
+                <div class="flex flex-wrap items-center gap-8 mb-10">
+                    <button id="btn-upload" class="bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-full font-bold text-base transition-all flex items-center gap-3 shadow-xl">
+                        <i class="fa-solid fa-plus"></i> Upload Space
+                    </button>
+                    
+                    <button id="btn-watch-preview" class="flex items-center gap-3 text-white/70 hover:text-white transition-all">
+                        <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center">
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                        </div>
+                        <span class="text-sm">Gallery Preview</span>
+                    </button>
+                </div>
+
+                <div class="glass-card p-6 md:p-8 inline-block w-full max-w-[500px]">
+                    <p class="text-[11px] uppercase tracking-[0.3em] text-white/40 mb-6 font-bold">Neural Color Library</p>
+                    <div id="swatch-container" class="flex items-center gap-6 overflow-visible"></div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 relative flex justify-center">
+                <div class="image-portal" id="tilt-card">
+                    <img id="img-1" src="" class="slide-img active">
+                    <img id="img-2" src="" class="slide-img">
+                </div>
+
+                <div class="absolute -bottom-8 right-0 glass-card p-6 pr-10 shadow-2xl flex items-center gap-5 min-w-[320px] animate-bounce-slow">
+                    <div id="active-color-sphere" class="w-14 h-14 rounded-full shadow-lg border-2 border-white/20 transition-all duration-1000"></div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-[0.3em] font-bold mb-1 opacity-50">Selected Tone</p>
+                        <h3 id="active-shade-name" class="text-2xl font-medium" style="font-family: 'Spectral', serif;">...</h3>
+                        <p id="active-shade-hex" class="font-mono text-[10px] opacity-40 uppercase">#000000</p>
+                    </div>
+                    <button id="heart-btn" class="ml-auto text-lg text-white/10 hover:text-white transition-all">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="upload-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-3xl z-[200] items-center justify-center p-6">
+        <div class="glass-card p-12 w-full max-w-xl text-center">
+            <h2 class="text-3xl font-light mb-8" style="font-family: 'Spectral', serif;">Import Space</h2>
+            <div id="drop-zone" class="border-2 border-dashed border-white/10 rounded-[40px] p-16 hover:border-white transition-all cursor-pointer bg-white/5">
+                <i class="fa-solid fa-cloud-arrow-up text-5xl mb-4 opacity-20"></i>
+                <p>Click or Drag Image</p>
+                <input type="file" id="file-input" class="hidden" accept="image/*">
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-8">
+                <button onclick="document.getElementById('upload-modal').classList.replace('flex','hidden')" class="py-4 rounded-full border border-white/10">Cancel</button>
+                <button id="btn-process" class="py-4 rounded-full bg-white text-black font-bold">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- THREE.JS ADVANCED BACKGROUND ---
+        let scene, camera, renderer, particles, lines, lineMesh;
+        let torus, torus2;
+        const particleCount = 200; // Lower count for visible line connections
+        let mouseX = 0, mouseY = 0;
+
+        function initThree() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Floating Star Field
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(particleCount * 3);
+            const velocities = [];
+            for(let i=0; i<particleCount*3; i++) {
+                pos[i] = (Math.random() - 0.5) * 40;
+                velocities.push((Math.random() - 0.5) * 0.02);
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.userData = { velocities };
+            
+            const mat = new THREE.PointsMaterial({ 
+                size: 0.12, 
+                transparent: true, 
+                opacity: 0.8, 
+                color: 0x8A9A86 
+            });
+            particles = new THREE.Points(geo, mat);
+            scene.add(particles);
+
+            // Line Connections (Neural Web)
+            const lineMat = new THREE.LineBasicMaterial({ 
+                color: 0x8A9A86, 
+                transparent: true, 
+                opacity: 0.15 
+            });
+            const lineGeo = new THREE.BufferGeometry();
+            lineMesh = new THREE.LineSegments(lineGeo, lineMat);
+            scene.add(lineMesh);
+
+            // Floating Geometry Rings for Depth
+            const torusGeo = new THREE.TorusGeometry(12, 0.05, 16, 100);
+            const torusMat = new THREE.MeshBasicMaterial({ color: 0x8A9A86, transparent: true, opacity: 0.1, wireframe: true });
+            torus = new THREE.Mesh(torusGeo, torusMat);
+            torus2 = new THREE.Mesh(new THREE.TorusGeometry(15, 0.03, 16, 100), torusMat);
+            torus.rotation.x = Math.PI / 2;
+            torus2.rotation.y = Math.PI / 3;
+            scene.add(torus);
+            scene.add(torus2);
+
+            camera.position.z = 15;
+        }
+
+        function updateNeuralConnections() {
+            const positions = particles.geometry.attributes.position.array;
+            const linePositions = [];
+            const maxDist = 6;
+
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    const x1 = positions[i * 3], y1 = positions[i * 3 + 1], z1 = positions[i * 3 + 2];
+                    const x2 = positions[j * 3], y2 = positions[j * 3 + 1], z2 = positions[j * 3 + 2];
+                    
+                    const dist = Math.sqrt((x1-x2)**2 + (y1-y2)**2 + (z1-z2)**2);
+                    if (dist < maxDist) {
+                        linePositions.push(x1, y1, z1, x2, y2, z2);
+                    }
+                }
+            }
+            lineMesh.geometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+            lineMesh.geometry.attributes.position.needsUpdate = true;
+        }
+
+        function animateThree() {
+            requestAnimationFrame(animateThree);
+            
+            const posAttr = particles.geometry.attributes.position;
+            const vels = particles.geometry.userData.velocities;
+
+            for(let i=0; i<particleCount*3; i++) {
+                posAttr.array[i] += vels[i];
+                // Bounce particles
+                if(Math.abs(posAttr.array[i]) > 20) vels[i] *= -1;
+            }
+            posAttr.needsUpdate = true;
+
+            updateNeuralConnections();
+
+            particles.rotation.y += 0.001;
+            lineMesh.rotation.y += 0.001;
+            torus.rotation.z += 0.002;
+            torus2.rotation.x += 0.001;
+
+            // Parallax
+            camera.position.x += (mouseX*5 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY*5 - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5);
+            mouseY = (e.clientY / window.innerHeight - 0.5);
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- APP LOGIC ---
+        const colors = [
+            { hex: '#8A9A86', name: 'Sage Garden', image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=1200', liked: false },
+            { hex: '#E2725B', name: 'Terracotta Sun', image: 'https://images.unsplash.com/photo-1589834390005-5d4fb13904e2?auto=format&fit=crop&q=80&w=1200', liked: false },
+            { hex: '#1C2E4A', name: 'Midnight Velvet', image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200', liked: false },
+            { hex: '#BCAAA4', name: 'Misty Greige', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200', liked: false },
+            { hex: '#DCAE96', name: 'Petal Blush', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1200', liked: false }
+        ];
+
+        let activeIndex = 0;
+        let isAutoPlay = true;
+        let uploadedImg = null;
+
+        const img1 = document.getElementById('img-1');
+        const img2 = document.getElementById('img-2');
+        const resetBtn = document.getElementById('btn-reset-scene');
+        const heartBtn = document.getElementById('heart-btn');
+
+        let currentImg = img1;
+        let otherImg = img2;
+
+        function selectColor(index, isAuto) {
+            if (!isAuto) isAutoPlay = false;
+            activeIndex = index;
+            const c = colors[index];
+
+            document.documentElement.style.setProperty('--dynamic-color', c.hex);
+            document.getElementById('active-shade-name').innerText = c.name;
+            document.getElementById('active-shade-hex').innerText = c.hex;
+            document.getElementById('active-color-sphere').style.backgroundColor = c.hex;
+            
+            // Update 3D colors
+            const threeCol = new THREE.Color(c.hex);
+            if(particles) particles.material.color = threeCol;
+            if(lineMesh) lineMesh.material.color = threeCol;
+            if(torus) torus.material.color = threeCol;
+
+            heartBtn.classList.toggle('liked', c.liked);
+
+            if (!uploadedImg) {
+                otherImg.src = c.image;
+                otherImg.classList.add('active');
+                currentImg.classList.remove('active');
+                [currentImg, otherImg] = [otherImg, currentImg];
+            }
+            renderSwatches();
+        }
+
+        function renderSwatches() {
+            const container = document.getElementById('swatch-container');
+            container.innerHTML = '';
+            colors.forEach((c, i) => {
+                const el = document.createElement('div');
+                el.className = `swatch-sphere ${i === activeIndex ? 'active' : ''}`;
+                el.style.backgroundColor = c.hex;
+                el.onclick = () => selectColor(i, false);
+                container.appendChild(el);
+            });
+        }
+
+        // Upload
+        document.getElementById('btn-upload').onclick = () => document.getElementById('upload-modal').classList.replace('hidden', 'flex');
+        document.getElementById('drop-zone').onclick = () => document.getElementById('file-input').click();
+        document.getElementById('file-input').onchange = (e) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => { uploadedImg = ev.target.result; document.querySelector('#drop-zone p').innerText = "Image Selected"; };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+
+        document.getElementById('btn-process').onclick = () => {
+            if (uploadedImg) {
+                isAutoPlay = false;
+                currentImg.src = uploadedImg;
+                document.getElementById('upload-modal').classList.replace('flex', 'hidden');
+                resetBtn.classList.add('visible');
+            }
+        };
+
+        resetBtn.onclick = () => {
+            uploadedImg = null;
+            isAutoPlay = true;
+            resetBtn.classList.remove('visible');
+            selectColor(activeIndex, true);
+        };
+
+        heartBtn.onclick = () => {
+            colors[activeIndex].liked = !colors[activeIndex].liked;
+            heartBtn.classList.toggle('liked', colors[activeIndex].liked);
+        };
+
+        window.onload = () => {
+            initThree();
+            animateThree();
+            renderSwatches();
+            selectColor(0, true);
+            setInterval(() => {
+                if (isAutoPlay && !uploadedImg) selectColor((activeIndex + 1) % colors.length, true);
+            }, 6000);
+        };
+    </script>
+</body>
+</html>

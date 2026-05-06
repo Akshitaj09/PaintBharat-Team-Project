@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAINTBHARAT CO. | Design Inspiration Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#ec1348', 
+                        gold: {
+                            DEFAULT: '#c5a044',
+                            light: '#dfc27d',
+                            dark: '#93752d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body { 
+            background-color: #050505; 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+        
+        .text-brand { color: #ec1348; }
+        .bg-brand { background-color: #ec1348; }
+        .border-brand { border-color: #ec1348; }
+        
+        .parallax-bg {
+            transition: transform 5s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .text-container {
+            display: block;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            position: relative;
+        }
+
+        .animate-enter {
+            animation: cinematicEnter 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: transform, opacity, filter;
+        }
+
+        .animate-exit {
+            animation: cinematicExit 0.6s cubic-bezier(0.5, 0, 0.7, 1) forwards;
+            will-change: transform, opacity, filter;
+            pointer-events: none;
+        }
+
+        @keyframes cinematicEnter {
+            0% { 
+                transform: translate3d(-20px, 40px, 0);
+                opacity: 0;
+                filter: blur(8px);
+            }
+            100% { 
+                transform: translate3d(0, 0, 0);
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+
+        @keyframes cinematicExit {
+            0% { 
+                transform: translate3d(0, 0, 0);
+                opacity: 1;
+                filter: blur(0);
+            }
+            100% { 
+                transform: translate3d(-20px, -40px, 0);
+                opacity: 0;
+                filter: blur(12px);
+            }
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.1s linear;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .hero-content-stack {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 12%; 
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .side-nav-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 60;
+        }
+        
+        .side-nav-btn:hover {
+            background: rgba(236, 19, 72, 0.1);
+            border-color: rgba(236, 19, 72, 0.4);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .gallery-card {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .gallery-card:hover, .gallery-card.active {
+            border-color: #ec1348;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body 
+    x-data="gallery()" 
+    x-init="startTimer()"
+    class="relative select-none overflow-hidden"
+>
+
+    <!-- 1. BACKGROUND LAYER -->
+    <div class="absolute inset-0 z-0 bg-black">
+        <template x-for="(slide, index) in slides" :key="'bg-' + slide.id">
+            <div 
+                x-show="currentIndex === index"
+                x-transition:enter="transition opacity-0 duration-[1500ms] ease-in-out"
+                x-transition:leave="transition opacity-0 duration-[1000ms] ease-in-out"
+                class="absolute inset-0"
+            >
+                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10" :class="isExpanded ? 'opacity-100' : 'opacity-60'"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60 z-10"></div>
+                
+                <img 
+                    :src="slide.image" 
+                    class="w-full h-full object-cover parallax-bg" 
+                    :class="isExpanded ? 'scale-105' : 'scale-110 blur-sm brightness-50'"
+                    :alt="slide.title"
+                >
+            </div>
+        </template>
+    </div>
+
+    <!-- 2. NAVIGATION BAR -->
+    <nav class="absolute top-0 left-0 w-full z-50 px-6 py-8 md:px-16 pointer-events-none bg-gradient-to-b from-black/80 via-black/30 to-transparent">
+        <div class="flex items-center justify-between w-full pointer-events-auto">
+            
+            <!-- Left: Logo & Brand -->
+            <div class="flex items-center gap-10 xl:gap-16">
+                <div class="flex items-center gap-4 cursor-pointer group" @click="isExpanded = false; timerProgress = 0;">
+                    <!-- User Logo Image Container -->
+                    <div class="relative w-11 h-11 bg-white rounded-full flex items-center justify-center shrink-0 overflow-hidden shadow-lg border border-white/20">
+                        <!-- REPLACE "logo.png" WITH YOUR ACTUAL IMAGE PATH -->
+                        <img src="../images/Logo2.png" alt="Logo" class="w-full h-full object-contain p-1" onerror="this.src='https://via.placeholder.com/100?text=PB'">
+                    </div>
+                    <span class="font-black text-[22px] tracking-tight text-white uppercase drop-shadow-md">PAINTBHARAT CO.</span>
+                </div>
+
+                <!-- Middle: Section Links -->
+                <div class="hidden lg:flex items-center gap-10">
+                    <a href="#" class="text-[11px] font-bold tracking-[0.2em] text-gray-300 uppercase hover:text-white transition-colors relative group">
+                        Interiors
+                        <span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#" class="text-[11px] font-bold tracking-[0.2em] text-gray-300 uppercase hover:text-white transition-colors relative group">
+                        Exteriors
+                        <span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#" class="text-[11px] font-bold tracking-[0.2em] text-gray-300 uppercase hover:text-white transition-colors relative group">
+                        Wallpapers
+                        <span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#" class="text-[11px] font-bold tracking-[0.2em] text-gray-300 uppercase hover:text-white transition-colors relative group">
+                        Waterproofing
+                        <span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-brand transition-all group-hover:w-full"></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Icon Controls -->
+            <div class="flex items-center gap-6 md:gap-8">
+                <button class="text-white hover:text-brand transition-colors focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+                <button class="text-white hover:text-brand transition-colors focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 3. GALLERY GRID VIEW -->
+    <div 
+        x-show="!isExpanded" 
+        x-transition:enter="transition opacity-0 transform translate-y-12 duration-[800ms]"
+        x-transition:leave="transition opacity-0 transform scale-110 duration-[800ms]"
+        class="absolute inset-0 z-20 flex flex-col items-center justify-center px-6 md:px-16"
+        x-cloak
+    >
+        <button @click="prev()" class="side-nav-btn glass left-8 hidden md:flex">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button @click="next()" class="side-nav-btn glass right-8 hidden md:flex">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+
+        <div class="text-center mb-12 mt-20">
+            <div class="text-container">
+                <h2 x-show="!isExpanded" 
+                    x-transition:enter="animate-enter"
+                    x-transition:leave="animate-exit"
+                    class="text-4xl md:text-6xl font-serif font-bold tracking-tight">Select your Vision</h2>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-7xl justify-center h-[50vh] md:h-[60vh]">
+            <template x-for="(slide, index) in slides" :key="'grid-' + slide.id">
+                <div 
+                    class="gallery-card relative rounded-2xl overflow-hidden cursor-pointer flex-1 group"
+                    :class="{
+                        'md:flex-[4] active': index === currentIndex,
+                        'md:flex-1 opacity-60 grayscale hover:grayscale-0 hover:opacity-100': index !== currentIndex
+                    }"
+                    @click="setIndex(index, true)"
+                >
+                    <img :src="slide.image" class="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    
+                    <div x-show="index === currentIndex" class="absolute top-0 left-0 w-full h-1 bg-white/5 z-30">
+                        <div class="h-full bg-brand" :style="`width: ${timerProgress}%`" style="transition: width 100ms linear"></div>
+                    </div>
+
+                    <div class="absolute bottom-8 left-8">
+                        <div x-show="index === currentIndex" 
+                             x-transition:enter="animate-enter"
+                             x-transition:leave="animate-exit">
+                            <p class="text-gold font-black tracking-[0.4em] uppercase mb-2 text-[9px]" x-text="slide.category"></p>
+                            <h3 class="text-2xl md:text-3xl font-serif font-bold tracking-tight" x-text="slide.title"></h3>
+                        </div>
+                        <div x-show="index !== currentIndex" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                             <h3 class="text-lg font-serif font-bold" x-text="slide.title"></h3>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- 4. EXPANDED VIEW CONTENT -->
+    <div class="absolute inset-0 z-20 px-8 md:px-24 pointer-events-none">
+        <template x-for="(slide, index) in slides" :key="'content-' + slide.id">
+            <div 
+                x-show="isExpanded && currentIndex === index"
+                class="hero-content-stack max-w-2xl pointer-events-auto"
+                x-cloak
+            >
+                <div class="text-container mb-6 overflow-hidden">
+                    <h1 x-show="isExpanded && currentIndex === index" 
+                        x-transition:enter="animate-enter"
+                        x-transition:leave="animate-exit"
+                        class="text-6xl md:text-[90px] lg:text-[110px] font-serif font-bold tracking-tighter leading-[0.85] drop-shadow-2xl" 
+                        style="animation-delay: 0.1s" x-text="slide.title"></h1>
+                </div>
+
+                <div class="text-container mb-10 overflow-hidden">
+                    <p x-show="isExpanded && currentIndex === index" 
+                       x-transition:enter="animate-enter"
+                       x-transition:leave="animate-exit"
+                       class="text-gray-300 text-base md:text-xl leading-relaxed max-w-md font-light" 
+                       style="animation-delay: 0.2s" x-text="slide.description"></p>
+                </div>
+
+                <div class="text-container">
+                    <div x-show="isExpanded && currentIndex === index" 
+                         x-transition:enter="animate-enter"
+                         x-transition:leave="animate-exit"
+                         class="flex items-center gap-6" 
+                         style="animation-delay: 0.3s">
+                        <button class="group relative px-8 md:px-12 py-4 glass rounded-full overflow-hidden transition-all border-brand/20">
+                            <span class="relative z-10 font-bold text-[10px] tracking-[0.3em] uppercase">Book Consultation</span>
+                            <div class="absolute inset-0 bg-brand translate-y-full group-hover:translate-y-0 transition-transform duration-500 opacity-20"></div>
+                        </button>
+                        <button @click="isExpanded = false; timerProgress = 0;" 
+                                class="text-[10px] text-gray-400 font-black uppercase tracking-[0.3em] hover:text-[#ec1348] transition-colors duration-300">
+                            Back to Gallery
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <!-- 5. PROGRESS & CONTROLS FOOTER -->
+    <div 
+        x-show="isExpanded" 
+        x-transition:enter="transition opacity-0 translate-y-4 duration-700"
+        x-transition:leave="transition opacity-0 translate-y-4 duration-500"
+        class="absolute bottom-0 left-0 w-full z-40 px-6 pb-8 md:px-16 flex items-end justify-between"
+        x-cloak
+    >
+        <div class="flex flex-col md:flex-row md:items-center gap-6 md:gap-16 w-full max-w-3xl">
+            <div class="flex items-baseline gap-2">
+                <span class="text-4xl md:text-5xl font-serif italic text-brand tracking-tighter" x-text="`0${currentIndex + 1}`"></span>
+                <span class="text-[10px] text-gray-500 font-black tracking-widest" x-text="`/ 0${slides.length}`"></span>
+            </div>
+            <div class="relative flex-1 h-[2px] bg-white/5">
+                <div class="absolute top-1/2 -translate-y-1/2 w-full flex justify-between">
+                    <template x-for="(s, idx) in slides" :key="'dot-'+idx">
+                        <div class="w-2 h-2 rounded-full transition-all duration-[800ms] cursor-pointer"
+                            @click="setIndex(idx, isExpanded)"
+                            :class="idx === currentIndex ? 'bg-brand scale-150' : 'bg-white/20 hover:bg-white/40'"></div>
+                    </template>
+                </div>
+                <div class="absolute h-full bg-brand transition-all duration-[800ms] ease-out" :style="`width: ${(currentIndex / (slides.length - 1)) * 100}%`"></div>
+            </div>
+        </div>
+
+        <div class="flex gap-4 items-center">
+            <button @click="prev()" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <div class="relative group">
+                <svg class="absolute -inset-1 w-14 h-14 pointer-events-none" viewBox="0 0 100 100">
+                    <circle class="progress-ring__circle text-brand" stroke-width="3" stroke="currentColor" fill="transparent" r="46" cx="50" cy="50" stroke-dasharray="289.027" :stroke-dashoffset="289.027 - (timerProgress / 100) * 289.027" />
+                </svg>
+                <button @click="next()" class="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors relative z-10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function gallery() {
+            return {
+                currentIndex: 0,
+                isExpanded: false,
+                isNavigating: false,
+                timer: null,
+                timerProgress: 0,
+                intervalMs: 5000,
+                tickMs: 50,
+                slides: [
+                    { id: 1, title: "Interior Artistry", category: "Premium Finishes", description: "Transform your living spaces with our curated interior palettes. Character brings depth to every room.", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 2, title: "Modern Exteriors", category: "Weather Protection", description: "Durability meets curb appeal. Engineered to withstand extreme elements with a stunning first impression.", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 3, title: "Designer Textures", category: "Luxury Wallpaper", description: "Bespoke wallpaper designs that redefine accent walls. Discover intricate patterns and tactile textures.", image: "https://images.unsplash.com/photo-1615529151169-7b1ff50dc7f2?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 4, title: "Waterproof Shield", category: "Technical Solutions", description: "Protect your structural integrity with advanced systems. Invisible protection that ensures safety.", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=2000" }
+                ],
+                startTimer() {
+                    this.stopTimer();
+                    this.timerProgress = 0;
+                    this.timer = setInterval(() => {
+                        this.timerProgress += (this.tickMs / this.intervalMs) * 100;
+                        if (this.timerProgress >= 100) { 
+                            this.next(true); 
+                            this.timerProgress = 0; 
+                        }
+                    }, this.tickMs);
+                },
+                stopTimer() { if (this.timer) clearInterval(this.timer); },
+                setIndex(idx, expanded) {
+                    if (this.isNavigating) return;
+                    this.currentIndex = idx;
+                    this.isExpanded = expanded;
+                    this.timerProgress = 0;
+                },
+                next(isAuto = false) {
+                    if (this.isNavigating) return;
+                    this.isNavigating = true;
+                    this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+                    this.timerProgress = 0;
+                    setTimeout(() => this.isNavigating = false, 1100); 
+                },
+                prev() {
+                    if (this.isNavigating) return;
+                    this.isNavigating = true;
+                    this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+                    this.timerProgress = 0;
+                    setTimeout(() => this.isNavigating = false, 1100);
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

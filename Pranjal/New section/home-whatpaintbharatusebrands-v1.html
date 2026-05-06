@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hot-pink: #ec1348;
+            --navy-blue: #000080;
+            --black: #0F172A;
+            --white: #FFFFFF;
+            --animation-speed: 40s;
+            --paint-color: #fec95e;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--white);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- Vertical Background Animation Logic --- */
+        .paint-container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .paint-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--paint-color);
+            /* Starts hidden from the top */
+            clip-path: inset(0 0 100% 0);
+            animation: revealPaintVertical 8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards infinite;
+            z-index: 0;
+        }
+
+        .roller-tool {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: #f92c5f; /* Roller handle color */
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.1), 0 10px 20px rgba(254, 201, 94, 0.6);
+            z-index: 5;
+            top: 0;
+            transform: translateY(-100%);
+            animation: moveRollerVertical 8s cubic-bezier(0.645, 0.045, 0.355, 1) forwards infinite;
+        }
+
+        /* Subtle roller texture */
+        .roller-tool::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        @keyframes moveRollerVertical {
+            0%, 10% { top: 0; transform: translateY(-100%); }
+            80%, 100% { top: 100%; transform: translateY(0%); }
+        }
+
+        @keyframes revealPaintVertical {
+            0%, 10% { clip-path: inset(0 0 100% 0); }
+            80%, 100% { clip-path: inset(0 0 0% 0); }
+        }
+
+        /* --- Original Design Restored --- */
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-320px * 6 - 4rem * 6)); }
+        }
+
+        .scroll-track {
+            display: flex;
+            width: calc(320px * 12 + 4rem * 12);
+            animation: scroll var(--animation-speed) linear infinite;
+        }
+
+        .scroll-container:hover .scroll-track {
+            animation-play-state: paused;
+        }
+
+        .brand-item {
+            width: 320px;
+            flex-shrink: 0;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .corner-accent {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-color: var(--hot-pink);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .top-left { top: 15%; left: 15%; border-top: 3px solid; border-left: 3px solid; }
+        .bottom-right { bottom: 15%; right: 15%; border-bottom: 3px solid; border-right: 3px solid; }
+
+        .brand-item:hover .top-left { top: 8%; left: 8%; opacity: 1; }
+        .brand-item:hover .bottom-right { bottom: 8%; right: 8%; opacity: 1; }
+
+        .brand-logo-img {
+            filter: none;
+            opacity: 1;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 85px;
+            max-width: 240px;
+            object-fit: contain;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand-item:hover .brand-logo-img {
+            transform: scale(1.15);
+        }
+
+        .brand-name {
+            display: block;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--navy-blue);
+            margin-bottom: 4px;
+        }
+
+        .brand-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            transition: color 0.3s ease;
+        }
+
+        .brand-item:hover .brand-tag {
+            color: var(--hot-pink);
+        }
+
+        .scroll-wrapper {
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .section-title { color: var(--navy-blue); }
+        .pink-highlight { color: var(--hot-pink); }
+    </style>
+</head>
+<body class="bg-white">
+
+    <div class="paint-container py-24">
+        <!-- Vertical Background Animation Layer -->
+        <div class="paint-canvas"></div>
+        <div class="roller-tool"></div>
+
+        <!-- Your Original Content Structure -->
+        <div class="content-layer max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h4 class="text-xs font-black uppercase tracking-[0.5em] pink-highlight mb-3">Certified Quality</h4>
+                <h2 class="text-4xl md:text-6xl font-black section-title tracking-tighter mb-4">
+                    Our Brand Partners
+                </h2>
+                <p class="text-lg text-slate-500 max-w-xl mx-auto font-medium">
+                    Direct partnerships with the manufacturers you know and trust.
+                </p>
+            </div>
+
+            <div class="scroll-wrapper overflow-hidden">
+                <div class="scroll-container">
+                    <div class="scroll-track gap-16">
+                        
+                        <!-- Asian Paints -->
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/ascian[aints_logo.jpg" alt="Asian Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Asian Paints</span>
+                                <span class="brand-tag">Elite Application Partner</span>
+                            </div>
+                        </div>
+
+                        <!-- Berger -->
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/berger_logo.jpg" alt="Berger Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Berger Paints</span>
+                                <span class="brand-tag">Luxury Finishes Specialist</span>
+                            </div>
+                        </div>
+
+                        <!-- Nerolac -->
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/nerolac_logo.jpg" alt="Nerolac" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Kansai Nerolac</span>
+                                <span class="brand-tag">Eco-Friendly Coatings</span>
+                            </div>
+                        </div>
+
+                        <!-- Indigo -->
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/indigo_logo.jpg" alt="Indigo Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Indigo Paints</span>
+                                <span class="brand-tag">Innovative Textures</span>
+                            </div>
+                        </div>
+
+                        <!-- JSW -->
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/jsw_logo.jpg" alt="JSW Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">JSW Paints</span>
+                                <span class="brand-tag">Think Beautiful</span>
+                            </div>
+                        </div>
+
+                        <!-- Dulux -->
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/dulux_logo.jpg" alt="Dulux" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Dulux AkzoNobel</span>
+                                <span class="brand-tag">Global Quality Standards</span>
+                            </div>
+                        </div>
+
+                        <!-- CLONES FOR INFINITE LOOP -->
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/ascian[aints_logo.jpg" alt="Asian Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Asian Paints</span>
+                                <span class="brand-tag">Elite Application Partner</span>
+                            </div>
+                        </div>
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/berger_logo.jpg" alt="Berger Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Berger Paints</span>
+                                <span class="brand-tag">Luxury Finishes Specialist</span>
+                            </div>
+                        </div>
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/nerolac_logo.jpg" alt="Nerolac" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Kansai Nerolac</span>
+                                <span class="brand-tag">Eco-Friendly Coatings</span>
+                            </div>
+                        </div>
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/indigo_logo.jpg" alt="Indigo Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Indigo Paints</span>
+                                <span class="brand-tag">Innovative Textures</span>
+                            </div>
+                        </div>
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/jsw_logo.jpg" alt="JSW Paints" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">JSW Paints</span>
+                                <span class="brand-tag">Think Beautiful</span>
+                            </div>
+                        </div>
+                        <div class="brand-item">
+                            <div class="corner-accent top-left"></div>
+                            <div class="corner-accent bottom-right"></div>
+                            <img src="images/dulux_logo.jpg" alt="Dulux" class="brand-logo-img">
+                            <div class="text-center">
+                                <span class="brand-name">Dulux AkzoNobel</span>
+                                <span class="brand-tag">Global Quality Standards</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Restored Scroll Shimmer -->
+            <div class="mt-16 flex justify-center items-center">
+                <div class="relative w-64 h-[3px] bg-slate-200 rounded-full overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-navy-blue via-pink-400 to-navy-blue w-full animate-[shimmer_3s_infinite]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+
+</body>
+</html>

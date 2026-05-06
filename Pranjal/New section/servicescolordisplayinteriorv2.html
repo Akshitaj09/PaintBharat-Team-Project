@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Architectural Showcase</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+body,html{
+margin:0;
+padding:0;
+height:100%;
+overflow:hidden;
+font-family:'Inter',sans-serif;
+background:#111;
+}
+
+.showcase-container{
+height:100vh;
+position:relative;
+transition:1s;
+}
+
+.circular-track{
+position:absolute;
+bottom:-5%;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:flex-end;
+perspective:2000px;
+}
+
+.house-item{
+position:absolute;
+width:clamp(340px,34vw,580px);
+transition:.8s cubic-bezier(.16,1,.3,1);
+}
+
+.house-item img{
+width:100%;
+height:auto;
+object-fit:contain;
+image-rendering:auto;
+filter:drop-shadow(0 25px 35px rgba(0,0,0,0.35));
+}
+
+.center-ui{
+position:absolute;
+top:8%;
+left:50%;
+transform:translate(-50%,30px);
+opacity:0;
+transition:.8s;
+text-align:center;
+}
+
+.center-ui.active{
+opacity:1;
+transform:translate(-50%,0);
+}
+
+.serif{
+font-family:'Playfair Display',serif;
+}
+
+</style>
+</head>
+
+<body>
+
+<main id="container" class="showcase-container">
+
+<div id="ui-overlay" class="center-ui">
+<h2 id="house-name" class="serif text-white text-6xl mb-4"></h2>
+<p id="house-desc" class="text-white/70 tracking-[0.4em] text-xs"></p>
+</div>
+
+<div id="track" class="circular-track"></div>
+
+</main>
+
+<script>
+
+const houses=[
+
+{
+name:"Modern Villa",
+desc:"Premium Architecture",
+img:"../3D homes/house_no_bg_2.png",
+bg:"#151515"
+},
+
+{
+name:"Luxury Residence",
+desc:"Minimal Design",
+img:"../3D homes/house_no_bg_3.png",
+bg:"#2f2522"
+},
+
+{
+name:"Urban Glass House",
+desc:"Contemporary Style",
+img:"../3D homes/house_no_bg_4.png",
+bg:"#4c4a42"
+},
+
+{
+name:"Eco Smart Home",
+desc:"Sustainable Living",
+img:"../3D homes/house_no_bg_5.png",
+bg:"#283028"
+},
+
+{
+name:"Skyline Villa",
+desc:"Premium Living",
+img:"../3D homes/Floating cottage on a lush island (1).png",
+bg:"#2c3e50"
+},
+
+{
+name:"Signature Estate",
+desc:"Luxury Collection",
+img:"../3D homes/Floating cottage on a lush island (1).png",
+bg:"#473d2a"
+}
+
+];
+
+const track=document.getElementById("track");
+const container=document.getElementById("container");
+const ui=document.getElementById("ui-overlay");
+const name=document.getElementById("house-name");
+const desc=document.getElementById("house-desc");
+
+const items=houses.map(h=>{
+
+const div=document.createElement("div");
+div.className="house-item";
+
+const img=document.createElement("img");
+img.src=h.img;
+
+div.appendChild(img);
+track.appendChild(div);
+
+return div;
+
+});
+
+let rotation=0;
+let target=0;
+let last=-1;
+
+setInterval(()=>target+=1,3500);
+
+window.addEventListener("wheel",e=>{
+target+=e.deltaY*.0015;
+});
+
+function update(){
+
+rotation+=(target-rotation)*.08;
+
+const total=houses.length;
+const active=Math.round(rotation)%total;
+
+if(active!==last){
+
+last=active;
+const h=houses[(active+total)%total];
+
+container.style.backgroundColor=h.bg;
+
+ui.classList.remove("active");
+
+setTimeout(()=>{
+
+name.textContent=h.name;
+desc.textContent=h.desc;
+ui.classList.add("active");
+
+},300);
+
+}
+
+items.forEach((el,i)=>{
+
+let diff=i-rotation;
+diff=((diff+total/2)%total)-total/2;
+
+const angle=diff*(Math.PI/4);
+
+const radius=65;
+
+const x=Math.sin(angle)*radius;
+const y=Math.cos(angle)*35;
+const z=Math.cos(angle)*400;
+
+const center=Math.abs(diff)<0.4;
+
+const scale=center?1.15:0.8;
+const opacity=1;
+
+el.style.transform=
+`translate3d(${x}vw,${y+35}vh,${z}px) scale(${scale})`;
+
+el.style.opacity=opacity;
+el.style.zIndex=Math.round(z+1000);
+
+el.style.filter=`drop-shadow(0 30px 40px rgba(0,0,0,0.35))`;
+
+});
+
+requestAnimationFrame(update);
+
+}
+
+update();
+
+</script>
+
+</body>
+</html>

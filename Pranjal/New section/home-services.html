@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Paintbharat | Premium Finishes</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+background:#020202;
+color:white;
+font-family:Inter;
+overflow:hidden;
+}
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+z-index:10;
+}
+
+.glow-bg{
+filter:blur(160px);
+transition:1.5s;
+}
+
+.page-indicator-fill{
+height:100%;
+width:0%;
+background:white;
+box-shadow:0 0 10px white;
+}
+
+.title-line{
+display:block;
+transition:.9s cubic-bezier(.19,1,.22,1);
+}
+
+.is-animating .title-line{
+opacity:0;
+transform:skewX(-20deg) translateY(60px);
+filter:blur(10px);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="glow-bg" 
+class="glow-bg absolute top-[-20%] right-[-10%] w-[60vw] h-[70vh] 
+rounded-full opacity-[0.2] bg-blue-500">
+</div>
+
+<nav class="fixed top-0 left-0 w-full px-16 py-10 z-50">
+<div class="text-3xl font-black italic">
+Paintbharat Co.
+</div>
+</nav>
+
+
+<main class="h-screen flex items-center px-24">
+
+<div id="content-block" class="max-w-2xl">
+
+<p id="subtitle" 
+class="text-xs tracking-[0.6em] text-white/60 mb-8">
+PREMIUM FINISHES
+</p>
+
+<h1 id="title"
+class="text-8xl font-black leading-[0.85] uppercase italic">
+
+<span class="title-line">Interior</span>
+<span class="title-line">Painting</span>
+<span class="title-line">Solutions</span>
+
+</h1>
+
+</div>
+
+</main>
+
+
+<div class="fixed right-16 top-1/2 -translate-y-1/2">
+
+<button onclick="changeSlide(1)"
+class="text-white/30 hover:text-white mb-10">
+
+NEXT →
+
+</button>
+
+<div>
+
+<span id="counter" class="text-2xl">
+01
+</span>
+
+<div class="w-32 h-[3px] bg-white/10 mt-2">
+
+<div id="indicator-fill" class="page-indicator-fill"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const SLIDES=[
+
+{
+subtitle:"PREMIUM FINISHES",
+title:"Interior<br>Painting<br>Solutions",
+description:"Luxury interior painting",
+color:"#3b82f6",
+imgUrl:"../3d-homes/interior.png"
+},
+
+{
+subtitle:"EXTREME DURABILITY",
+title:"Exterior<br>Coating<br>Systems",
+description:"Exterior painting",
+color:"#f97316",
+imgUrl:"../3d-homes/exterior.png"
+},
+
+{
+subtitle:"TACTILE DESIGN",
+title:"Designer<br>Wallpaper<br>Studio",
+description:"Wallpaper",
+color:"#ec4899",
+imgUrl:"../3d-homes/wallpaper.png"
+},
+
+{
+subtitle:"SEAL TECHNOLOGY",
+title:"Active<br>Waterproof<br>Shield",
+description:"Waterproof",
+color:"#14b8a6",
+imgUrl:"../3d-homes/waterproof.png"
+}
+
+];
+
+
+let currentSlide=0;
+let targetGroupX=2.8;
+
+
+const scene=new THREE.Scene();
+
+const camera=new THREE.PerspectiveCamera(
+45,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
+
+const renderer=new THREE.WebGLRenderer({
+antialias:true,
+alpha:true
+});
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+document.body.appendChild(renderer.domElement);
+
+
+const loader=new THREE.TextureLoader();
+loader.setCrossOrigin('');
+
+
+const materials=SLIDES.map(s=>{
+
+const texture=loader.load(
+s.imgUrl,
+()=>console.log("Loaded",s.imgUrl),
+undefined,
+err=>console.error(err)
+);
+
+return new THREE.MeshStandardMaterial({
+map:texture,
+transparent:true,
+side:THREE.DoubleSide
+});
+
+});
+
+
+const geometry=new THREE.PlaneGeometry(5,6);
+
+const mesh=new THREE.Mesh(
+geometry,
+materials[0]
+);
+
+scene.add(mesh);
+
+
+const light=new THREE.PointLight(
+0xffffff,
+5
+);
+
+light.position.set(5,5,5);
+scene.add(light);
+
+
+camera.position.z=7;
+
+
+let mouseX=0;
+
+window.addEventListener("mousemove",e=>{
+
+mouseX=(e.clientX/window.innerWidth)-.5
+
+})
+
+
+function animate(){
+
+requestAnimationFrame(animate);
+
+mesh.rotation.y+=
+(mouseX*.5-mesh.rotation.y)*.05
+
+renderer.render(scene,camera)
+
+}
+
+animate()
+
+
+
+function changeSlide(){
+
+currentSlide=
+(currentSlide+1)%SLIDES.length
+
+const s=SLIDES[currentSlide]
+
+document.getElementById("subtitle").innerText=s.subtitle
+
+document.getElementById("title").innerHTML=
+s.title.split("<br>")
+.map(t=>`<span class="title-line">${t}</span>`)
+.join("")
+
+document.getElementById("counter").innerText=
+"0"+(currentSlide+1)
+
+document.getElementById("glow-bg").style.backgroundColor=s.color
+
+mesh.material=materials[currentSlide]
+
+}
+
+
+window.addEventListener("resize",()=>{
+
+camera.aspect=
+window.innerWidth/window.innerHeight
+
+camera.updateProjectionMatrix()
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+)
+
+})
+
+
+</script>
+
+</body>
+</html>

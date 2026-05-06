@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAINTBHARAT CO. | Auto-Loop Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#ec1348', 
+                        gold: {
+                            DEFAULT: '#c5a044',
+                            light: '#dfc27d',
+                            dark: '#93752d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        body { 
+            background-color: #050505; 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .font-serif { font-family: 'Playfair Display', serif; }
+        
+        .parallax-bg {
+            transition: transform 8s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations for text entry */
+        .animate-enter {
+            animation: cinematicEnter 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: transform, opacity, filter;
+        }
+
+        .animate-exit {
+            animation: cinematicExit 0.8s cubic-bezier(0.5, 0, 0.7, 1) forwards;
+            will-change: transform, opacity, filter;
+            pointer-events: none;
+        }
+
+        @keyframes cinematicEnter {
+            0% { transform: translate3d(-30px, 50px, 0); opacity: 0; filter: blur(10px); }
+            100% { transform: translate3d(0, 0, 0); opacity: 1; filter: blur(0); }
+        }
+
+        @keyframes cinematicExit {
+            0% { transform: translate3d(0, 0, 0); opacity: 1; filter: blur(0); }
+            100% { transform: translate3d(-30px, -50px, 0); opacity: 0; filter: blur(15px); }
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.1s linear;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .gallery-card {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .gallery-card.active {
+            border-color: #ec1348;
+            box-shadow: 0 0 40px rgba(236, 19, 72, 0.1);
+        }
+
+        .hero-content-stack {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 10%; 
+            z-index: 40;
+        }
+
+        /* Minimal Button Styling */
+        .btn-minimal {
+            position: relative;
+            padding: 1rem 2.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-minimal:hover {
+            border-color: #ec1348;
+            background: rgba(236, 19, 72, 0.05);
+            box-shadow: 0 0 25px rgba(236, 19, 72, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-minimal .btn-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: #ec1348;
+            opacity: 0.1;
+            transition: height 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn-minimal:hover .btn-fill {
+            height: 100%;
+        }
+    </style>
+</head>
+<body 
+    x-data="galleryLoop()" 
+    x-init="init()"
+    class="relative select-none overflow-hidden"
+>
+
+    <!-- 1. DYNAMIC BACKGROUND -->
+    <div class="absolute inset-0 z-0 bg-black">
+        <template x-for="(slide, index) in slides" :key="'bg-' + slide.id">
+            <div 
+                x-show="currentIndex === index"
+                x-transition:enter="transition opacity-0 duration-[2000ms] ease-in-out"
+                x-transition:leave="transition opacity-0 duration-[1500ms] ease-in-out"
+                class="absolute inset-0"
+            >
+                <div class="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent z-10" :class="isExpanded ? 'opacity-100' : 'opacity-60'"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60 z-10"></div>
+                
+                <img 
+                    :src="slide.image" 
+                    class="w-full h-full object-cover parallax-bg" 
+                    :class="isExpanded ? 'scale-105' : 'scale-110 blur-md brightness-[0.4]'"
+                >
+            </div>
+        </template>
+    </div>
+
+    <!-- 2. NAVBAR -->
+    <nav class="absolute top-0 left-0 w-full z-50 px-6 py-8 md:px-16 pointer-events-none">
+        <div class="flex items-center justify-between w-full pointer-events-auto">
+            <div class="flex items-center gap-6">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden border border-white/20">
+                    <img src="../images/Logo2.png" alt="PB" class="w-full h-full object-contain p-1" onerror="this.src='https://via.placeholder.com/100?text=PB'">
+                </div>
+                <span class="font-black text-xl tracking-tighter text-white uppercase">PAINTBHARAT CO.</span>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-10">
+                <template x-for="link in ['Interiors', 'Exteriors', 'Wallpapers', 'Waterproofing']">
+                    <a href="#" class="text-[10px] font-bold tracking-[0.3em] text-gray-400 uppercase hover:text-brand transition-colors" x-text="link"></a>
+                </template>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <button class="text-white hover:text-brand transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <button class="text-white hover:text-brand transition-colors"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 3. GALLERY VIEW (Front Page) -->
+    <div 
+        x-show="!isExpanded" 
+        x-transition:enter="transition opacity-0 transform translate-y-10 duration-1000"
+        x-transition:leave="transition opacity-0 transform scale-95 duration-700"
+        class="absolute inset-0 z-20 flex flex-col items-center justify-center px-6 md:px-16"
+        x-cloak
+    >
+        <div class="text-center mb-16">
+            <h2 class="text-5xl md:text-7xl font-serif font-bold tracking-tight mb-4">Select your Vision</h2>
+            <div class="w-24 h-1 bg-brand mx-auto rounded-full"></div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6 w-full max-w-7xl justify-center h-[55vh]">
+            <template x-for="(slide, index) in slides" :key="'card-' + slide.id">
+                <div 
+                    class="gallery-card relative rounded-3xl overflow-hidden cursor-pointer flex-1 group"
+                    :class="{
+                        'md:flex-[4] active': index === currentIndex,
+                        'md:flex-1 opacity-50 grayscale hover:grayscale-0 hover:opacity-100': index !== currentIndex
+                    }"
+                    @click="manualJump(index)"
+                >
+                    <img :src="slide.image" class="w-full h-full object-cover transition-transform duration-[3000ms] group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                    
+                    <div x-show="index === currentIndex" class="absolute top-0 left-0 w-full h-1.5 bg-white/10 z-30">
+                        <div class="h-full bg-brand shadow-[0_0_15px_#ec1348]" :style="`width: ${timerProgress}%`" style="transition: width 100ms linear"></div>
+                    </div>
+
+                    <div class="absolute bottom-10 left-10 right-10">
+                        <p class="text-gold font-black tracking-[0.4em] uppercase mb-2 text-[10px]" x-text="slide.category"></p>
+                        <h3 class="text-3xl font-serif font-bold tracking-tight" x-text="slide.title"></h3>
+                        <p x-show="index === currentIndex" class="mt-4 text-gray-300 text-sm line-clamp-2 max-w-xs transition-opacity duration-500" x-text="slide.description"></p>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- 4. FULL SCREEN DETAIL VIEW -->
+    <div 
+        x-show="isExpanded" 
+        class="absolute inset-0 z-30 pointer-events-none"
+        x-cloak
+    >
+        <template x-for="(slide, index) in slides" :key="'expanded-' + slide.id">
+            <div x-show="currentIndex === index" class="hero-content-stack w-full max-w-3xl pointer-events-auto">
+                <div class="overflow-hidden mb-4">
+                    <p x-show="isExpanded && currentIndex === index" x-transition:enter="animate-enter" x-transition:leave="animate-exit"
+                       class="text-gold font-black tracking-[0.5em] uppercase text-xs" x-text="slide.category"></p>
+                </div>
+                <div class="overflow-hidden mb-8">
+                    <h1 x-show="isExpanded && currentIndex === index" x-transition:enter="animate-enter" x-transition:leave="animate-exit"
+                        style="animation-delay: 0.1s"
+                        class="text-7xl md:text-[120px] font-serif font-bold tracking-tighter leading-[0.9] text-white" x-text="slide.title"></h1>
+                </div>
+                <div class="overflow-hidden mb-12">
+                    <p x-show="isExpanded && currentIndex === index" x-transition:enter="animate-enter" x-transition:leave="animate-exit"
+                       style="animation-delay: 0.2s"
+                       class="text-gray-300 text-xl md:text-2xl font-light leading-relaxed max-w-xl" x-text="slide.description"></p>
+                </div>
+                <div x-show="isExpanded && currentIndex === index" x-transition:enter="animate-enter" x-transition:leave="animate-exit"
+                     style="animation-delay: 0.3s" class="flex items-center gap-10">
+                    
+                    <!-- Minimal Button -->
+                    <button class="btn-minimal group">
+                        <span class="relative z-10">Explore Collection</span>
+                        <div class="btn-fill"></div>
+                    </button>
+
+                    <!-- Minimal Secondary CTA -->
+                    <div class="flex items-center gap-4 text-gray-500 group cursor-pointer">
+                        <div class="w-12 h-1 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-white transition-all duration-100" :style="`width: ${timerProgress}%`"></div>
+                        </div>
+                        <span class="text-[10px] font-black tracking-[0.3em] uppercase group-hover:text-white transition-colors">Next Vision</span>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+    <!-- 5. COUNTER FOOTER -->
+    <div class="absolute bottom-10 left-16 z-50 flex items-center gap-6">
+        <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-serif italic text-brand" x-text="`0${currentIndex + 1}`"></span>
+            <span class="text-xs text-gray-600 font-bold tracking-widest" x-text="`/ 0${slides.length}`"></span>
+        </div>
+        <div class="h-[1px] w-20 bg-white/20">
+            <div class="h-full bg-brand transition-all duration-700" :style="`width: ${(currentIndex + 1) * 25}%`"></div>
+        </div>
+    </div>
+
+    <script>
+        function galleryLoop() {
+            return {
+                currentIndex: 0,
+                isExpanded: false,
+                timer: null,
+                timerProgress: 0,
+                phaseDuration: 5000, 
+                tickMs: 50,
+                
+                slides: [
+                    { id: 1, title: "Royal Living", category: "Interior Art", description: "Bespoke palettes that redefine luxury living. Experience the harmony of color and texture in your personal sanctuary.", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 2, title: "Skyline Aura", category: "Modern Exterior", description: "Engineered protection for majestic structures. Our exterior finishes combine resilience with timeless elegance.", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 3, title: "Velvet Walls", category: "Texture Design", description: "Tactile sensations for modern spaces. From raw concrete to silk finishes, transform every touchpoint.", image: "https://images.unsplash.com/photo-1615529151169-7b1ff50dc7f2?auto=format&fit=crop&q=80&w=2000" },
+                    { id: 4, title: "Aqua Guard", category: "Water Shield", description: "Invisible tech for ultimate peace of mind. Advanced waterproofing that preserves your architectural legacy.", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=2000" }
+                ],
+
+                init() {
+                    this.startLoop();
+                },
+
+                startLoop() {
+                    if (this.timer) clearInterval(this.timer);
+                    this.timerProgress = 0;
+                    
+                    this.timer = setInterval(() => {
+                        this.timerProgress += (this.tickMs / this.phaseDuration) * 100;
+                        if (this.timerProgress >= 100) {
+                            this.handleTransition();
+                        }
+                    }, this.tickMs);
+                },
+
+                handleTransition() {
+                    this.timerProgress = 0;
+                    if (!this.isExpanded) {
+                        this.isExpanded = true;
+                    } else {
+                        this.isExpanded = false;
+                        this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+                    }
+                },
+
+                manualJump(index) {
+                    this.currentIndex = index;
+                    this.isExpanded = true; 
+                    this.timerProgress = 0;
+                    this.startLoop();
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | Immersive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --active-color: #713232;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Full Screen Background Engine */
+        .viewport {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .bg-canvas {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 8s linear, background-image 1.2s ease-in-out;
+            transform: scale(1.05);
+        }
+
+        .bg-canvas.zooming {
+            transform: scale(1.15);
+        }
+
+        /* Clean Color Tint - No Shadow/Vignette */
+        .color-wash {
+            position: absolute;
+            inset: 0;
+            background-color: var(--active-color);
+            mix-blend-mode: multiply;
+            opacity: 0.6;
+            transition: background-color 1.5s ease-in-out;
+        }
+
+        /* Clean Interface */
+        .glass-dock {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .manual-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .manual-swatch.active {
+            transform: scale(2.8);
+            border-color: white;
+            background-color: white !important;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .feature-item {
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+        .feature-item:hover {
+            opacity: 1;
+        }
+
+        /* Text Animations */
+        #title-container {
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-out {
+            opacity: 0;
+            transform: translateX(-30px);
+            filter: blur(15px);
+        }
+
+        /* Simple Progress Loader */
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: white;
+            transition: width 0.1s linear;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- The Stage -->
+    <div class="viewport">
+        <div class="bg-canvas" id="bg-canvas"></div>
+        <div class="color-wash"></div>
+    </div>
+
+    <!-- UI Overlay -->
+    <div class="relative z-10 flex flex-col h-screen">
+        
+        <!-- Minimal Header -->
+        <header class="p-10 flex justify-between items-start">
+            <div>
+                <h1 class="text-xs font-bold tracking-[0.6em] uppercase opacity-60 mb-2">PaintBharat Co.</h1>
+                <div class="h-[1px] w-8 bg-white/40"></div>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] font-bold uppercase tracking-widest text-green-400">Pure Organic Base</p>
+            </div>
+        </header>
+
+        <!-- Main Identity -->
+        <main class="flex-1 flex items-center px-10 lg:px-20">
+            <div id="title-container">
+                <span class="text-[10px] font-bold uppercase tracking-[0.8em] opacity-40 block mb-6" id="sub-label">Interior Lookbook</span>
+                <h2 class="text-7xl lg:text-9xl font-light tracking-tighter mb-8" id="main-title">
+                    Raspberry Luxe
+                </h2>
+                <div class="flex items-center gap-6">
+                    <span class="font-mono text-sm tracking-widest opacity-60" id="hex-label">#713232</span>
+                    <div class="h-4 w-[1px] bg-white/20"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-60" id="finish-text">Velvet Matte</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Functional Dock -->
+        <footer class="glass-dock">
+            <div class="progress-bar" id="timer-bar" style="width: 0%"></div>
+            
+            <div class="max-w-screen-2xl mx-auto px-10 py-12">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-10">
+                    
+                    <!-- Manual Controls -->
+                    <div class="flex items-center gap-10" id="manual-bar">
+                        <!-- Swatches injected by JS -->
+                    </div>
+
+                    <!-- Features -->
+                    <div class="flex items-center gap-12 border-l border-white/10 pl-12 hidden md:flex">
+                        <div class="feature-item text-center">
+                            <p class="text-[9px] font-bold uppercase tracking-[0.2em] mb-1">Color Mapping</p>
+                            <p class="text-[8px] opacity-40 uppercase">Light Synergy</p>
+                        </div>
+                        <div class="feature-item text-center">
+                            <p class="text-[9px] font-bold uppercase tracking-[0.2em] mb-1">Durability</p>
+                            <p class="text-[8px] opacity-40 uppercase">Scuff Proof</p>
+                        </div>
+                        <div class="feature-item text-center">
+                            <p class="text-[9px] font-bold uppercase tracking-[0.2em] mb-1">Eco-Conscious</p>
+                            <p class="text-[8px] opacity-40 uppercase">Zero VOC</p>
+                        </div>
+                    </div>
+
+                    <!-- Counter -->
+                    <div class="flex items-center">
+                        <span class="text-3xl font-light italic opacity-20 tracking-tighter" id="counter">01 / 06</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const colors = [
+            { 
+                name: "Raspberry Luxe", 
+                hex: "#713232", 
+                finish: "Velvet Matte",
+                img: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=2000" 
+            },
+            { 
+                name: "Alabaster Silk", 
+                hex: "#D7CFC4", 
+                finish: "Eggshell Polish",
+                img: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000" 
+            },
+            { 
+                name: "Ocean Teal", 
+                hex: "#344D52", 
+                finish: "Satin Shell",
+                img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2000" 
+            },
+            { 
+                name: "Emerald Regal", 
+                hex: "#2D4138", 
+                finish: "High Gloss",
+                img: "https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?q=80&w=2000" 
+            },
+            { 
+                name: "Midnight Royal", 
+                hex: "#2A3548", 
+                finish: "Soft Sheen",
+                img: "https://images.unsplash.com/photo-1505691938895-1758d7eaa511?q=80&w=2000" 
+            },
+            { 
+                name: "Terracotta Earth", 
+                hex: "#A25E49", 
+                finish: "Chalky Texture",
+                img: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=2000" 
+            }
+        ];
+
+        let index = 0;
+        let progress = 0;
+        const DURATION = 7000;
+        const TICK = 50;
+
+        // Init Swatches
+        const manualBar = document.getElementById('manual-bar');
+        colors.forEach((color, i) => {
+            const btn = document.createElement('div');
+            btn.className = `manual-swatch ${i === 0 ? 'active' : ''}`;
+            btn.style.backgroundColor = color.hex;
+            btn.onclick = () => jumpTo(i);
+            btn.id = `swatch-${i}`;
+            manualBar.appendChild(btn);
+        });
+
+        function update() {
+            const data = colors[index];
+            const titleCont = document.getElementById('title-container');
+            const bg = document.getElementById('bg-canvas');
+            
+            titleCont.classList.add('fade-out');
+            bg.classList.remove('zooming');
+            
+            setTimeout(() => {
+                document.documentElement.style.setProperty('--active-color', data.hex);
+                bg.style.backgroundImage = `url('${data.img}')`;
+                
+                document.getElementById('main-title').innerText = data.name;
+                document.getElementById('hex-label').innerText = data.hex;
+                document.getElementById('finish-text').innerText = data.finish;
+                document.getElementById('counter').innerText = `0${index + 1} / 0${colors.length}`;
+
+                // Update Active Swatch
+                document.querySelectorAll('.manual-swatch').forEach((s, i) => {
+                    s.classList.toggle('active', i === index);
+                });
+
+                titleCont.classList.remove('fade-out');
+                
+                // Trigger subtle zoom
+                setTimeout(() => bg.classList.add('zooming'), 50);
+            }, 600);
+            
+            progress = 0;
+        }
+
+        function next() {
+            index = (index + 1) % colors.length;
+            update();
+        }
+
+        function jumpTo(i) {
+            if (i === index) return;
+            index = i;
+            update();
+        }
+
+        // Timer
+        setInterval(() => {
+            progress += (TICK / DURATION) * 100;
+            if (progress >= 100) {
+                next();
+            } else {
+                document.getElementById('timer-bar').style.width = progress + '%';
+            }
+        }, TICK);
+
+        window.onload = update;
+    </script>
+</body>
+</html>

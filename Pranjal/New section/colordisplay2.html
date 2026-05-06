@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | The Monolith Series</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #713232;
+            --accent-rgb: 113, 50, 50;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #030303;
+            color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            cursor: none; 
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        #cursor {
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* --- IMMERSIVE PARALLAX BACKGROUND --- */
+        .viewport-container {
+            position: fixed;
+            inset: 0;
+            perspective: 1000px;
+            z-index: 1;
+        }
+
+        .texture-bg {
+            position: absolute;
+            inset: -15%; 
+            z-index: 1;
+            transition: transform 0.8s cubic-bezier(0.1, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .texture-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4) contrast(1.3) saturate(0.8);
+            transition: opacity 1.5s ease;
+            animation: slow-drift 30s infinite alternate ease-in-out;
+        }
+
+        @keyframes slow-drift {
+            from { transform: scale(1) translate(0, 0); }
+            to { transform: scale(1.1) translate(-2%, -2%); }
+        }
+
+        /* --- LIGHTING & NOISE --- */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), transparent 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.9) 80%);
+            pointer-events: none;
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            background: url("https://grainy-gradients.vercel.app/noise.svg");
+            opacity: 0.15;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        /* --- UI ELEMENTS --- */
+        .ui-wrapper {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 3vw 4vw;
+        }
+
+        .giant-text-container {
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 3vw;
+        }
+
+        .giant-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(140px, 24vw, 420px);
+            line-height: 0.75;
+            letter-spacing: -0.02em;
+            margin: 0;
+            text-transform: uppercase;
+            color: transparent;
+            background: linear-gradient(to bottom, #ffffff 20%, rgba(255,255,255,0) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+        }
+
+        .rating-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .star { color: #fbbf24; font-size: 14px; } 
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* Reduced padding and max-width to make the card smaller */
+            padding: 28px;
+            max-width: 380px;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .is-ready .info-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .accent-bar {
+            width: 40px;
+            height: 3px;
+            background: var(--accent);
+            margin-bottom: 16px;
+            transition: background 0.6s ease;
+        }
+
+        .meta-desc {
+            /* Slightly reduced font-size and spacing to fit the smaller card perfectly */
+            font-size: 13px;
+            line-height: 1.6;
+            opacity: 0.6;
+            font-weight: 300;
+            margin-bottom: 24px;
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .nav-item {
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Active state uses the accent color of the tone */
+        .nav-item.active {
+            background: var(--accent);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .nav-item.active .nav-label, 
+        .nav-item.active .nav-name {
+            color: white;
+            opacity: 1;
+        }
+        
+        /* Special case for light colors like Alabaster */
+        .nav-item.active.light-theme .nav-label,
+        .nav-item.active.light-theme .nav-name {
+            color: black;
+        }
+
+        .nav-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: rgba(255, 255, 255, 0.4);
+            transition: width linear;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            opacity: 0.3;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .nav-name {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .scan-line {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+            opacity: 0.2;
+            z-index: 5;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            from { top: -10%; }
+            to { top: 110%; }
+        }
+
+        .is-switching .giant-text { transform: translateY(100%) skewY(5deg); opacity: 0; }
+        .is-switching .info-card { transform: scale(0.95) translateY(20px); opacity: 0; filter: blur(10px); }
+        .is-switching .texture-bg { filter: brightness(0.1) scale(1.1) blur(20px); }
+
+    </style>
+</head>
+<body class="is-ready">
+
+    <div id="cursor"></div>
+    <div class="noise"></div>
+    <div class="scan-line"></div>
+    <div class="vignette" id="vignette"></div>
+
+    <div class="viewport-container">
+        <div class="texture-bg" id="bg-parallax">
+            <img id="main-texture" class="texture-image" src="https://images.unsplash.com/photo-1594142465967-a41296ea30bb?q=80&w=2000" alt="Texture">
+        </div>
+    </div>
+
+    <div class="ui-wrapper" id="ui-main">
+        <!-- Simplified Header -->
+        <header class="flex justify-end items-start">
+            <div class="flex items-center gap-12">
+                <div class="hidden lg:flex gap-10 text-[10px] font-black tracking-[0.4em] uppercase opacity-20">
+                    <span class="hover:text-white transition-colors cursor-pointer">Archive</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Pigments</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Case Study</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Product Hero -->
+        <main class="flex flex-col justify-center flex-grow">
+            <div class="giant-text-container">
+                <h1 class="giant-text" id="title">Raspberry</h1>
+            </div>
+            
+            <div class="info-card" id="info-card">
+                <div class="accent-bar" id="accent-bar"></div>
+                
+                <div class="rating-container" id="rating">
+                    <div class="flex gap-1">
+                        <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star opacity-30">★</span>
+                    </div>
+                    <span class="text-[11px] ml-3 opacity-50 font-bold tracking-widest uppercase">4.8</span>
+                </div>
+
+                <h3 class="text-[12px] font-black uppercase tracking-[0.5em] text-white/60 mb-4" id="tag">Structural Finish</h3>
+                <p class="meta-desc" id="desc">
+                    A heavy, light-absorbing pigment designed for high-contrast architectural geometry. Crafted to reveal depth in shadowed volumes.
+                </p>
+                
+                <div class="flex items-center gap-8">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black uppercase opacity-30 tracking-widest">Base Code</span>
+                        <span class="text-sm font-mono tracking-tighter" id="hex-label">#713232</span>
+                    </div>
+                    <div class="h-10 w-[1px] bg-white/10"></div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black uppercase opacity-30 tracking-widest">Opacity</span>
+                        <span class="text-sm font-mono tracking-tighter">98.4%</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Navigation Grid -->
+        <footer class="nav-container">
+            <div class="nav-item active" onclick="manualJump(0)">
+                <span class="nav-label">Tone 01</span>
+                <span class="nav-name">Raspberry</span>
+                <div class="nav-progress" id="p0"></div>
+            </div>
+            <div class="nav-item" onclick="manualJump(1)">
+                <span class="nav-label">Tone 02</span>
+                <span class="nav-name">Midnight</span>
+                <div class="nav-progress" id="p1"></div>
+            </div>
+            <div class="nav-item" onclick="manualJump(2)">
+                <span class="nav-label">Tone 03</span>
+                <span class="nav-name">Alabaster</span>
+                <div class="nav-progress" id="p2"></div>
+            </div>
+            <div class="nav-item" onclick="manualJump(3)">
+                <span class="nav-label">Tone 04</span>
+                <span class="nav-name">Emerald</span>
+                <div class="nav-progress" id="p3"></div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const colorData = [
+            {
+                name: "Raspberry", tag: "Structural Matte", hex: "#713232", rating: 4,
+                img: "https://images.unsplash.com/photo-1594142465967-a41296ea30bb?q=80&w=2000",
+                desc: "A heavy, light-absorbing pigment designed for high-contrast architectural geometry. Crafted to reveal depth in shadowed volumes.",
+                isLight: false
+            },
+            {
+                name: "Midnight", tag: "Liquid Gloss", hex: "#1A2A2F", rating: 5,
+                img: "https://images.unsplash.com/photo-1615529328331-f8917597711f?q=80&w=2000",
+                desc: "Obsidian undertones engineered for infinite depth. A finish that mirrors the calmness of open-sea midnight in vast galleries.",
+                isLight: false
+            },
+            {
+                name: "Alabaster", tag: "Silk Porcelain", hex: "#D7CFC4", rating: 4,
+                img: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?q=80&w=2000",
+                desc: "A breathable, bone-white finish that responds dynamically to shifting natural light. Pure elegance for minimalist structures.",
+                isLight: true
+            },
+            {
+                name: "Emerald", tag: "Brutal Green", hex: "#2D4138", rating: 5,
+                img: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=2000",
+                desc: "A grounded, organic green that mimics the dense textures of ancient forest foliage. Bold, heavy, and architecturally timeless.",
+                isLight: false
+            }
+        ];
+
+        let current = 0;
+        let isBusy = false;
+        const autoDelay = 7000;
+        let start;
+
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const moveX = (x - 0.5) * 60;
+            const moveY = (y - 0.5) * 60;
+            document.getElementById('bg-parallax').style.transform = `translate(${moveX}px, ${moveY}px)`;
+            
+            document.body.style.setProperty('--mouse-x', (x * 100) + '%');
+            document.body.style.setProperty('--mouse-y', (y * 100) + '%');
+        });
+
+        document.querySelectorAll('.nav-item, button, span').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(4)');
+            el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+        });
+
+        function updateRating(count) {
+            const stars = document.getElementById('rating').querySelectorAll('.star');
+            stars.forEach((s, i) => {
+                s.classList.toggle('opacity-30', i >= count);
+            });
+        }
+
+        function updateUI() {
+            if (isBusy) return;
+            isBusy = true;
+
+            const data = colorData[current];
+            const ui = document.getElementById('ui-main');
+            ui.classList.add('is-switching');
+            
+            document.querySelectorAll('.nav-progress').forEach(p => {
+                p.style.transition = 'none';
+                p.style.width = '0%';
+            });
+
+            setTimeout(() => {
+                document.documentElement.style.setProperty('--accent', data.hex);
+                document.getElementById('main-texture').src = data.img;
+                document.getElementById('title').innerText = data.name;
+                document.getElementById('tag').innerText = data.tag;
+                document.getElementById('desc').innerText = data.desc;
+                document.getElementById('hex-label').innerText = data.hex;
+                updateRating(data.rating);
+
+                document.querySelectorAll('.nav-item').forEach((item, i) => {
+                    const isActive = i === current;
+                    item.classList.toggle('active', isActive);
+                    // Add light-theme class to handle text contrast for Alabaster
+                    if (isActive) {
+                        item.classList.toggle('light-theme', data.isLight);
+                    }
+                });
+
+                ui.classList.remove('is-switching');
+                
+                setTimeout(() => {
+                    isBusy = false;
+                    start = Date.now();
+                    const activeBar = document.getElementById(`p${current}`);
+                    activeBar.style.transition = `width ${autoDelay}ms linear`;
+                    activeBar.style.width = '100%';
+                }, 100);
+
+            }, 1000); 
+        }
+
+        function manualJump(index) {
+            if (isBusy || current === index) return;
+            current = index;
+            updateUI();
+        }
+
+        function mainLoop() {
+            if (!isBusy && start) {
+                const elapsed = Date.now() - start;
+                if (elapsed >= autoDelay) {
+                    current = (current + 1) % colorData.length;
+                    updateUI();
+                }
+            }
+            requestAnimationFrame(mainLoop);
+        }
+
+        window.onload = () => {
+            start = Date.now();
+            const initialBar = document.getElementById('p0');
+            initialBar.style.transition = `width ${autoDelay}ms linear`;
+            initialBar.style.width = '100%';
+            mainLoop();
+        };
+    </script>
+</body>
+</html>

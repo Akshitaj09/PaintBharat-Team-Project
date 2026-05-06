@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PaintBharat Brands</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+/* Infinite Animation */
+
+.marquee {
+display: flex;
+width: max-content;
+animation: marquee 35s linear infinite;
+}
+
+.marquee.reverse {
+animation: marqueeReverse 35s linear infinite;
+}
+
+@keyframes marquee {
+0% { transform: translateX(0); }
+100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeReverse {
+0% { transform: translateX(-50%); }
+100% { transform: translateX(0); }
+}
+
+/* Hover Pause */
+
+.marquee-wrapper:hover .marquee {
+animation-play-state: paused;
+}
+
+/* Brand Hover */
+
+.brand-card {
+transition: all .35s ease;
+white-space: nowrap;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:6px;
+cursor:pointer;
+}
+
+.brand-card:hover {
+transform: translateY(-6px);
+}
+
+/* Bigger Logos */
+
+.brand-card img{
+height:90px;
+object-fit:contain;
+transition:all .35s ease;
+}
+
+/* Hide Text Initially */
+
+.brand-card span{
+opacity:0;
+transform:translateY(8px);
+transition:all .35s ease;
+font-size:14px;
+font-weight:600;
+color:black;
+}
+
+/* Show On Hover */
+
+.brand-card:hover span{
+opacity:1;
+transform:translateY(0);
+}
+
+</style>
+
+</head>
+
+<body class="bg-white">
+
+<section class="py-24 overflow-hidden">
+
+<div class="max-w-7xl mx-auto px-6">
+
+<!-- Header -->
+
+<div class="text-center mb-16">
+
+<p class="text-sm tracking-widest text-[#0B1F3A] font-semibold mb-3">
+TRUSTED MATERIAL PARTNERS
+</p>
+
+<h2 class="text-4xl font-semibold text-[#ec1348]">
+Brands We Use
+</h2>
+
+<p class="text-gray-500 mt-4 max-w-2xl mx-auto">
+We collaborate with industry-leading paint and material brands to ensure premium quality finishes and long-lasting results.
+</p>
+
+</div>
+
+
+<!-- Marquee Wrapper -->
+<div class="marquee-wrapper space-y-4">
+
+<!-- Top Line -->
+
+<div class="overflow-hidden">
+
+<div class="marquee gap-16">
+
+<div class="brand-card">
+<img src="images/ascian[aints_logo.jpg">
+<span>Asian Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/berger_logo.jpg">
+<span>Berger Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/dulux_logo.jpg">
+<span>Dulux</span>
+</div>
+
+<div class="brand-card">
+<img src="images/nerolac_logo.jpg">
+<span>Nerolac</span>
+</div>
+
+<div class="brand-card">
+<img src="images/indigo_logo.jpg">
+<span>Indigo Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Birla_White_logo.png">
+<span>Birla White</span>
+</div>
+
+
+<!-- Duplicate -->
+
+<div class="brand-card">
+<img src="images/ascian[aints_logo.jpg">
+<span>Asian Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/berger_logo.jpg">
+<span>Berger Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/dulux_logo.jpg">
+<span>Dulux</span>
+</div>
+
+<div class="brand-card">
+<img src="images/nerolac_logo.jpg">
+<span>Nerolac</span>
+</div>
+
+<div class="brand-card">
+<img src="images/indigo_logo.jpg">
+<span>Indigo Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Birla_White_logo.png">
+<span>Birla White</span>
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- Bottom Line -->
+
+<div class="overflow-hidden">
+
+<div class="marquee reverse gap-16">
+
+<div class="brand-card">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Birla_White_logo.png">
+<span>Birla White</span>
+</div>
+
+<div class="brand-card">
+<img src="images/indigo_logo.jpg">
+<span>Indigo Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/nerolac_logo.jpg">
+<span>Nerolac</span>
+</div>
+
+<div class="brand-card">
+<img src="images/dulux_logo.jpg">
+<span>Dulux</span>
+</div>
+
+<div class="brand-card">
+<img src="images/berger_logo.jpg">
+<span>Berger Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/ascian[aints_logo.jpg">
+<span>Asian Paints</span>
+</div>
+
+
+<!-- Duplicate -->
+
+<div class="brand-card">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Birla_White_logo.png">
+<span>Birla White</span>
+</div>
+
+<div class="brand-card">
+<img src="images/indigo_logo.jpg">
+<span>Indigo Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/nerolac_logo.jpg">
+<span>Nerolac</span>
+</div>
+
+<div class="brand-card">
+<img src="images/dulux_logo.jpg">
+<span>Dulux</span>
+</div>
+
+<div class="brand-card">
+<img src="images/berger_logo.jpg">
+<span>Berger Paints</span>
+</div>
+
+<div class="brand-card">
+<img src="images/ascian[aints_logo.jpg">
+<span>Asian Paints</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</body>
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Paintbharat Wallpapers</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --warm: #f7f5f2;
+            --price-red: #ec1348;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--warm);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            height: 100vh;
+            background: white;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid rgba(212, 175, 55, .15);
+            padding: 4rem 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            padding: 1.2rem 3rem;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            transition: .4s;
+            text-transform: uppercase;
+            letter-spacing: .15em;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            color: var(--gold);
+            transform: translateX(8px);
+        }
+
+        .nav-item.active {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Main Alignment */
+        .main {
+            margin-left: 320px;
+        }
+
+        /* Hero */
+        .hero {
+            height: 60vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 4rem;
+            background: #111;
+            overflow: hidden;
+        }
+
+        .hero-img {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: .6;
+            animation: zoom 20s forwards;
+        }
+
+        @keyframes zoom {
+            from { transform: scale(1.1) }
+            to { transform: scale(1) }
+        }
+
+        /* Marquee Animation */
+        @keyframes marquee {
+            0% { transform: translateX(0) }
+            100% { transform: translateX(-50%) }
+        }
+
+        /* Structural Background */
+        .marquee-container {
+            overflow: hidden;
+            padding: 5rem 0;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.478), rgba(255, 255, 255, 0.478)), url("../3D homes/download.jpg");
+            background-size: auto;
+            background-position: center;
+            border-top: 1px solid rgba(0, 0, 0, .05);
+            border-bottom: 1px solid rgba(0, 0, 0, .05);
+        }
+
+        .marquee-content {
+            display: flex;
+            animation: marquee 40s linear infinite;
+        }
+
+        .marquee-container:hover .marquee-content {
+            animation-play-state: paused;
+        }
+
+        /* Marquee Cards */
+        .marquee-card {
+            border: 1px solid #D4AF37;
+            overflow: hidden;
+            transition: .6s ease;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .05);
+        }
+
+        .marquee-card img {
+            transition: 1s ease;
+        }
+
+        .marquee-card:hover img {
+            transform: scale(1.15);
+        }
+
+        /* Filter Dropdown Styles */
+        .dropdown-open #filter-dropdown {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .filter-option {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: 0.3s;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .filter-option:hover {
+            color: var(--gold);
+            background: #fdfdfc;
+            padding-left: 1.8rem;
+        }
+
+        .filter-option.active {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Grid Cards */
+        .image-viewport {
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .elegant-card {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .elegant-card img {
+            transition: .7s;
+        }
+
+        .elegant-card:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Hover view button circle */
+        .view-btn-circle {
+            width: 80px;
+            height: 80px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--gold);
+            opacity: 0;
+            transition: .4s;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(2px);
+        }
+
+        .elegant-card:hover .view-btn-circle {
+            opacity: 1;
+        }
+
+        /* Golden Line Underline Animation */
+        .animated-title {
+            position: relative;
+            display: inline-block;
+            color: #111;
+            padding-bottom: 2px;
+        }
+
+        .animated-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px; /* Line ko patla kiya gaya he */
+            background-color: var(--gold);
+            transition: width 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        }
+
+        .elegant-card:hover .animated-title::after {
+            width: 100%;
+        }
+
+        /* Price Color - Updated weight and size for refinement */
+        .price-tag {
+            color: var(--price-red);
+            font-weight: 400; /* Thinner weight for refinement */
+            font-size: 0.9rem; /* Subtle size */
+            letter-spacing: 0.05em;
+        }
+
+        /* Popup Styling - Matched to Image */
+        #popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .popup-card {
+            background: #fdfaf7; 
+            width: 1000px;
+            max-width: 95%;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-image-side {
+            width: 50%;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+
+        .popup-info-side {
+            width: 50%;
+            padding: 60px 50px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .popup-info-side::before {
+             content: '';
+             position: absolute;
+             top: 60px;
+             left: 50px;
+             width: 40px;
+             height: 2px;
+             background: var(--gold);
+        }
+
+        .label-small {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .popup-explore-btn {
+            background: #000;
+            color: white;
+            padding: 15px 40px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 11px;
+            margin-top: 40px;
+            width: fit-content;
+            transition: 0.3s;
+        }
+
+        .popup-explore-btn:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: #666; 
+            font-weight: 600; 
+            text-transform: uppercase;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--price-red); 
+        }
+
+        /* Section Title Styling */
+        .section-header {
+            padding-top: 6rem;
+            padding-left: 4rem;
+            padding-right: 4rem;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .curated-title {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+        }
+
+        .designs-text {
+            font-size: 4.5rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 400;
+            color: #111;
+            white-space: nowrap;
+        }
+
+        .title-divider {
+            width: 60px;
+            height: 2px;
+            background: #111;
+        }
+
+        /* Popup Price Style - Also refined */
+        #popup-price {
+            font-weight: 400;
+            font-size: 1.75rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="px-8 mb-16">
+            <h1 class="serif text-2xl uppercase tracking-widest leading-none">
+                Paintbharat <span class="text-[#D4AF37] text-lg">Co.</span>
+            </h1>
+        </div>
+        <div class="nav-item">Interior</div>
+        <div class="nav-item">Exterior</div>
+        <div class="nav-item">Waterproof</div>
+        <div class="nav-item active">Wallpaper</div>
+    </div>
+
+    <!-- Main -->
+    <div class="main">
+
+        <!-- Updated Popup Card -->
+        <div id="popup" onclick="closePopup()">
+            <div class="popup-card" onclick="event.stopPropagation()">
+                <div class="popup-image-side">
+                    <img id="popup-img" class="w-full h-full object-cover shadow-lg">
+                </div>
+                <div class="popup-info-side">
+                    <div class="mt-8">
+                        <h2 id="popup-title" class="serif text-5xl mb-2 text-[#111]"></h2>
+                        <p id="popup-tier" class="text-[10px] text-gray-400 tracking-[0.2em] mb-12 uppercase">HERITAGE — STANDARD TIER</p>
+                        
+                        <div class="mb-8">
+                            <p class="label-small">Dimensions</p>
+                            <p id="popup-size" class="serif italic text-2xl text-[#111]"></p>
+                        </div>
+
+                        <div>
+                            <p class="label-small">Price Guide</p>
+                            <div class="flex items-baseline gap-2">
+                                <span id="popup-price" class="price-tag"></span>
+                                <span class="text-[#D4AF37] text-sm">(Inclusive of VAT)</span>
+                            </div>
+                        </div>
+
+                        <button class="popup-explore-btn">Explore More</button>
+                        
+                        <div class="back-link" onclick="closePopup()">
+                            <span>←</span> Back to Gallery
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-img" style="background-image:url('https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=2000')"></div>
+            <h1 class="serif text-white text-7xl relative z-10">
+                The Art of Living
+            </h1>
+        </div>
+
+        <!-- Marquee -->
+        <div class="marquee-container">
+            <div id="marquee" class="marquee-content"></div>
+        </div>
+
+        <!-- Title & Filter Section -->
+        <div class="section-header relative z-20">
+            <div class="curated-title">
+                <span class="designs-text">Curated Designs</span>
+                <div class="title-divider mb-4"></div>
+            </div>
+
+            <!-- Filter Dropdown Component -->
+            <div class="relative" id="filter-container">
+                <button onclick="toggleFilter(event)" class="flex items-center gap-6 border border-[#D4AF37] text-gray-700 px-8 py-3 rounded-full hover:bg-gray-50 transition bg-white shadow-sm">
+                    <span id="current-theme-label" class="text-[14px] uppercase tracking-widest font-medium">Explore Themes</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-[#D4AF37]"></i>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div id="filter-dropdown" class="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 pointer-events-none transition-all duration-300 transform -translate-y-3 overflow-hidden">
+                    <div class="py-4 flex flex-col" id="filter-options-container">
+                        <!-- Options injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div id="grid" class="grid grid-cols-4 gap-10 px-16 pt-12 pb-24 bg-white min-h-[50vh]">
+        </div>
+
+    </div>
+
+    <script>
+        const THEMES = [
+            "All Wallpapers",
+            "Floral & Botanical",
+            "Luxury Damask",
+            "Modern Geometric",
+            "Abstract Art",
+            "Minimalist Textures",
+            "Kids Room"
+        ];
+
+        const wallpapers = [];
+        const images = [
+            "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800",
+            "https://images.unsplash.com/photo-1558603668-6570496b66f8?q=80&w=800",
+            "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?q=80&w=800",
+            "https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=2000"
+        ];
+
+        for (let i = 0; i < 24; i++) {
+            const themeIndex = (i % (THEMES.length - 1)) + 1;
+            wallpapers.push({
+                id: i,
+                name: `Luxury Texture ${i + 1}`,
+                theme: THEMES[themeIndex],
+                price: `₹${120 + i * 5}`,
+                size: "10ft x 8ft",
+                img: images[i % 4]
+            });
+        }
+
+        function render(itemsToRender = wallpapers) {
+            const grid = document.getElementById("grid");
+            grid.innerHTML = '';
+
+            if (itemsToRender.length === 0) {
+                grid.innerHTML = `
+                <div class="col-span-4 flex flex-col items-center justify-center py-20 text-gray-400">
+                    <i data-lucide="image-off" class="w-12 h-12 mb-4 opacity-50"></i>
+                    <p class="text-lg">No wallpapers found for this theme.</p>
+                </div>`;
+            } else {
+                itemsToRender.forEach((w, index) => {
+                    const delay = (index % 4) * 0.1;
+                    grid.innerHTML += `
+                    <div class="elegant-card cursor-pointer group" style="animation-delay: ${delay}s" onclick='openPopup(${JSON.stringify(w)})'>
+                        <div class="image-viewport bg-gray-100">
+                            <img src="${w.img}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="view-btn-circle">VIEW</div>
+                            </div>
+                        </div>
+                        <div class="mt-5 flex justify-between items-start">
+                            <div class="flex-1 pr-4">
+                                <h3 class="serif text-lg leading-tight">
+                                    <span class="animated-title">${w.name}</span>
+                                </h3>
+                                <p class="text-[10px] text-gray-400 uppercase tracking-[0.2em] mt-1">HERITAGE • WALL DECOR</p>
+                            </div>
+                            <p class="price-tag">${w.price}</p>
+                        </div>
+                    </div>`;
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function renderMarquee() {
+            const marquee = document.getElementById("marquee");
+            const items = [...wallpapers.slice(0, 6), ...wallpapers.slice(0, 6)];
+
+            items.forEach(w => {
+                marquee.innerHTML += `
+                <div class="w-[300px] mx-8 flex-shrink-0">
+                    <div class="aspect-[4/5] marquee-card">
+                        <img src="${w.img}" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-gray-700 text-center mt-4 serif">${w.name}</p>
+                </div>`;
+            });
+        }
+
+        function initializeFilter() {
+            const container = document.getElementById('filter-options-container');
+            THEMES.forEach(theme => {
+                const isActive = theme === 'All Wallpapers' ? 'active' : '';
+                container.innerHTML += `
+                <span class="filter-option ${isActive}" data-theme="${theme}" onclick="applyFilter('${theme}', event)">
+                    ${theme}
+                </span>`;
+            });
+        }
+
+        function toggleFilter(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('filter-container').classList.toggle('dropdown-open');
+        }
+
+        function closeFilter() {
+            document.getElementById('filter-container').classList.remove('dropdown-open');
+        }
+
+        function applyFilter(selectedTheme, event) {
+            if (event) event.stopPropagation();
+            const label = document.getElementById('current-theme-label');
+            label.innerText = selectedTheme === 'All Wallpapers' ? 'Explore Themes' : selectedTheme;
+
+            document.querySelectorAll('.filter-option').forEach(el => {
+                if (el.dataset.theme === selectedTheme) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            closeFilter();
+
+            if (selectedTheme === 'All Wallpapers') {
+                render(wallpapers);
+            } else {
+                const filtered = wallpapers.filter(w => w.theme === selectedTheme);
+                render(filtered);
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const container = document.getElementById('filter-container');
+            if (container && !container.contains(e.target)) {
+                closeFilter();
+            }
+        });
+
+        function openPopup(w) {
+            document.getElementById("popup").style.display = "flex";
+            document.getElementById("popup-img").src = w.img;
+            document.getElementById("popup-title").innerText = w.name;
+            document.getElementById("popup-price").innerText = w.price;
+            document.getElementById("popup-size").innerText = w.size;
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+
+        lucide.createIcons();
+        initializeFilter();
+        renderMarquee();
+        render();
+    </script>
+
+</body>
+</html>

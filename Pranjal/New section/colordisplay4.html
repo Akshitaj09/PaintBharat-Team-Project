@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaintBharat | Exterior Orbital Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;600;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #94A3B8;
+            --bg-active: #94A3B8; 
+            --rotation: 0deg;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: #111; 
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- DYNAMIC BACKGROUND PANEL --- */
+        .bg-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40vw; 
+            height: 100vh;
+            background-color: var(--bg-active);
+            transition: background-color 1s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 5;
+            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 0% 100%);
+        }
+
+        /* --- ORBITAL NAVIGATION --- */
+        .orbital-container {
+            position: absolute;
+            left: -18vw; 
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40vw; 
+            height: 40vw;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            z-index: 50; 
+        }
+
+        .orbit-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            transform: rotate(var(--rotation));
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .swatch-anchor {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            margin-left: -35px;
+            margin-top: -35px;
+            left: 100%;
+            top: 50%;
+            transform-origin: calc(-20vw + 35px) 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .swatch-anchor:nth-child(1) { transform: rotate(-30deg); }
+        .swatch-anchor:nth-child(2) { transform: rotate(0deg); }
+        .swatch-anchor:nth-child(3) { transform: rotate(30deg); }
+        .swatch-anchor:nth-child(4) { transform: rotate(60deg); }
+
+        .swatch-node {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: currentColor;
+            border: 2px solid rgba(255,255,255,0.4);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+        }
+
+        .active .swatch-node {
+            transform: scale(1.3);
+            border: 3px solid #fff;
+            box-shadow: 0 0 40px rgba(0,0,0,0.4);
+        }
+
+        /* --- MAIN STAGE --- */
+        .main-stage {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .visual-backdrop {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 75vw; 
+            height: 100vh;
+            z-index: 1;
+            clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+            background: #000;
+            overflow: hidden;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9);
+            transition: transform 1.5s ease, opacity 0.8s ease;
+        }
+
+        .content-wrap {
+            position: relative;
+            z-index: 30;
+            margin-left: 32vw; 
+            max-width: 500px;
+        }
+
+        .mega-heading {
+            font-size: clamp(40px, 6vw, 90px);
+            font-weight: 900;
+            line-height: 0.85;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+
+        /* Adaptive Theme for Light Colors */
+        .is-light-bg .mega-heading, 
+        .is-light-bg #desc,
+        .is-light-bg .detail-bar {
+            color: #111;
+        }
+        .is-light-bg .detail-bar .line-sep {
+            background-color: #111;
+        }
+
+        .detail-bar {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .hud-top {
+            position: absolute;
+            top: 2.5rem;
+            right: 3rem;
+            z-index: 100;
+            text-align: right;
+            mix-blend-mode: difference;
+        }
+
+        /* Transition States */
+        .is-switching .mega-heading,
+        .is-switching #desc,
+        .is-switching .detail-bar {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        #title, #desc, .detail-bar {
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body id="body-ctx">
+
+    <div class="bg-fill" id="dynamic-bg"></div>
+
+    <div class="hud-top">
+        <div class="text-[9px] font-bold opacity-60 tracking-[0.6em] mb-1">PAINT_BHARAT // ORBITAL</div>
+        <div class="text-sm font-black" id="serial-display">#94A3B8</div>
+    </div>
+
+    <div class="orbital-container">
+        <div class="orbit-ring" id="orbit-ring">
+            <div class="swatch-anchor active" onclick="manualNavigate(0)" style="color: #94A3B8;">
+                <div class="swatch-node"></div>
+            </div>
+            <div class="swatch-anchor" onclick="manualNavigate(1)" style="color: #F5F5DC;">
+                <div class="swatch-node"></div>
+            </div>
+            <div class="swatch-anchor" onclick="manualNavigate(2)" style="color: #5D4037;">
+                <div class="swatch-node"></div>
+            </div>
+            <div class="swatch-anchor" onclick="manualNavigate(3)" style="color: #4F7942;">
+                <div class="swatch-node"></div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-stage" id="stage">
+        <div class="visual-backdrop">
+            <img id="hero-img" class="hero-img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070" alt="Architecture">
+        </div>
+
+        <div class="content-wrap">
+            <div class="detail-bar">
+                <span id="cat-label">Lunar Neutrals</span>
+                <div class="w-10 h-[1px] bg-white opacity-40 line-sep"></div>
+                <span id="rating-label">Extreme Shield</span>
+            </div>
+            
+            <h1 class="mega-heading" id="title">Moonshadow<br>Grey</h1>
+            
+            <p class="text-sm md:text-base font-light leading-relaxed opacity-80 max-w-sm" id="desc">
+                An atmospheric deep grey engineered with UV-reflect technology. Designed to resist urban smog while providing a sophisticated, brutalist edge to modern facades.
+            </p>
+        </div>
+    </main>
+
+    <script>
+        const collection = [
+            {
+                title: "Moonshadow<br>Grey",
+                desc: "An atmospheric deep grey engineered with UV-reflect technology. Designed to resist urban smog while providing a sophisticated, brutalist edge to modern facades.",
+                cat: "Lunar Neutrals",
+                hex: "#94A3B8",
+                img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070",
+                rating: "Extreme Shield",
+                isLight: false
+            },
+            {
+                title: "Alabaster<br>Silk",
+                desc: "A luminous cream finish that deflects solar heat. Perfect for grand bungalows, it maintains a cool interior while reflecting the timeless elegance of classic architecture.",
+                cat: "Luminous Creams",
+                hex: "#F5F5DC",
+                img: "https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070",
+                rating: "Heat Reflect: High",
+                isLight: true
+            },
+            {
+                title: "Umber<br>Earth",
+                desc: "A grounded, mineral-based brown inspired by the high desert. Formulated with anti-fungal shield technology to protect structures in humid, tropical environments.",
+                cat: "Organic Bases",
+                hex: "#5D4037",
+                img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
+                rating: "Anti-Algal: 10Yr",
+                isLight: false
+            },
+            {
+                title: "Jade<br>Sanctuary",
+                desc: "A muted, botanical green that harmonizes with vertical gardens. This breathable coating allows masonry to release moisture, preventing cracks and dampness.",
+                cat: "Botanical Tones",
+                hex: "#4F7942",
+                img: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?q=80&w=2070",
+                rating: "Moisture-Lock",
+                isLight: false
+            }
+        ];
+
+        let currentIndex = 0;
+        let autoPlayTimer;
+
+        function updateUI(index) {
+            const stage = document.getElementById('stage');
+            const ring = document.getElementById('orbit-ring');
+            const bodyCtx = document.getElementById('body-ctx');
+            
+            stage.classList.add('is-switching');
+            currentIndex = index;
+
+            // Rotation angles for the orbital ring
+            const angles = [30, 0, -30, -60];
+            ring.style.setProperty('--rotation', `${angles[index]}deg`);
+
+            // Update active state on nodes
+            document.querySelectorAll('.swatch-anchor').forEach((node, i) => {
+                node.classList.toggle('active', i === index);
+            });
+
+            // Content Swap Delay
+            setTimeout(() => {
+                const item = collection[index];
+                document.getElementById('title').innerHTML = item.title;
+                document.getElementById('desc').innerText = item.desc;
+                document.getElementById('cat-label').innerText = item.cat;
+                document.getElementById('rating-label').innerText = item.rating;
+                document.getElementById('serial-display').innerText = item.hex;
+                document.getElementById('hero-img').src = item.img;
+                
+                document.documentElement.style.setProperty('--bg-active', item.hex);
+                document.documentElement.style.setProperty('--accent', item.hex);
+                
+                bodyCtx.classList.toggle('is-light-bg', item.isLight);
+
+                stage.classList.remove('is-switching');
+            }, 600);
+        }
+
+        // Auto-play logic
+        function startAutoPlay() {
+            autoPlayTimer = setInterval(() => {
+                let nextIndex = (currentIndex + 1) % collection.length;
+                updateUI(nextIndex);
+            }, 3000); // 3 seconds interval
+        }
+
+        // Manual Navigation: Stops auto-play and restarts it after interaction
+        function manualNavigate(index) {
+            if (index === currentIndex) return;
+            clearInterval(autoPlayTimer);
+            updateUI(index);
+            startAutoPlay(); // Restart timer after manual click
+        }
+
+        // Mouse parallax for the image
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            document.getElementById('hero-img').style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+        });
+
+        // Initialize
+        window.onload = startAutoPlay;
+    </script>
+</body>
+</html>

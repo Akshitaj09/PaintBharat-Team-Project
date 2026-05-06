@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Architectural Color Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1b1e; 
+        }
+
+        .showcase-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+
+        .circular-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 2000px;
+        }
+
+        .house-item {
+            position: absolute;
+            width: clamp(280px, 35vw, 500px);
+            height: auto;
+            will-change: transform, opacity, filter;
+            transition: opacity 0.8s ease;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .house-item img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 30px 50px rgba(0,0,0,0.5));
+        }
+
+        .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ✅ POSITION CHANGED HERE */
+        .center-ui {
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translate(-50%, 30px);
+            z-index: 1000;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .center-ui.active {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            opacity: 0.05;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .floor {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40vh;
+            background: linear-gradient(to top, rgba(0,0,0,0.2), transparent);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grain"></div>
+
+    <main id="container" class="showcase-container">
+        <div class="floor"></div>
+
+        <!-- Floating Labels -->
+        <div id="ui-overlay" class="center-ui">
+            <h2 id="house-name" class="serif text-white text-4xl md:text-7xl mb-4"></h2>
+            <div class="flex items-center justify-center gap-4">
+                <span class="h-[1px] w-12 bg-white/30"></span>
+                <p id="house-desc" class="text-white/70 uppercase tracking-[0.5em] text-[10px] md:text-xs font-semibold"></p>
+                <span class="h-[1px] w-12 bg-white/30"></span>
+            </div>
+        </div>
+
+        <div id="track" class="circular-track">
+        </div>
+
+        <!-- Status / Progress Bar -->
+        <div class="absolute top-12 left-1/2 -translate-x-1/2 flex gap-2">
+            <div id="progress-dots" class="flex gap-3"></div>
+        </div>
+    </main>
+
+<script>
+const houses = [
+{ 
+name: "Midnight Onyx", 
+desc: "Modern Minimalist", 
+img: "../3D homes/house_no_bg_2.png", 
+bg: "#121214" 
+},
+{ 
+name: "Terracotta Sun", 
+desc: "Mediterranean Luxury", 
+img: "../3D homes/ChatGPT Image Apr 10, 2026, 12_44_20 PM.png", 
+bg: "#3d2b26" 
+},
+{ 
+name: "Ivory Zen", 
+desc: "Japanese Modern", 
+img: "../3D homes/house_no_bg_4.png", 
+bg: "#4d4a41" 
+},
+{ 
+name: "Forest Slate", 
+desc: "Eco Architecture", 
+img: "../3D homes/house_no_bg_5.png", 
+bg: "#2a3328" 
+},
+{ 
+name: "Sky Pavilion", 
+desc: "Urban Rooftop", 
+img: "../3D homes/ChatGPT Image Apr 10, 2026, 12_42_10 PM.png", 
+bg: "#2c3e50" 
+},
+{ 
+name: "Golden Villa", 
+desc: "Signature Series", 
+img: "../3D homes/house_no_bg_4.png", 
+bg: "#473d2a" 
+}
+];
+
+const track = document.getElementById('track');
+const container = document.getElementById('container');
+const uiOverlay = document.getElementById('ui-overlay');
+const nameEl = document.getElementById('house-name');
+const descEl = document.getElementById('house-desc');
+const progressDots = document.getElementById('progress-dots');
+
+const houseEls = houses.map((house, i) => {
+const div = document.createElement('div');
+div.className = 'house-item';
+const img = document.createElement('img');
+img.src = house.img;
+img.alt = house.name;
+div.appendChild(img);
+track.appendChild(div);
+
+const dot = document.createElement('div');
+dot.className = 'w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-500';
+progressDots.appendChild(dot);
+
+return div;
+});
+
+let rotation = 0;
+let targetRotation = 0;
+let lastActiveIndex = -1;
+let isUserInteracting = false;
+let interactionTimeout;
+
+setInterval(() => {
+if (!isUserInteracting) {
+targetRotation += 1;
+}
+}, 3000);
+
+function handleInteraction() {
+isUserInteracting = true;
+clearTimeout(interactionTimeout);
+interactionTimeout = setTimeout(() => {
+isUserInteracting = false;
+targetRotation = Math.round(targetRotation);
+}, 4000);
+}
+
+window.addEventListener('wheel', (e) => {
+handleInteraction();
+targetRotation += e.deltaY * 0.0015;
+});
+
+let touchX = 0;
+window.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+window.addEventListener('touchmove', e => {
+handleInteraction();
+const delta = touchX - e.touches[0].clientX;
+targetRotation += delta * 0.005;
+touchX = e.touches[0].clientX;
+});
+
+function update() {
+
+rotation += (targetRotation - rotation) * 0.08;
+
+const numItems = houses.length;
+const normalizedRotation = ((rotation % numItems) + numItems) % numItems;
+const activeIndex = Math.round(normalizedRotation) % numItems;
+
+if (activeIndex !== lastActiveIndex) {
+lastActiveIndex = activeIndex;
+const activeHouse = houses[activeIndex];
+
+container.style.backgroundColor = activeHouse.bg;
+
+uiOverlay.classList.remove('active');
+
+Array.from(progressDots.children).forEach((dot, idx) => {
+dot.style.opacity = idx === activeIndex ? '1' : '0.2';
+dot.style.transform = idx === activeIndex ? 'scale(1.5)' : 'scale(1)';
+dot.style.backgroundColor = idx === activeIndex ? '#fff' : 'rgba(255,255,255,0.5)';
+});
+
+setTimeout(() => {
+nameEl.textContent = activeHouse.name;
+descEl.textContent = activeHouse.desc;
+uiOverlay.classList.add('active');
+}, 300);
+}
+
+houseEls.forEach((el, i) => {
+const angle = (i - rotation) * (Math.PI * 2 / numItems);
+
+const x = Math.sin(angle) * 55;
+const y = Math.cos(angle) * 15;
+const z = Math.cos(angle) * 600;
+
+const scale = Math.max(0.2, (z + 800) / 1200); 
+const opacity = Math.max(0, (z + 400) / 900);
+
+const sway = Math.sin(angle) * 2;
+
+el.style.transform = `translate3d(${x}vw, ${y}vh, ${z}px) rotateZ(${sway}deg) scale(${scale})`;
+el.style.opacity = opacity;
+el.style.zIndex = Math.round(z + 1000);
+
+const blurAmount = Math.max(0, (400 - z) / 150);
+el.style.filter = `blur(${blurAmount}px)`;
+});
+
+requestAnimationFrame(update);
+}
+
+update();
+</script>
+
+</body>
+</html>
